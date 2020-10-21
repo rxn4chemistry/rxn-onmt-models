@@ -1,2 +1,2 @@
 attrs==19.1.0
-OpenNMT-py==1.2.0
+rxn-opennmt-py @ git+https://${GHE_TOKEN}@github.ibm.com/rxn/OpenNMT-py.git@latest

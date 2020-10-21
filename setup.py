@@ -1,4 +1,5 @@
 import io
+import os
 import re
 
 from setuptools import setup
@@ -17,5 +18,9 @@ setup(
     author='IBM RXN team',
     packages=['rxn_onmt_utils'],
     package_data={'rxn_onmt_utils': ['py.typed']},
-    install_requires=['attrs>=19.1.0', 'OpenNMT-py>=1.0.0']
+    install_requires=[
+        'attrs>=19.1.0',
+        'rxn-opennmt-py '
+        '@ git+https://{}@github.ibm.com/rxn/OpenNMT-py@latest'.format(os.environ['GHE_TOKEN']),
+    ]
 )
