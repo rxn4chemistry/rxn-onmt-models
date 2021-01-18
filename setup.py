@@ -2,7 +2,7 @@ import io
 import os
 import re
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 match = re.search(
     r'__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
@@ -16,10 +16,11 @@ setup(
     name='rxn_onmt_utils',
     version=__version__,
     author='IBM RXN team',
-    packages=['rxn_onmt_utils'],
+    packages=find_packages(),
     package_data={'rxn_onmt_utils': ['py.typed']},
     install_requires=[
         'attrs>=19.1.0',
+        'click>=7.0',
         'rxn-opennmt-py '
         '@ git+https://{}@github.ibm.com/rxn/OpenNMT-py@latest'.format(os.environ['GHE_TOKEN']),
     ]
