@@ -1,7 +1,9 @@
+import copy
 import os
 import tempfile
+from argparse import Namespace
 from itertools import repeat
-from typing import List, Optional, Iterable, Union
+from typing import List, Optional, Iterable, Any
 
 import attr
 import onmt.opts as opts
@@ -25,32 +27,39 @@ class RawTranslator:
     Translator class that is very coupled to the internal OpenNMT implementation.
     """
 
-    def __init__(self, translation_model: Union[str, Iterable[str]]):
-        opt = get_onmt_opt(translation_model=translation_model)
+    def __init__(self, opt: Namespace):
+        self.opt = opt
 
         # to avoid the creation of an unnecessary file
         out_file = open(os.devnull, 'w')
-        self.internal_translator = build_translator(opt, report_score=False, out_file=out_file)
+        self.internal_translator = build_translator(
+            self.opt, report_score=False, out_file=out_file
+        )
 
-    def translate_sentences_with_onmt(self, opt,
-                                      sentences: List[str]) -> List[List[TranslationResult]]:
+    def translate_sentences_with_onmt(self, sentences: List[str],
+                                      **opt_updated_kwargs: Any) -> List[List[TranslationResult]]:
         """
         Do the translation (in tokenized format) with OpenNMT.
 
         Args:
-            opt: args given to the main script
             sentences: sentences to translate
+            opt_updated_kwargs: values to update in the "opt" of the translator. The
+                translator is not instantiated again from those values, therefore this
+                only affects values that are used for translation, such as n_best.
         """
+        new_opt = copy.deepcopy(self.opt)
+        for key, value in opt_updated_kwargs.items():
+            setattr(new_opt, key, value)
         with tempfile.NamedTemporaryFile() as tmp_src, tempfile.NamedTemporaryFile() as tmp_output:
-            opt.src = tmp_src.name
-            opt.output = tmp_output.name
+            new_opt.src = tmp_src.name
+            new_opt.output = tmp_output.name
 
             # write source sentences to temporary input file
-            with open(opt.src, 'wt') as f:
+            with open(new_opt.src, 'wt') as f:
                 for sentence in sentences:
                     f.write(f'{sentence}\n')
 
-            return self.translate_with_onmt(opt)
+            return self.translate_with_onmt(new_opt)
 
     def translate_with_onmt(self, opt) -> List[List[TranslationResult]]:
         """
@@ -103,7 +112,17 @@ def get_onmt_opt(
     output_file: Optional[str] = None,
     n_best: int = 1,
     log_probs: bool = False
-):
+) -> Namespace:
+    """
+    Create the opt arguments by taking the defaults and overwriting a few values.
+
+    Args:
+        translation_model: Model(s) to for translation
+        src_file: Source file
+        output_file: Output file
+        n_best: Number of translations to do for each input
+        log_probs: Whether to calculate the log probs
+    """
     src = src_file if src_file is not None else '(unused)'
     output = output_file if output_file is not None else '(unused)'
     args_str = f'--model {" ".join(translation_model)} --src {src} --output {output}'

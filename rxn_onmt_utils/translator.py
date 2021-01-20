@@ -1,6 +1,7 @@
-from typing import List, Iterable, Union
+from argparse import Namespace
+from typing import List, Iterable, Union, Optional
 
-from .internal_translation_utils import get_onmt_opt, TranslationResult, RawTranslator
+from .internal_translation_utils import TranslationResult, RawTranslator, get_onmt_opt
 
 
 class Translator:
@@ -8,18 +9,15 @@ class Translator:
     Wraps the OpenNMT translation functionality into a class.
     """
 
-    def __init__(self, model: Union[str, Iterable[str]]):
+    def __init__(self, opt: Namespace):
         """
+        Should not be called directly as implementation may change; call the
+        classmethods from_model_path or from_opt instead.
+
         Args:
-            model: path to the translation model file(s).
-                If multiple are given, will be an ensemble model.
+            opt: model options.
         """
-
-        if isinstance(model, str):
-            model = [model]
-        self.model = list(model)
-
-        self.onmt_translator = RawTranslator(self.model)
+        self.onmt_translator = RawTranslator(opt=opt)
 
     def translate_single(self, sentence: str) -> str:
         """
@@ -38,9 +36,45 @@ class Translator:
 
     def translate_multiple_with_scores(self,
                                        sentences: List[str],
-                                       n_best=1) -> List[List[TranslationResult]]:
-        onmt_opt = get_onmt_opt(translation_model=self.model, n_best=n_best)
+                                       n_best: Optional[int] = None
+                                       ) -> List[List[TranslationResult]]:
+        """
+        Translate multiple sentences.
 
-        translations = self.onmt_translator.translate_sentences_with_onmt(onmt_opt, sentences)
+        Args:
+            sentences: Sentences to translate.
+            n_best: if provided, will overwrite the number of predictions to make.
+        """
+        additional_opt_kwargs = {}
+        if n_best is not None:
+            additional_opt_kwargs['n_best'] = n_best
+
+        translations = self.onmt_translator.translate_sentences_with_onmt(
+            sentences, **additional_opt_kwargs
+        )
 
         return translations
+
+    @classmethod
+    def from_model_path(cls, model_path: Union[str, Iterable[str]]):
+        """
+        Create a Translator instance from the model path(s).
+
+        Args:
+            model_path: path to the translation model file(s).
+                If multiple are given, will be an ensemble model.
+        """
+        if isinstance(model_path, str):
+            model_path = [model_path]
+        opt = get_onmt_opt(translation_model=list(model_path))
+        return cls(opt=opt)
+
+    @classmethod
+    def from_opt(cls, opt: Namespace):
+        """
+        Create a Translator instance from the opt arguments.
+
+        Args:
+            opt: model options.
+        """
+        return cls(opt=opt)

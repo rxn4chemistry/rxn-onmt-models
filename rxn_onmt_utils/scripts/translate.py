@@ -24,7 +24,7 @@ def translate(models: Tuple[str, ...], src_file: str, output_file: str, num_thre
     """Translate lines of a file with one or several OpenNMT model(s)."""
     set_num_threads(num_threads)
 
-    translator = Translator(model=models)
+    translator = Translator.from_model_path(model_path=models)
 
     with open(src_file, 'rt') as f:
         sentences = [line.strip() for line in f]
