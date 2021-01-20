@@ -1,5 +1,5 @@
 from argparse import Namespace
-from typing import List, Iterable, Union, Optional
+from typing import List, Iterable, Union, Optional, Any
 
 from .internal_translation_utils import TranslationResult, RawTranslator, get_onmt_opt
 
@@ -56,17 +56,19 @@ class Translator:
         return translations
 
     @classmethod
-    def from_model_path(cls, model_path: Union[str, Iterable[str]]):
+    def from_model_path(cls, model_path: Union[str, Iterable[str]], **kwargs: Any):
         """
         Create a Translator instance from the model path(s).
 
         Args:
             model_path: path to the translation model file(s).
                 If multiple are given, will be an ensemble model.
+            kwargs: Additional values to be parsed for instantiating the translator,
+                such as n_best, beam_size, max_length, etc.
         """
         if isinstance(model_path, str):
             model_path = [model_path]
-        opt = get_onmt_opt(translation_model=list(model_path))
+        opt = get_onmt_opt(translation_model=list(model_path), **kwargs)
         return cls(opt=opt)
 
     @classmethod

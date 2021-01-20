@@ -110,8 +110,7 @@ def get_onmt_opt(
     translation_model: Iterable[str],
     src_file: Optional[str] = None,
     output_file: Optional[str] = None,
-    n_best: int = 1,
-    log_probs: bool = False
+    **kwargs: Any,
 ) -> Namespace:
     """
     Create the opt arguments by taking the defaults and overwriting a few values.
@@ -120,20 +119,20 @@ def get_onmt_opt(
         translation_model: Model(s) to for translation
         src_file: Source file
         output_file: Output file
-        n_best: Number of translations to do for each input
-        log_probs: Whether to calculate the log probs
+        kwargs: additional values to change in the resulting opt
     """
+
+    # Some values are needed and must be parsed from args, other values can
+    # simply be overwritten from the default ones
     src = src_file if src_file is not None else '(unused)'
     output = output_file if output_file is not None else '(unused)'
     args_str = f'--model {" ".join(translation_model)} --src {src} --output {output}'
-    if log_probs:
-        args_str += ' --log_probs'
-    if n_best != 1:
-        args_str += f' --n_best {n_best}'
     args = args_str.split()
 
     parser = onmt_parser()
     opt = parser.parse_args(args)
+    for key, value in kwargs.items():
+        setattr(opt, key, value)
     ArgumentParser.validate_translate_opts(opt)
 
     return opt
