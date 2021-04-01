@@ -130,14 +130,18 @@ class ModelResizer:
 
         num_added_tokens = len(self.vocab['tgt'].base_field.vocab) - old_linear.out_features
 
-        weight_extension = nn.Parameter(torch.Tensor(num_added_tokens, old_linear.in_features))
+        weight_extension = nn.Parameter(  # type: ignore
+            torch.Tensor(num_added_tokens, old_linear.in_features)  # type: ignore
+        )
         init_parameters(self.model_opt, weight_extension)
 
-        new_weights = nn.Parameter(torch.cat([old_linear.weight, weight_extension.data]))
+        new_weights = nn.Parameter(  # type: ignore
+            torch.cat([old_linear.weight, weight_extension.data])
+        )
 
-        bias_extension = nn.Parameter(torch.Tensor(num_added_tokens))
+        bias_extension = nn.Parameter(torch.Tensor(num_added_tokens))  # type: ignore
         init_parameters(self.model_opt, bias_extension)
-        new_bias = nn.Parameter(torch.cat([old_linear.bias, bias_extension.data]))
+        new_bias = nn.Parameter(torch.cat([old_linear.bias, bias_extension.data]))  # type: ignore
 
         new_linear = nn.Linear(old_linear.in_features, len(self.vocab["tgt"].base_field.vocab))
         new_linear.load_state_dict({'weight': new_weights, 'bias': new_bias})
