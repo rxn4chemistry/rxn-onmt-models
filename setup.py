@@ -23,10 +23,5 @@ setup(
     author='IBM RXN team',
     packages=find_packages(),
     package_data={'rxn_onmt_utils': ['py.typed']},
-    install_requires=[
-        'attrs>=19.1.0',
-        'click>=7.0',
-        'rxn-opennmt-py '
-        '@ git+https://{}@github.ibm.com/rxn/OpenNMT-py@latest'.format(os.environ['GHE_TOKEN']),
-    ]
+    install_requires=['attrs>=19.1.0', 'click>=7.0', 'rxn-opennmt-py>=1.0.3']
 )
