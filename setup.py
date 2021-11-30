@@ -4,7 +4,6 @@
 # ALL RIGHTS RESERVED
 
 import io
-import os
 import re
 
 from setuptools import setup, find_packages
