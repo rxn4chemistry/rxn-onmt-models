@@ -8,7 +8,7 @@ python:
 
 install:
   - |
-    pip3 install -r requirements.txt && \
+    pip3 install -r requirements.txt --extra-index-url https://${PYPI_USERNAME}:${PYPI_PASSWORD}@${PYPI_SERVER}/simple && \
     pip3 install -r test_requirements.txt
 script:
   - |
