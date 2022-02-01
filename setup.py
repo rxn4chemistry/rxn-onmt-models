@@ -22,5 +22,17 @@ setup(
     author='IBM RXN team',
     packages=find_packages(),
     package_data={'rxn_onmt_utils': ['py.typed']},
-    install_requires=['attrs>=19.1.0', 'click>=7.0', 'rxn-opennmt-py>=1.0.3']
+    install_requires=[
+        'attrs>=19.1.0',
+        'click>=7.0',
+        'rxn-opennmt-py>=1.0.3',
+    ],
+    extras_require={
+        'dev': [
+            'flake8>=3.8.4',
+            'mypy>=0.761',
+            'pytest>=5.3.4',
+            'yapf>=0.31.0',
+        ],
+    },
 )

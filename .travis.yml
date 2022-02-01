@@ -4,12 +4,13 @@ dist: xenial
 
 language: python
 python:
-  - "3.6"
+  - "3.7"
 
 install:
-  - |
-    pip3 install -r requirements.txt --extra-index-url https://${PYPI_USERNAME}:${PYPI_PASSWORD}@${PYPI_SERVER}/simple && \
-    pip3 install -r test_requirements.txt
+  - >
+    pip install -e .[dev]
+    --extra-index-url https://${PYPI_USERNAME}:${PYPI_PASSWORD}@eu.artifactory.swg-devops.com/artifactory/api/pypi/res-accelerated-discovery-team-rxn-public-pypi-local/simple
+    --extra-index-url https://${PYPI_USERNAME}:${PYPI_PASSWORD}@eu.artifactory.swg-devops.com/artifactory/api/pypi/res-accelerated-discovery-team-rxn-private-pypi-local/simple
 script:
   - |
     yapf --quiet --style "{based_on_style: pep8, blank_line_before_nested_class_or_def: true, indent_dictionary_value: true, dedent_closing_brackets: true, column_limit: 99}" --recursive .
