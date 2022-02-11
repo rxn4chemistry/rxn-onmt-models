@@ -29,6 +29,10 @@ def init_parameters(model_opt, parameters):
     if model_opt.param_init_glorot:
         if parameters.dim() > 1:
             xavier_uniform_(parameters)
+        if parameters.dim() == 1:
+            # If there is only one dimension: the parameters are likely to
+            # correspond to a bias vector -> set to zero.
+            parameters.data.zero_()
 
 
 class ModelResizer:
