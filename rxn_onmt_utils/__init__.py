@@ -3,4 +3,4 @@
 # (C) Copyright IBM Corp. 2021
 # ALL RIGHTS RESERVED
 
-__version__ = '0.0.9'
+__version__ = '0.1.0'
