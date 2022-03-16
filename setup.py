@@ -28,11 +28,10 @@ setup(
         'rxn-opennmt-py>=1.0.3',
     ],
     extras_require={
-        'dev': [
-            'flake8>=3.8.4',
-            'mypy>=0.761',
-            'pytest>=5.3.4',
-            'yapf>=0.31.0',
-        ],
+        'dev':
+            [
+                'flake8>=3.8.4', 'mypy>=0.761', 'pytest>=5.3.4', 'yapf>=0.31.0',
+                'bump2version>=1.0.1'
+            ],
     },
 )
