@@ -1,3 +1,0 @@
-attrs==19.1.0
-click==7.0
-rxn-opennmt-py==1.0.3
