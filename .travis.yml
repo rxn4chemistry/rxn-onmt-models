@@ -9,10 +9,16 @@ install:
     pip install -e .[dev]
     --extra-index-url https://${PYPI_USERNAME}:${PYPI_PASSWORD}@eu.artifactory.swg-devops.com/artifactory/api/pypi/res-accelerated-discovery-team-rxn-public-pypi-local/simple
     --extra-index-url https://${PYPI_USERNAME}:${PYPI_PASSWORD}@eu.artifactory.swg-devops.com/artifactory/api/pypi/res-accelerated-discovery-team-rxn-private-pypi-local/simple
+  # install RDKit. This is not as a setup dependency in order not to install it
+  # in downstream packages and avoid potential conflicts with the conda
+  # installation of RDKit
+  - pip install rdkit-pypi==2021.3.2
+
 script:
   - yapf --diff --recursive .
   - flake8 .
   - mypy rxn_onmt_utils
+  - pytest rxn_onmt_utils
 
 jobs:
   include:
