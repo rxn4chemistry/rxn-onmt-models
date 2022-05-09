@@ -8,8 +8,10 @@ check_untyped_defs = true
 [[tool.mypy.overrides]]
 module = [
     "onmt.*",
+    "numpy.*",
     "pandas.*",
     "pytest.*",
+    "rdkit.*",
 ]
 ignore_missing_imports = true
 
