@@ -6,6 +6,8 @@ from typing import Tuple, Dict, Any
 import click
 import pandas as pd
 
+from rxn_onmt_utils.utils import setup_console_logger
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
@@ -29,7 +31,7 @@ def main(csv: str, directories: Tuple[str, ...]) -> None:
         - python parse_metrics_into_csv.py --csv dir* other_dir
         - python parse_metrics_into_csv.py --csv *
     """
-    logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level='INFO')
+    setup_console_logger()
 
     metrics_dicts = [get_metric_from_dir(Path(directory)) for directory in directories]
 

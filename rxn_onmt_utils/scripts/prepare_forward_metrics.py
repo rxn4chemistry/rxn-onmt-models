@@ -9,6 +9,7 @@ from rxn_onmt_utils.rxn_models.forward_or_retro_translation import forward_or_re
 from rxn_onmt_utils.rxn_models.tokenize_file import copy_as_detokenized
 from rxn_onmt_utils.rxn_models.utils import ForwardFiles
 from rxn_onmt_utils.scripts.canonicalize_file import canonicalize_file
+from rxn_onmt_utils.utils import setup_console_and_file_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -40,13 +41,7 @@ def main(
 
     forward_files = ForwardFiles(output_path)
 
-    # Setup logging (to terminal and to file)
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[logging.FileHandler(forward_files.log_file),
-                  logging.StreamHandler()]
-    )
+    setup_console_and_file_logger(forward_files.log_file)
 
     copy_as_detokenized(products_file, forward_files.gt_products)
     copy_as_detokenized(precursors_file, forward_files.gt_precursors)

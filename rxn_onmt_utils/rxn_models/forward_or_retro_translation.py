@@ -1,8 +1,7 @@
 import logging
-from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
-from rxn_utilities.file_utilities import is_path_exists_or_creatable
+from rxn_utilities.file_utilities import is_path_exists_or_creatable, PathLike
 
 from .tokenize_file import tokenize_file, detokenize_file
 from .translate import translate
@@ -13,15 +12,16 @@ logger.addHandler(logging.NullHandler())
 
 
 def forward_or_retro_translation(
-    src_file: Union[str, Path],
-    tgt_file: Optional[Union[str, Path]],
-    pred_file: Union[str, Path],
-    model: Union[str, Path],
+    src_file: PathLike,
+    tgt_file: Optional[PathLike],
+    pred_file: PathLike,
+    model: PathLike,
     n_best: int,
     beam_size: int,
     batch_size: int,
     gpu: bool,
-    max_length: int = 300
+    max_length: int = 300,
+    as_external_command: bool = True
 ) -> None:
     """
     Do a forward or retro translation.
@@ -41,6 +41,7 @@ def forward_or_retro_translation(
         batch_size: batch size.
         gpu: whether to use the GPU.
         max_length: maximum sequence length.
+        as_external_command: runs the onmt command instead of Python code.
     """
     if not is_path_exists_or_creatable(pred_file):
         raise RuntimeError(f'The file "{pred_file}" cannot be created.')
@@ -72,7 +73,8 @@ def forward_or_retro_translation(
         beam_size=beam_size,
         max_length=max_length,
         batch_size=batch_size,
-        gpu=gpu
+        gpu=gpu,
+        as_external_command=as_external_command
     )
 
     detokenize_file(tokenized_pred, pred_file)

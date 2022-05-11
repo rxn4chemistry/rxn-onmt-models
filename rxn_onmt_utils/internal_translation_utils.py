@@ -8,11 +8,10 @@ import os
 import tempfile
 from argparse import Namespace
 from itertools import repeat
-from typing import List, Optional, Iterable, Any
+from typing import List, Optional, Iterable, Any, Iterator
 
 import attr
 import onmt.opts as opts
-import torch
 from onmt.translate.translator import build_translator
 from onmt.utils.misc import split_corpus
 from onmt.utils.parse import ArgumentParser
@@ -41,8 +40,9 @@ class RawTranslator:
             self.opt, report_score=False, out_file=out_file
         )
 
-    def translate_sentences_with_onmt(self, sentences: List[str],
-                                      **opt_updated_kwargs: Any) -> List[List[TranslationResult]]:
+    def translate_sentences_with_onmt(
+        self, sentences: Iterable[str], **opt_updated_kwargs: Any
+    ) -> Iterator[List[TranslationResult]]:
         """
         Do the translation (in tokenized format) with OpenNMT.
 
@@ -62,11 +62,17 @@ class RawTranslator:
             # write source sentences to temporary input file
             with open(new_opt.src, 'wt') as f:
                 for sentence in sentences:
+                    # In order to avoid problems with batches full of empty string on GPUs,
+                    # we write a dummy line instead of the empty string. This should not have
+                    # a particularly strong impact; at least the predicted value will be
+                    # reproducible (which it is not in the case of empty strings).
+                    if sentence == '':
+                        sentence = 'C . C . C . C . C . C'
                     f.write(f'{sentence}\n')
 
-            return self.translate_with_onmt(new_opt)
+            yield from self.translate_with_onmt(new_opt)
 
-    def translate_with_onmt(self, opt) -> List[List[TranslationResult]]:
+    def translate_with_onmt(self, opt) -> Iterator[List[TranslationResult]]:
         """
         Do the translation (in tokenized format) with OpenNMT.
 
@@ -74,8 +80,8 @@ class RawTranslator:
             opt: args given to the main script
 
         Returns:
-            scores: list (size: number of sentences) of lists of scores (each of size: n_best)
-            translations: list (size: number of sentences) of lists of translations (each of size: n_best)
+            Generator of TranslationResults; they will be yielded in chunks of
+            size opt.shard_size.
         """
         # for some versions, it seems that n_best is not updated, we therefore do it manually here
         self.internal_translator.n_best = opt.n_best
@@ -85,8 +91,6 @@ class RawTranslator:
             if opt.tgt is not None else repeat(None)
         shard_pairs = zip(src_shards, tgt_shards)
 
-        scores: List[List[torch.Tensor]] = []
-        translations: List[List[str]] = []
         for i, (src_shard, tgt_shard) in enumerate(shard_pairs):
             l1, l2 = self.internal_translator.translate(
                 src=src_shard,
@@ -96,19 +100,11 @@ class RawTranslator:
                 batch_type=opt.batch_type,
                 attn_debug=opt.attn_debug
             )
-            scores.extend(l1)
-            translations.extend(l2)
-
-        r = []
-        for score_list, translation_list in zip(scores, translations):
-            r.append(
-                [
+            for score_list, translation_list in zip(l1, l2):
+                yield [
                     TranslationResult(text=t, score=s.item())
                     for s, t in zip(score_list, translation_list)
                 ]
-            )
-
-        return r
 
 
 def get_onmt_opt(

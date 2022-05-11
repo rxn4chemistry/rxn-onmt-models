@@ -1,7 +1,6 @@
 import logging
 import os
 from pathlib import Path
-from typing import Union
 
 from rxn_chemutils.tokenization import detokenize_smiles, tokenize_smiles
 from rxn_utilities.file_utilities import iterate_lines_from_file, PathLike
@@ -36,7 +35,7 @@ def string_is_tokenized(smiles_line: str) -> bool:
     return smiles_line == tokenized
 
 
-def file_is_tokenized(filepath: Union[str, Path]) -> bool:
+def file_is_tokenized(filepath: PathLike) -> bool:
     """
     Whether a file contains tokenized SMILES or not.
 
@@ -83,7 +82,7 @@ class ForwardFiles(MetricsFiles):
     the evaluation of forward metrics.
     """
 
-    def __init__(self, directory: Union[str, PathLike]):
+    def __init__(self, directory: PathLike):
         super().__init__(directory=directory)
         self.gt_products = self.directory / 'gt_products.txt'
         self.gt_precursors = self.directory / 'gt_precursors.txt'

@@ -3,12 +3,20 @@
 # IBM Research Zurich Licensed Internal Code
 # (C) Copyright IBM Corp. 2020
 # ALL RIGHTS RESERVED
-import subprocess
+import logging
 from pathlib import Path
 
 import click
+from rxn_reaction_preprocessing.config import (
+    Config, DataConfig, RxnImportConfig, InitialDataFormat, StandardizeConfig, SplitConfig
+)
+from rxn_reaction_preprocessing.main import preprocess_data
 
 from rxn_onmt_utils.from_tunerxn.utils import RxnPreprocessingFiles
+from rxn_onmt_utils.utils import setup_console_logger
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings=dict(show_default=True))
@@ -34,6 +42,7 @@ def prepare_data(input_data: str, output_dir: str, split_seed: int) -> None:
         data.processed.test.precursors_tokens
         data.processed.test.products_tokens
     """
+    setup_console_logger()
 
     # Running the command below fails if the paths are relative -> make them absolute
     input_data_path = Path(input_data).resolve()
@@ -46,26 +55,22 @@ def prepare_data(input_data: str, output_dir: str, split_seed: int) -> None:
     #   rxn_import.data_format=CSV
     #   rxn_import.input_csv_column_name=rxn_smiles_xxx
 
-    cmd = [
-        'rxn-data-pipeline',
-        f'data.path={input_data_path}',
-        f'data.proc_dir={output_dir_path}',
-        f'data.name={RxnPreprocessingFiles.FILENAME_ROOT}',
-        'rxn_import.data_format=TXT',
-        'standardize.annotation_file_paths=[]',
-        'standardize.discard_unannotated_metals=False',
-        f'split.hash_seed={split_seed}',
-    ]
+    cfg = Config(
+        data=DataConfig(
+            path=str(input_data_path),
+            proc_dir=str(output_dir_path),
+            name=RxnPreprocessingFiles.FILENAME_ROOT
+        ),
+        rxn_import=RxnImportConfig(data_format=InitialDataFormat.TXT),
+        standardize=StandardizeConfig(annotation_file_paths=[], discard_unannotated_metals=False),
+        split=SplitConfig(hash_seed=split_seed),
+    )
 
-    cmd_string = ' '.join(cmd)
-    print('Running the command:', cmd_string)
     try:
-        output = subprocess.check_output(cmd)
-        print(output.decode('utf-8'))
-    except subprocess.CalledProcessError as e:
-        print('Error', e.returncode)
-        print(e.output.decode('utf-8'))
-        raise SystemExit(f'"{cmd_string}" failed.')
+        print('Running the data preprocessing')
+        preprocess_data(cfg)
+    except Exception as e:
+        raise SystemExit('Error in data preprocessing') from e
 
 
 if __name__ == "__main__":

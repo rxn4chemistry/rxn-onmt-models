@@ -16,9 +16,10 @@ from rxn_chemutils.reaction_equation import (
 from rxn_chemutils.reaction_smiles import parse_any_reaction_smiles
 from rxn_chemutils.tokenization import detokenize_smiles
 from rxn_utilities.file_utilities import is_path_creatable, load_list_from_file
-from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, RxnPreprocessingFiles
 
+from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, RxnPreprocessingFiles
 from rxn_onmt_utils.translator import Translator
+from rxn_onmt_utils.utils import setup_console_logger
 
 
 def _standardized(multi_smiles: str) -> ReactionEquation:
@@ -83,7 +84,7 @@ def evaluate(
 ) -> None:
     """Evaluate a trained/finetuned OpenNMT model."""
 
-    logging.basicConfig(format='%(asctime)s [%(levelname)-7s] : %(message)s', level=logging.INFO)
+    setup_console_logger()
 
     # Before translating, verify that we will be able to create the metrics JSON
     if not is_path_creatable(output_json):

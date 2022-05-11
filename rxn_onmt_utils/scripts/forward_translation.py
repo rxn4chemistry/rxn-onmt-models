@@ -4,6 +4,7 @@ from typing import Optional
 import click
 
 from rxn_onmt_utils.rxn_models.forward_or_retro_translation import forward_or_retro_translation
+from rxn_onmt_utils.utils import setup_console_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -23,7 +24,7 @@ def main(
     precursors_file: str, products_tgt: Optional[str], products_pred: str, forward_model: str,
     n_best: int, batch_size: int, gpu: bool
 ) -> None:
-    logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level='INFO')
+    setup_console_logger()
     forward_or_retro_translation(
         src_file=precursors_file,
         tgt_file=products_tgt,

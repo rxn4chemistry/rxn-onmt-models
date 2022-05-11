@@ -1,6 +1,4 @@
 import logging
-from pathlib import Path
-from typing import Union
 
 import click
 from rxn_chemutils.multicomponent_smiles import (
@@ -10,9 +8,10 @@ from rxn_chemutils.reaction_equation import canonicalize_compounds, sort_compoun
 from rxn_chemutils.reaction_smiles import (
     determine_format, parse_reaction_smiles, to_reaction_smiles
 )
-from rxn_utilities.file_utilities import dump_list_to_file, iterate_lines_from_file
+from rxn_utilities.file_utilities import dump_list_to_file, iterate_lines_from_file, PathLike
 
 from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path
+from rxn_onmt_utils.utils import setup_console_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -39,8 +38,8 @@ def canonicalize_line(smiles_line: str, invalid_placeholder: str, sort_molecules
 
 
 def canonicalize_file(
-    input_file: Union[str, Path],
-    output_file: Union[str, Path],
+    input_file: PathLike,
+    output_file: PathLike,
     invalid_placeholder: str = '',
     sort_molecules: bool = False
 ) -> None:
@@ -66,7 +65,7 @@ def canonicalize_file(
     help='What to output when the canonicalization fails'
 )
 def main(input_file: str, output_file: str, invalid_placeholder: str) -> None:
-    logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level='INFO')
+    setup_console_logger()
 
     # Note: we put the actual code in a separate function, so that it can be
     # called also as a Python function.

@@ -1,10 +1,8 @@
 import logging
 import shutil
-from pathlib import Path
-from typing import Union
 
 from rxn_chemutils.tokenization import tokenize_smiles, TokenizationError, detokenize_smiles
-from rxn_utilities.file_utilities import iterate_lines_from_file, dump_list_to_file
+from rxn_utilities.file_utilities import iterate_lines_from_file, dump_list_to_file, PathLike
 
 from .utils import raise_if_identical_path, file_is_tokenized
 
@@ -21,9 +19,7 @@ def tokenize_line(smiles_line: str, invalid_placeholder: str) -> str:
 
 
 def tokenize_file(
-    input_file: Union[str, Path],
-    output_file: Union[str, Path],
-    invalid_placeholder: str = ''
+    input_file: PathLike, output_file: PathLike, invalid_placeholder: str = ''
 ) -> None:
     raise_if_identical_path(input_file, output_file)
     logger.info(f'Tokenizing "{input_file}" -> "{output_file}".')
@@ -36,8 +32,8 @@ def tokenize_file(
 
 
 def detokenize_file(
-    input_file: Union[str, Path],
-    output_file: Union[str, Path],
+    input_file: PathLike,
+    output_file: PathLike,
 ) -> None:
     raise_if_identical_path(input_file, output_file)
     logger.info(f'Detokenizing "{input_file}" -> "{output_file}".')
@@ -46,7 +42,7 @@ def detokenize_file(
     dump_list_to_file(detokenized, output_file)
 
 
-def copy_as_detokenized(src: Union[str, Path], dest: Union[str, Path]) -> None:
+def copy_as_detokenized(src: PathLike, dest: PathLike) -> None:
     """
     Copy a source file to a destination, while making sure that it is not tokenized.
     """

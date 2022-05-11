@@ -1,6 +1,8 @@
 import re
 from pathlib import Path
-from typing import Union, Optional
+from typing import Optional
+
+from rxn_utilities.file_utilities import PathLike
 
 
 class ModelFiles:
@@ -11,7 +13,7 @@ class ModelFiles:
     MODEL_PREFIX = 'model'
     MODEL_STEP_PATTERN = re.compile(r'model_step_(\d+)\.pt')
 
-    def __init__(self, model_dir: Union[Path, str]):
+    def __init__(self, model_dir: PathLike):
         # Directly converting to an absolute path
         self.model_dir = Path(model_dir).resolve()
         # Create the directory if it does not exist yet
@@ -59,7 +61,7 @@ class OnmtPreprocessedFiles:
     """
     PREFIX = 'preprocessed'
 
-    def __init__(self, preprocessed_dir: Union[Path, str]):
+    def __init__(self, preprocessed_dir: PathLike):
         # Directly converting to an absolute path
         self.preprocessed_dir = Path(preprocessed_dir).resolve()
         # Create the directory if it does not exist yet
@@ -84,7 +86,7 @@ class RxnPreprocessingFiles:
     """
     FILENAME_ROOT = 'data'
 
-    def __init__(self, processed_data_dir: Union[Path, str]):
+    def __init__(self, processed_data_dir: PathLike):
         # Directly converting to an absolute path
         self.processed_data_dir = Path(processed_data_dir).resolve()
 
