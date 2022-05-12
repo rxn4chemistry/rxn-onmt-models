@@ -10,6 +10,7 @@ from typing import List, Tuple
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
+import rxn_onmt_utils.rxn_models.defaults as defaults
 from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, OnmtPreprocessedFiles
 from rxn_onmt_utils.rxn_models.utils import (
     extend_command_args_for_gpu, extend_command_args_for_data_weights
@@ -20,14 +21,14 @@ logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings=dict(show_default=True))
-@click.option("--batch_size", default=6144)
+@click.option("--batch_size", default=defaults.BATCH_SIZE)
 @click.option(
     "--data_weights",
     type=int,
     multiple=True,
     help='Weights of the different data sets for training. Only needed in a multi-task setting.'
 )
-@click.option("--dropout", default=0.1)
+@click.option("--dropout", default=defaults.DROPOUT)
 @click.option("--model_output_dir", type=str, required=True, help="Where to save the models")
 @click.option("--no_gpu", is_flag=True, help='Run the training on CPU (slow!)')
 @click.option(
@@ -36,13 +37,12 @@ logger.addHandler(logging.NullHandler())
     required=True,
     help="Directory with OpenNMT-preprocessed files",
 )
-@click.option("--seed", default=42)
+@click.option("--seed", default=defaults.SEED)
 @click.option(
     "--train_num_steps",
     default=100000,
     help="Number of steps, including steps from the initial training run."
 )
-@click.option("--warmup_steps", default=8000)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
@@ -52,7 +52,6 @@ def main(
     preprocess_dir: str,
     seed: int,
     train_num_steps: int,
-    warmup_steps: int,
 ) -> None:
     """Continue training for an OpenNMT model.
 
@@ -91,7 +90,6 @@ def main(
             '-train_from', train_from,
             '-train_steps', train_num_steps,
             '-valid_batch_size', '8',
-            '-warmup_steps', warmup_steps,
         ]
     ]
     # yapf: enable

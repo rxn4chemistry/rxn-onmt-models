@@ -10,6 +10,7 @@ from typing import List, Tuple
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
+import rxn_onmt_utils.rxn_models.defaults as defaults
 from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, OnmtPreprocessedFiles
 from rxn_onmt_utils.rxn_models.utils import (
     extend_command_args_for_gpu, extend_command_args_for_data_weights
@@ -20,28 +21,28 @@ logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings=dict(show_default=True))
-@click.option('--batch_size', default=6144)
+@click.option('--batch_size', default=defaults.BATCH_SIZE)
 @click.option(
     '--data_weights',
     type=int,
     multiple=True,
     help='Weights of the different data sets for training. Only needed in a multi-task setting.'
 )
-@click.option('--dropout', default=0.1)
-@click.option('--heads', default=8)
-@click.option('--layers', default=4)
-@click.option('--learning_rate', type=float, default=2)
+@click.option('--dropout', default=defaults.DROPOUT)
+@click.option('--heads', default=defaults.HEADS)
+@click.option('--layers', default=defaults.LAYERS)
+@click.option('--learning_rate', type=float, default=defaults.LEARNING_RATE)
 @click.option('--model_output_dir', type=str, required=True, help='Where to save the models')
 @click.option('--no_gpu', is_flag=True, help='Run the training on CPU (slow!)')
 @click.option(
     '--preprocess_dir', type=str, required=True, help='Directory with OpenNMT-preprocessed files'
 )
-@click.option('--rnn_size', default=384)
-@click.option('--seed', default=42)
+@click.option('--rnn_size', default=defaults.RNN_SIZE)
+@click.option('--seed', default=defaults.SEED)
 @click.option('--train_num_steps', default=100000)
-@click.option('--transformer_ff', default=2048)
-@click.option('--warmup_steps', default=8000)
-@click.option('--word_vec_size', default=384)
+@click.option('--transformer_ff', default=defaults.TRANSFORMER_FF)
+@click.option('--warmup_steps', default=defaults.WARMUP_STEPS)
+@click.option('--word_vec_size', default=defaults.WORD_VEC_SIZE)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],

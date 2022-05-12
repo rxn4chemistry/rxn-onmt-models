@@ -13,6 +13,7 @@ from rxn_reaction_preprocessing.config import (
 from rxn_reaction_preprocessing.main import preprocess_data
 from rxn_utilities.logging_utilities import setup_console_logger
 
+import rxn_onmt_utils.rxn_models.defaults as defaults
 from rxn_onmt_utils.from_tunerxn.utils import RxnPreprocessingFiles
 
 logger = logging.getLogger(__name__)
@@ -24,7 +25,7 @@ logger.addHandler(logging.NullHandler())
 @click.option(
     '--output_dir', type=str, required=True, help='Directory where to save the generated files'
 )
-@click.option('--split_seed', default=42, help='Random seed for splitting step')
+@click.option('--split_seed', default=defaults.SEED, help='Random seed for splitting step')
 def main(input_data: str, output_dir: str, split_seed: int) -> None:
     """Preprocess the data to generate a dataset for training transformer models.
 

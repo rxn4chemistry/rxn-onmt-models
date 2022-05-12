@@ -12,6 +12,12 @@ The files for (ii) are mainly located under the `rxn_models` directory. Some of 
 
 Example of usage for training RXN models
 
+### The easy way
+
+Simply execute the interactive program `rxn-plan-training` in your terminal and follow the instructions.
+
+### The complicated way
+
 0. Optional: set shell variables, to be used in the commands later on.
 
 ```shell
