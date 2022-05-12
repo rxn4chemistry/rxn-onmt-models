@@ -10,9 +10,8 @@ from typing import Optional, Tuple
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
-from rxn_onmt_utils.from_tunerxn.utils import (
-    RxnPreprocessingFiles, OnmtPreprocessedFiles, preprocessed_id_names
-)
+from rxn_onmt_utils.from_tunerxn.utils import RxnPreprocessingFiles, OnmtPreprocessedFiles
+from rxn_onmt_utils.rxn_models.utils import preprocessed_id_names
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

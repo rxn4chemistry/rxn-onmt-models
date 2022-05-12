@@ -1,6 +1,7 @@
 import logging
 import os
 from pathlib import Path
+from typing import List, Sequence
 
 from rxn_chemutils.tokenization import detokenize_smiles, tokenize_smiles
 from rxn_utilities.file_utilities import iterate_lines_from_file, PathLike
@@ -88,3 +89,39 @@ class ForwardFiles(MetricsFiles):
         self.gt_precursors = self.directory / 'gt_precursors.txt'
         self.predicted_products = self.directory / 'predicted_products.txt'
         self.predicted_products_canonical = self.directory / 'predicted_products_canonical.txt'
+
+
+def preprocessed_id_names(n_additional_sets: int) -> List[str]:
+    """Get the names of the ids for the datasets used in multi-task training
+    with OpenNMT.
+
+    Args:
+        n_additional_sets: how many sets there are in addition to the main set.
+    """
+    return ['main_set'] + [f'additional_set_{i+1}' for i in range(n_additional_sets)]
+
+
+def extend_command_args_for_gpu(command_and_args: List[str], *, no_gpu: bool) -> None:
+    """
+    Extend the command with what is needed for execution on GPU.
+
+    `no_gpu` is given as a keyword-only argument to avoid confusion.
+    """
+    if not no_gpu:
+        command_and_args.extend(['-gpu_ranks', '0'])
+
+
+def extend_command_args_for_data_weights(
+    command_and_args: List[str], data_weights: Sequence[int]
+) -> None:
+    if data_weights:
+        n_additional_datasets = len(data_weights) - 1
+        data_ids = preprocessed_id_names(n_additional_datasets)
+        command_and_args.extend(
+            [
+                '-data_ids',
+                *data_ids,
+                '-data_weights',
+                *(str(weight) for weight in data_weights),
+            ]
+        )

@@ -65,3 +65,9 @@ rxn-onmt-preprocess --input_dir $DATA_DIR_1 --output_dir $PREPROCESSED --model_t
 rxn-onmt-train --model_output_dir $MODELS --preprocess_dir $PREPROCESSED --train_num_steps 30 --batch_size 4 --heads 2 --layers 2 --transformer_ff 256 --no_gpu \
   --data_weights 1 --data_weights 3 --data_weights 4
 ```
+
+Continuing training is possible (for both single-task and multi-task); it needs fewer parameters:
+```shell
+rxn-onmt-continue-training --model_output_dir $MODELS --preprocess_dir $PREPROCESSED --train_num_steps 30 --batch_size 4 --no_gpu \
+  --data_weights 1 --data_weights 3 --data_weights 4
+```

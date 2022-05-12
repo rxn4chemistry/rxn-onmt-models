@@ -20,46 +20,41 @@ logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings=dict(show_default=True))
-@click.option('--batch_size', default=6144)
+@click.option("--batch_size", default=6144)
 @click.option(
-    '--data_weights',
+    "--data_weights",
     type=int,
     multiple=True,
     help='Weights of the different data sets for training. Only needed in a multi-task setting.'
 )
-@click.option('--dropout', default=0.1)
-@click.option('--heads', default=8)
-@click.option('--layers', default=4)
-@click.option('--learning_rate', type=float, default=2)
-@click.option('--model_output_dir', type=str, required=True, help='Where to save the models')
-@click.option('--no_gpu', is_flag=True, help='Run the training on CPU (slow!)')
+@click.option("--dropout", default=0.1)
+@click.option("--model_output_dir", type=str, required=True, help="Where to save the models")
+@click.option("--no_gpu", is_flag=True, help='Run the training on CPU (slow!)')
 @click.option(
-    '--preprocess_dir', type=str, required=True, help='Directory with OpenNMT-preprocessed files'
+    "--preprocess_dir",
+    type=str,
+    required=True,
+    help="Directory with OpenNMT-preprocessed files",
 )
-@click.option('--rnn_size', default=384)
-@click.option('--seed', default=42)
-@click.option('--train_num_steps', default=100000)
-@click.option('--transformer_ff', default=2048)
-@click.option('--warmup_steps', default=8000)
-@click.option('--word_vec_size', default=384)
+@click.option("--seed", default=42)
+@click.option(
+    "--train_num_steps",
+    default=100000,
+    help="Number of steps, including steps from the initial training run."
+)
+@click.option("--warmup_steps", default=8000)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
     dropout: float,
-    heads: int,
-    layers: int,
-    learning_rate: float,
     model_output_dir: str,
     no_gpu: bool,
     preprocess_dir: str,
-    rnn_size: int,
     seed: int,
     train_num_steps: int,
-    transformer_ff: int,
     warmup_steps: int,
-    word_vec_size: int,
 ) -> None:
-    """Train an OpenNMT model.
+    """Continue training for an OpenNMT model.
 
     Multi-task training is also supported, if at least two
     `data_weights` parameters are given (Note: needs to be consistent with the
@@ -71,47 +66,32 @@ def main(
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
 
+    train_from = model_files.get_last_checkpoint()
+    logger.info(f'Training will be continued from {train_from}')
+
     # yapf: disable
     command_and_args: List[str] = [
         str(e) for e in [
             'onmt_train',
             '-save_config', model_files.config_file,
             '-accum_count', '4',
-            '-adam_beta1', '0.9',
-            '-adam_beta2', '0.998',
             '-batch_size', batch_size,
             '-batch_type', 'tokens',
             '-data', onmt_preprocessed_files.preprocess_prefix,
-            '-decay_method', 'noam',
-            '-decoder_type', 'transformer',
             '-dropout', dropout,
-            '-encoder_type', 'transformer',
-            '-global_attention', 'general',
-            '-global_attention_function', 'softmax',
-            '-heads', heads,
             '-keep_checkpoint', '20',
             '-label_smoothing', '0.0',
-            '-layers', layers,
-            '-learning_rate', learning_rate,
             '-max_generator_batches', '32',
-            '-max_grad_norm', '0',
             '-normalization', 'tokens',
-            '-optim', 'adam',
-            '-param_init', '0',
-            '-param_init_glorot',
-            '-position_encoding',
             '-report_every', '1000',
-            '-rnn_size', rnn_size,
+            '-reset_optim', 'none',
             '-save_checkpoint_steps', '5000',
             '-save_model', model_files.model_prefix,
             '-seed', seed,
-            '-self_attn_type', 'scaled-dot',
-            '-share_embeddings',
+            '-train_from', train_from,
             '-train_steps', train_num_steps,
-            '-transformer_ff', transformer_ff,
             '-valid_batch_size', '8',
             '-warmup_steps', warmup_steps,
-            '-word_vec_size', word_vec_size,
         ]
     ]
     # yapf: enable
