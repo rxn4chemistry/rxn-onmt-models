@@ -9,9 +9,9 @@ from rxn_chemutils.reaction_smiles import (
     determine_format, parse_reaction_smiles, to_reaction_smiles
 )
 from rxn_utilities.file_utilities import dump_list_to_file, iterate_lines_from_file, PathLike
+from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path
-from rxn_onmt_utils.utils import setup_console_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

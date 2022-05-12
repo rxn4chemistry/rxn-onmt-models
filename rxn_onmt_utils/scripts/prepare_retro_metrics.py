@@ -3,13 +3,13 @@ import logging
 from pathlib import Path
 
 import click
+from rxn_utilities.logging_utilities import setup_console_and_file_logger
 
 from rxn_onmt_utils.rxn_models.forward_or_retro_translation import forward_or_retro_translation
 from rxn_onmt_utils.rxn_models.retro_metrics import RetroMetrics
 from rxn_onmt_utils.rxn_models.tokenize_file import copy_as_detokenized
 from rxn_onmt_utils.rxn_models.utils import RetroFiles
 from rxn_onmt_utils.scripts.canonicalize_file import canonicalize_file
-from rxn_onmt_utils.utils import setup_console_and_file_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

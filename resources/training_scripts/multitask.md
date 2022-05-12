@@ -61,3 +61,34 @@ onmt_train \
   -warmup_steps 8000 \
   -word_vec_size 384
 ```
+
+Continue training:
+Necessary ones for continuing. 
+Note (ava, May 11): I went through what happens in the opennmt code and the ones below really play a role.
+```
+onmt_train \
+  -accum_count 4 \
+  -batch_size 6144 \
+  -batch_type tokens \
+  -data ${PREPROCESSED_DATA_DIR}/preprocessed  \
+  -data_ids sub1 sub2 \
+  -data_weights ${SUB1_WEIGHT} ${SUB2_WEIGHT} \
+  -dropout 0.1 \
+  -gpu_ranks 0 \
+  -keep_checkpoint 20 \
+  -label_smoothing 0.0 \
+  -max_generator_batches 32 \
+  -normalization tokens \
+  -report_every 1000 \
+  -reset_optim none \
+  -save_checkpoint_steps 5000 \
+  -save_model ${CONTINUE_SAVE_MODEL_DIR}/model  \
+  -seed $SEED \
+  -train_from ${SAVE_MODEL_DIR}/model_step_260000.pt \
+  -train_steps 500000 \
+  -valid_batch_size 8 \
+  -valid_steps 10000 \
+  #-wandb \
+  #-wandb_project_name client-ch1-common-training \
+  #-wandb_run_name ${RUN_NAME} \
+```

@@ -21,7 +21,7 @@ def forward_or_retro_translation(
     batch_size: int,
     gpu: bool,
     max_length: int = 300,
-    as_external_command: bool = True
+    as_external_command: bool = False
 ) -> None:
     """
     Do a forward or retro translation.

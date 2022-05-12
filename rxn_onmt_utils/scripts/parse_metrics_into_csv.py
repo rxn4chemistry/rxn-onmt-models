@@ -5,8 +5,7 @@ from typing import Tuple, Dict, Any
 
 import click
 import pandas as pd
-
-from rxn_onmt_utils.utils import setup_console_logger
+from rxn_utilities.logging_utilities import setup_console_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -27,9 +26,9 @@ def main(csv: str, directories: Tuple[str, ...]) -> None:
     """Parse the metrics from several directories and collect them into a CSV.
 
     Usage examples:
-        - python parse_metrics_into_csv.py --csv dir1 dir2 dir3
-        - python parse_metrics_into_csv.py --csv dir* other_dir
-        - python parse_metrics_into_csv.py --csv *
+        - python parse_metrics_into_csv.py --csv metrics.csv dir1 dir2 dir3
+        - python parse_metrics_into_csv.py --csv metrics.csv dir* other_dir
+        - python parse_metrics_into_csv.py --csv metrics.csv *
     """
     setup_console_logger()
 

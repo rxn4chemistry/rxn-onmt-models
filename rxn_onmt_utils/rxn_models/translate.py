@@ -109,6 +109,13 @@ def translate_as_external_command(
     See the function translate() for the documentation of the arguments.
     """
 
+    if not gpu:
+        logger.warning(
+            'Running translation on CPU as a subprocess. Be careful '
+            'when executing on a cluster: the subprocess may try to access '
+            'all available cores.'
+        )
+
     command: List[str] = [
         'onmt_translate',
         '-model',

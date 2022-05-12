@@ -2,9 +2,9 @@ import logging
 from typing import Optional
 
 import click
+from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils.rxn_models.forward_or_retro_translation import forward_or_retro_translation
-from rxn_onmt_utils.utils import setup_console_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

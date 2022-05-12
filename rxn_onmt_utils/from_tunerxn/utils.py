@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 from rxn_utilities.file_utilities import PathLike
 
@@ -177,3 +177,13 @@ class RxnPreprocessingFiles:
         if split == 'test' and model_task == 'retro':
             return self.test_precursors
         raise ValueError(f'Unsupported combination: "{split}", "{model_task}"')
+
+
+def preprocessed_id_names(n_additional_sets: int) -> List[str]:
+    """Get the names of the ids for the datasets used in multi-task training
+    with OpenNMT.
+
+    Args:
+        n_additional_sets: how many sets there are in addition to the main set.
+    """
+    return ['main_set'] + [f'additional_set_{i+1}' for i in range(n_additional_sets)]

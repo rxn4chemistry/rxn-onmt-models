@@ -16,10 +16,10 @@ from rxn_chemutils.reaction_equation import (
 from rxn_chemutils.reaction_smiles import parse_any_reaction_smiles
 from rxn_chemutils.tokenization import detokenize_smiles
 from rxn_utilities.file_utilities import is_path_creatable, load_list_from_file
+from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, RxnPreprocessingFiles
 from rxn_onmt_utils.translator import Translator
-from rxn_onmt_utils.utils import setup_console_logger
 
 
 def _standardized(multi_smiles: str) -> ReactionEquation:

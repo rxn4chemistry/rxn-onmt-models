@@ -3,12 +3,19 @@
 # IBM Research Zurich Licensed Internal Code
 # (C) Copyright IBM Corp. 2020
 # ALL RIGHTS RESERVED
+import logging
 import subprocess
-from typing import List
+from typing import List, Tuple
 
 import click
+from rxn_utilities.logging_utilities import setup_console_logger
 
-from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, OnmtPreprocessedFiles
+from rxn_onmt_utils.from_tunerxn.utils import (
+    ModelFiles, OnmtPreprocessedFiles, preprocessed_id_names
+)
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings=dict(show_default=True))
@@ -27,13 +34,27 @@ from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, OnmtPreprocessedFiles
 @click.option('--dropout', default=0.1)
 @click.option('--transformer_ff', default=2048)
 @click.option('--seed', default=42)
-@click.option('--use_gpu', is_flag=True, help='Run the training on GPU')
-def train(
+@click.option('--no_gpu', is_flag=True, help='Run the training on CPU (slow!)')
+@click.option(
+    '--data_weights',
+    type=int,
+    multiple=True,
+    help='Weights of the different data sets for training. Only needed in a multi-task setting.'
+)
+def main(
     preprocess_dir: str, model_output_dir: str, train_num_steps: int, warmup_steps: int,
     batch_size: int, learning_rate: float, layers: int, rnn_size: int, word_vec_size: int,
-    heads: int, dropout: float, transformer_ff: int, seed: int, use_gpu: bool
+    heads: int, dropout: float, transformer_ff: int, seed: int, no_gpu: bool,
+    data_weights: Tuple[int, ...]
 ) -> None:
-    """Train an OpenNMT model."""
+    """Train an OpenNMT model.
+
+    Preprocessing data for multi-task training is also supported, if at least two
+    `data_weights` parameters are given (Note: needs to be consistent with the
+    rxn-onmt-preprocess command executed before training.
+    """
+
+    setup_console_logger()
 
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
@@ -82,21 +103,32 @@ def train(
         ]
     ]
     # yapf: enable
-    if use_gpu:
+    if not no_gpu:
         command_and_args.extend(['-gpu_ranks', '0'])
+    if data_weights:
+        n_additional_datasets = len(data_weights) - 1
+        data_ids = preprocessed_id_names(n_additional_datasets)
+        command_and_args.extend(
+            [
+                '-data_ids',
+                *data_ids,
+                '-data_weights',
+                *(str(weight) for weight in data_weights),
+            ]
+        )
 
     # Write config file
     command_and_args = [str(v) for v in command_and_args]
-    print('Running command:', ' '.join(command_and_args))
+    logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
     # Actual training config file
     command_and_args = ['onmt_train', '-config', str(model_files.config_file)]
-    print('Running command:', ' '.join(command_and_args))
+    logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
-    print(f'Training successful. Models saved under {str(model_files.model_dir)}')
+    logger.info(f'Training successful. Models saved under {str(model_files.model_dir)}')
 
 
 if __name__ == "__main__":
-    train()
+    main()
