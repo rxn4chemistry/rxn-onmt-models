@@ -13,7 +13,7 @@ from rxn_reaction_preprocessing.config import (
 from rxn_reaction_preprocessing.main import preprocess_data
 from rxn_utilities.logging_utilities import setup_console_logger
 
-import rxn_onmt_utils.rxn_models.defaults as defaults
+from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.from_tunerxn.utils import RxnPreprocessingFiles
 
 logger = logging.getLogger(__name__)
@@ -68,10 +68,11 @@ def main(input_data: str, output_dir: str, split_seed: int) -> None:
     )
 
     try:
-        print('Running the data preprocessing')
+        logger.info('Running the data preprocessing')
         preprocess_data(cfg)
     except Exception as e:
-        raise SystemExit('Error in data preprocessing') from e
+        logger.exception('Error during data preprocessing:')
+        raise SystemExit('Error during data preprocessing') from e
 
 
 if __name__ == "__main__":
