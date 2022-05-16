@@ -5,7 +5,7 @@
 # ALL RIGHTS RESERVED
 import logging
 import subprocess
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
@@ -39,6 +39,14 @@ logger.addHandler(logging.NullHandler())
 )
 @click.option("--seed", default=defaults.SEED)
 @click.option(
+    "--train_from",
+    type=str,
+    help=(
+        'Model to continue training from. If not specified, '
+        'the last checkpoint from model_output_dir will be taken.'
+    )
+)
+@click.option(
     "--train_num_steps",
     default=100000,
     help="Number of steps, including steps from the initial training run."
@@ -51,6 +59,7 @@ def main(
     no_gpu: bool,
     preprocess_dir: str,
     seed: int,
+    train_from: Optional[str],
     train_num_steps: int,
 ) -> None:
     """Continue training for an OpenNMT model.
@@ -65,7 +74,8 @@ def main(
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
 
-    train_from = model_files.get_last_checkpoint()
+    if train_from is None:
+        train_from = str(model_files.get_last_checkpoint())
     logger.info(f'Training will be continued from {train_from}')
 
     # yapf: disable
