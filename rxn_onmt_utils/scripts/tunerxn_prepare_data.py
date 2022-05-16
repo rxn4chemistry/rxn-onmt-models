@@ -14,7 +14,7 @@ from rxn_reaction_preprocessing.main import preprocess_data
 from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils.rxn_models import defaults
-from rxn_onmt_utils.from_tunerxn.utils import RxnPreprocessingFiles
+from rxn_onmt_utils.rxn_models.utils import RxnPreprocessingFiles
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

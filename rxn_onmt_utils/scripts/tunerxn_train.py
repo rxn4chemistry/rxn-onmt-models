@@ -11,9 +11,9 @@ import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
 import rxn_onmt_utils.rxn_models.defaults as defaults
-from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, OnmtPreprocessedFiles
 from rxn_onmt_utils.rxn_models.utils import (
-    extend_command_args_for_gpu, extend_command_args_for_data_weights
+    extend_command_args_for_gpu, extend_command_args_for_data_weights, ModelFiles,
+    OnmtPreprocessedFiles
 )
 
 logger = logging.getLogger(__name__)

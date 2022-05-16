@@ -18,7 +18,7 @@ from rxn_chemutils.tokenization import detokenize_smiles
 from rxn_utilities.file_utilities import is_path_creatable, load_list_from_file
 from rxn_utilities.logging_utilities import setup_console_logger
 
-from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, RxnPreprocessingFiles
+from rxn_onmt_utils.rxn_models.utils import ModelFiles, RxnPreprocessingFiles
 from rxn_onmt_utils.translator import Translator
 
 

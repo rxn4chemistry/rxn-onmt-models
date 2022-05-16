@@ -6,8 +6,9 @@
 import subprocess
 
 import click
+
 from rxn_onmt_utils.model_resize import ModelResizer
-from rxn_onmt_utils.from_tunerxn.utils import ModelFiles, OnmtPreprocessedFiles
+from rxn_onmt_utils.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
 
 
 @click.command(context_settings=dict(show_default=True))

@@ -12,9 +12,10 @@ import click
 from rxn_utilities.file_utilities import count_lines, load_list_from_file, dump_list_to_file
 from rxn_utilities.logging_utilities import setup_console_logger
 
-from rxn_onmt_utils.from_tunerxn.utils import RxnPreprocessingFiles, OnmtPreprocessedFiles
 from rxn_onmt_utils.rxn_models import defaults
-from rxn_onmt_utils.rxn_models.utils import preprocessed_id_names
+from rxn_onmt_utils.rxn_models.utils import (
+    preprocessed_id_names, OnmtPreprocessedFiles, RxnPreprocessingFiles
+)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
