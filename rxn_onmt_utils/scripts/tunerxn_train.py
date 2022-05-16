@@ -72,11 +72,13 @@ def main(
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
 
+    config_file = model_files.next_config_file()
+
     # yapf: disable
     command_and_args: List[str] = [
         str(e) for e in [
             'onmt_train',
-            '-save_config', model_files.config_file,
+            '-save_config', config_file,
             '-accum_count', '4',
             '-adam_beta1', '0.9',
             '-adam_beta2', '0.998',
@@ -126,11 +128,11 @@ def main(
     _ = subprocess.run(command_and_args, check=True)
 
     # Actual training config file
-    command_and_args = ['onmt_train', '-config', str(model_files.config_file)]
+    command_and_args = ['onmt_train', '-config', str(config_file)]
     logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
-    logger.info(f'Training successful. Models saved under {str(model_files.model_dir)}')
+    logger.info(f'Training successful. Models saved under "{str(model_files.model_dir)}".')
 
 
 if __name__ == "__main__":

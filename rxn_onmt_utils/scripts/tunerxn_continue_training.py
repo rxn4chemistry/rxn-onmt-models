@@ -11,6 +11,9 @@ import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
 import rxn_onmt_utils.rxn_models.defaults as defaults
+from rxn_onmt_utils.model_introspection import (
+    model_vocab_is_compatible, get_model_dropout, get_model_seed
+)
 from rxn_onmt_utils.rxn_models.utils import (
     extend_command_args_for_gpu, extend_command_args_for_data_weights, ModelFiles,
     OnmtPreprocessedFiles
@@ -28,7 +31,6 @@ logger.addHandler(logging.NullHandler())
     multiple=True,
     help='Weights of the different data sets for training. Only needed in a multi-task setting.'
 )
-@click.option("--dropout", default=defaults.DROPOUT)
 @click.option("--model_output_dir", type=str, required=True, help="Where to save the models")
 @click.option("--no_gpu", is_flag=True, help='Run the training on CPU (slow!)')
 @click.option(
@@ -37,7 +39,6 @@ logger.addHandler(logging.NullHandler())
     required=True,
     help="Directory with OpenNMT-preprocessed files",
 )
-@click.option("--seed", default=defaults.SEED)
 @click.option(
     "--train_from",
     type=str,
@@ -54,11 +55,9 @@ logger.addHandler(logging.NullHandler())
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
-    dropout: float,
     model_output_dir: str,
     no_gpu: bool,
     preprocess_dir: str,
-    seed: int,
     train_from: Optional[str],
     train_num_steps: int,
 ) -> None:
@@ -78,11 +77,20 @@ def main(
         train_from = str(model_files.get_last_checkpoint())
     logger.info(f'Training will be continued from {train_from}')
 
+    if not model_vocab_is_compatible(train_from, onmt_preprocessed_files.vocab_file):
+        raise RuntimeError(
+            'The vocabularies are not compatible. It is not advised to continue training.'
+        )
+
+    config_file = model_files.next_config_file()
+    dropout = get_model_dropout(train_from)
+    seed = get_model_seed(train_from)
+
     # yapf: disable
     command_and_args: List[str] = [
         str(e) for e in [
             'onmt_train',
-            '-save_config', model_files.config_file,
+            '-save_config', config_file,
             '-accum_count', '4',
             '-batch_size', batch_size,
             '-batch_type', 'tokens',
@@ -113,11 +121,11 @@ def main(
     _ = subprocess.run(command_and_args, check=True)
 
     # Actual training config file
-    command_and_args = ['onmt_train', '-config', str(model_files.config_file)]
+    command_and_args = ['onmt_train', '-config', str(config_file)]
     logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
-    logger.info(f'Training successful. Models saved under {str(model_files.model_dir)}')
+    logger.info(f'Training successful. Models saved under "{str(model_files.model_dir)}".')
 
 
 if __name__ == "__main__":

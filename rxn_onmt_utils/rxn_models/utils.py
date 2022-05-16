@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+from itertools import count
 from pathlib import Path
 from typing import List, Sequence, Optional
 
@@ -132,7 +133,7 @@ class ModelFiles:
     """
     Class to make it easy to get the names/paths of the trained OpenNMT models.
     """
-    ONMT_CONFIG_FILE = 'config.yml'
+    ONMT_CONFIG_FILE = 'config_{idx}.yml'
     MODEL_PREFIX = 'model'
     MODEL_STEP_PATTERN = re.compile(r'^model_step_(\d+)\.pt$')
 
@@ -148,11 +149,13 @@ class ModelFiles:
         append "_step_10000.pt" to it (or other step numbers)."""
         return self.model_dir / ModelFiles.MODEL_PREFIX
 
-    @property
-    def config_file(self) -> Path:
-        """Absolute path to the model prefix; during training, OpenNMT will
-        append "_step_10000.pt" to it (or other step numbers)."""
-        return self.model_dir / ModelFiles.ONMT_CONFIG_FILE
+    def next_config_file(self) -> Path:
+        """Get the next available config file name."""
+        for idx in count(1):
+            config_file = self.model_dir / ModelFiles.ONMT_CONFIG_FILE.format(idx=idx)
+            if not config_file.exists():
+                return config_file
+        return Path()  # Note: in order to satisfy mypy. This is never reached.
 
     def get_last_checkpoint(self) -> Path:
         """Get the last checkpoint matching the naming including the step number.
