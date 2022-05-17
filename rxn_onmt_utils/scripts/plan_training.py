@@ -3,28 +3,12 @@
 # IBM Research Zurich Licensed Internal Code
 # (C) Copyright IBM Corp. 2020
 # ALL RIGHTS RESERVED
-from enum import Flag
 from typing import Iterator, Union, List
 
 import click
 
 import rxn_onmt_utils.rxn_models.defaults as defaults
-
-
-class RxnCommand(Flag):
-    """
-    Flag indicating which command(s) the parameters relate to.
-
-    TC, TF, TCF are the combinations of the three base flags.
-    This enum allows for easily checking which commands some parameters relate
-    to (see Parameter and TrainingPlanner classes).
-    """
-    T = 1  # Train
-    C = 2  # Continue training
-    F = 4  # Fine-tune
-    TC = 3
-    TF = 5
-    TCF = 7
+from rxn_onmt_utils.rxn_models.utils import RxnCommand
 
 
 class Parameter:

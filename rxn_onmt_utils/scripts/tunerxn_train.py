@@ -5,16 +5,14 @@
 # ALL RIGHTS RESERVED
 import logging
 import subprocess
-from typing import List, Tuple
+from typing import Tuple
 
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
 import rxn_onmt_utils.rxn_models.defaults as defaults
-from rxn_onmt_utils.rxn_models.utils import (
-    extend_command_args_for_gpu, extend_command_args_for_data_weights, ModelFiles,
-    OnmtPreprocessedFiles
-)
+from rxn_onmt_utils.rxn_models.onmt_train_command import OnmtTrainCommand
+from rxn_onmt_utils.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -74,61 +72,31 @@ def main(
 
     config_file = model_files.next_config_file()
 
-    # yapf: disable
-    command_and_args: List[str] = [
-        str(e) for e in [
-            'onmt_train',
-            '-save_config', config_file,
-            '-accum_count', '4',
-            '-adam_beta1', '0.9',
-            '-adam_beta2', '0.998',
-            '-batch_size', batch_size,
-            '-batch_type', 'tokens',
-            '-data', onmt_preprocessed_files.preprocess_prefix,
-            '-decay_method', 'noam',
-            '-decoder_type', 'transformer',
-            '-dropout', dropout,
-            '-encoder_type', 'transformer',
-            '-global_attention', 'general',
-            '-global_attention_function', 'softmax',
-            '-heads', heads,
-            '-keep_checkpoint', '20',
-            '-label_smoothing', '0.0',
-            '-layers', layers,
-            '-learning_rate', learning_rate,
-            '-max_generator_batches', '32',
-            '-max_grad_norm', '0',
-            '-normalization', 'tokens',
-            '-optim', 'adam',
-            '-param_init', '0',
-            '-param_init_glorot',
-            '-position_encoding',
-            '-report_every', '1000',
-            '-rnn_size', rnn_size,
-            '-save_checkpoint_steps', '5000',
-            '-save_model', model_files.model_prefix,
-            '-seed', seed,
-            '-self_attn_type', 'scaled-dot',
-            '-share_embeddings',
-            '-train_steps', train_num_steps,
-            '-transformer_ff', transformer_ff,
-            '-valid_batch_size', '8',
-            '-warmup_steps', warmup_steps,
-            '-word_vec_size', word_vec_size,
-        ]
-    ]
-    # yapf: enable
-
-    extend_command_args_for_gpu(command_and_args, no_gpu=no_gpu)
-    extend_command_args_for_data_weights(command_and_args, data_weights=data_weights)
+    train_cmd = OnmtTrainCommand.train(
+        batch_size=batch_size,
+        data=onmt_preprocessed_files.preprocess_prefix,
+        dropout=dropout,
+        heads=heads,
+        layers=layers,
+        learning_rate=learning_rate,
+        rnn_size=rnn_size,
+        save_model=model_files.model_prefix,
+        seed=seed,
+        train_steps=train_num_steps,
+        transformer_ff=transformer_ff,
+        warmup_steps=warmup_steps,
+        word_vec_size=word_vec_size,
+        no_gpu=no_gpu,
+        data_weights=data_weights,
+    )
 
     # Write config file
-    command_and_args = [str(v) for v in command_and_args]
+    command_and_args = train_cmd.save_to_config_cmd(config_file)
     logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
     # Actual training config file
-    command_and_args = ['onmt_train', '-config', str(config_file)]
+    command_and_args = train_cmd.execute_from_config_cmd(config_file)
     logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 

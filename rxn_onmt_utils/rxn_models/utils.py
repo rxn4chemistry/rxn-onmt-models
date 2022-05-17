@@ -1,9 +1,10 @@
 import logging
 import os
 import re
+from enum import Flag
 from itertools import count
 from pathlib import Path
-from typing import List, Sequence, Optional
+from typing import List, Optional
 
 from rxn_chemutils.tokenization import detokenize_smiles, tokenize_smiles
 from rxn_utilities.file_utilities import iterate_lines_from_file, PathLike
@@ -101,32 +102,6 @@ def preprocessed_id_names(n_additional_sets: int) -> List[str]:
         n_additional_sets: how many sets there are in addition to the main set.
     """
     return ['main_set'] + [f'additional_set_{i+1}' for i in range(n_additional_sets)]
-
-
-def extend_command_args_for_gpu(command_and_args: List[str], *, no_gpu: bool) -> None:
-    """
-    Extend the command with what is needed for execution on GPU.
-
-    `no_gpu` is given as a keyword-only argument to avoid confusion.
-    """
-    if not no_gpu:
-        command_and_args.extend(['-gpu_ranks', '0'])
-
-
-def extend_command_args_for_data_weights(
-    command_and_args: List[str], data_weights: Sequence[int]
-) -> None:
-    if data_weights:
-        n_additional_datasets = len(data_weights) - 1
-        data_ids = preprocessed_id_names(n_additional_datasets)
-        command_and_args.extend(
-            [
-                '-data_ids',
-                *data_ids,
-                '-data_weights',
-                *(str(weight) for weight in data_weights),
-            ]
-        )
 
 
 class ModelFiles:
@@ -304,3 +279,20 @@ class RxnPreprocessingFiles:
         if split == 'test' and model_task == 'retro':
             return self.test_precursors
         raise ValueError(f'Unsupported combination: "{split}", "{model_task}"')
+
+
+class RxnCommand(Flag):
+    """
+    Flag indicating which command(s) the parameters relate to.
+
+    TC, TF, TCF are the combinations of the three base flags.
+    This enum allows for easily checking which commands some parameters relate
+    to (see Parameter and TrainingPlanner classes).
+    """
+    T = 1  # Train
+    C = 2  # Continue training
+    F = 4  # Fine-tune
+    TC = 3
+    TF = 5
+    CF = 6
+    TCF = 7
