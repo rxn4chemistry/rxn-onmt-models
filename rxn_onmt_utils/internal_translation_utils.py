@@ -33,6 +33,8 @@ class RawTranslator:
 
     def __init__(self, opt: Namespace):
         self.opt = opt
+        self.score_for_empty_input = -9999.9999
+        self.dummy_string_for_empty_input = 'C . C . C . C'
 
         # to avoid the creation of an unnecessary file
         out_file = open(os.devnull, 'w')
@@ -59,18 +61,36 @@ class RawTranslator:
             new_opt.src = tmp_src.name
             new_opt.output = tmp_output.name
 
+            # List to track which inputs were empty, for post-processing
+            empty_input: List[bool] = []
+
             # write source sentences to temporary input file
             with open(new_opt.src, 'wt') as f:
                 for sentence in sentences:
                     # In order to avoid problems with batches full of empty string on GPUs,
-                    # we write a dummy line instead of the empty string. This should not have
-                    # a particularly strong impact; at least the predicted value will be
-                    # reproducible (which it is not in the case of empty strings).
+                    # we write a dummy line instead of the empty string. These lines
+                    # are post-processed again below to replace the predictions by
+                    # empty strings.
+                    is_empty = False
                     if sentence == '':
-                        sentence = 'C . C . C . C . C . C'
-                    f.write(f'{sentence}\n')
+                        sentence = self.dummy_string_for_empty_input
+                        is_empty = True
 
-            yield from self.translate_with_onmt(new_opt)
+                    f.write(f'{sentence}\n')
+                    empty_input.append(is_empty)
+
+            for translation_results, is_empty in zip(
+                self.translate_with_onmt(new_opt), empty_input
+            ):
+                # For predictions corresponding to empty predictions, return
+                # an empty string with adequate score
+                if is_empty:
+                    yield [
+                        TranslationResult('', self.score_for_empty_input)
+                        for _ in translation_results
+                    ]
+                else:
+                    yield translation_results
 
     def translate_with_onmt(self, opt) -> Iterator[List[TranslationResult]]:
         """
