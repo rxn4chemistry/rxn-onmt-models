@@ -1,38 +1,40 @@
 import logging
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union
 
-from rxn_utilities.file_utilities import is_path_exists_or_creatable, PathLike
+from rxn_utilities.file_utilities import is_path_exists_or_creatable
 
-from .tokenize_file import tokenize_file, detokenize_file, file_is_tokenized
+from .tokenize_file import tokenize_file, detokenize_classification_file, tokenize_classification_file, \
+    classification_file_is_tokenized
 from .translate import translate
+from .tokenize_file import file_is_tokenized
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def forward_or_retro_translation(
-    src_file: PathLike,
-    tgt_file: Optional[PathLike],
-    pred_file: PathLike,
-    model: PathLike,
+def classification_translation(
+    src_file: Union[str, Path],
+    tgt_file: Optional[Union[str, Path]],
+    pred_file: Union[str, Path],
+    model: Union[str, Path],
     n_best: int,
     beam_size: int,
     batch_size: int,
     gpu: bool,
-    max_length: int = 300,
+    max_length: int = 3,
     as_external_command: bool = False
 ) -> None:
     """
-    Do a forward or retro translation.
+    Do a classification translation.
 
-    This function takes care of tokenizing/detokenizing the input. In principle, by adapting
-    the "invalid" placeholder, this could also work when input/output are full reactions.
+    This function takes care of tokenizing/detokenizing the input.
 
     Note: no check is made that the source is canonical.
 
     Args:
         src_file: source file (tokenized or detokenized).
-        tgt_file: ground truth file (tokenized or detokenized), not mandatory.
+        tgt_file: ground truth class file (tokenized), not mandatory.
         pred_file: file where to save the predictions.
         model: model to do the translation
         n_best: number of predictions to make for each input.
@@ -40,7 +42,6 @@ def forward_or_retro_translation(
         batch_size: batch size.
         gpu: whether to use the GPU.
         max_length: maximum sequence length.
-        as_external_command: runs the onmt command instead of Python code.
     """
     if not is_path_exists_or_creatable(pred_file):
         raise RuntimeError(f'The file "{pred_file}" cannot be created.')
@@ -55,11 +56,11 @@ def forward_or_retro_translation(
     # tgt
     if tgt_file is None:
         tokenized_tgt = None
-    elif file_is_tokenized(tgt_file):
+    elif classification_file_is_tokenized(tgt_file):
         tokenized_tgt = tgt_file
     else:
         tokenized_tgt = str(tgt_file) + '.tokenized'
-        tokenize_file(tgt_file, tokenized_tgt, invalid_placeholder='')
+        tokenize_classification_file(tgt_file, tokenized_tgt)
 
     tokenized_pred = str(pred_file) + '.tokenized'
 
@@ -76,4 +77,4 @@ def forward_or_retro_translation(
         as_external_command=as_external_command
     )
 
-    detokenize_file(tokenized_pred, pred_file)
+    detokenize_classification_file(tokenized_pred, pred_file)

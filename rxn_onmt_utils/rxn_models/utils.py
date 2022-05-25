@@ -7,10 +7,14 @@ from pathlib import Path
 from typing import List, Optional
 
 from rxn_chemutils.tokenization import detokenize_smiles, tokenize_smiles
-from rxn_utilities.file_utilities import iterate_lines_from_file, PathLike
+from rxn_utilities.file_utilities import PathLike
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+
+def convert_class_token_idx_for_tranlation_models(class_token_idx: int) -> str:
+    return f"[{class_token_idx}]"
 
 
 def raise_if_identical_path(input_path: PathLike, output_path: PathLike) -> None:
@@ -39,23 +43,6 @@ def string_is_tokenized(smiles_line: str) -> bool:
     return smiles_line == tokenized
 
 
-def file_is_tokenized(filepath: PathLike) -> bool:
-    """
-    Whether a file contains tokenized SMILES or not.
-
-    By default, this looks at the first line of the file only!
-
-    Raises:
-        TokenizationError: propagated from tokenize_smiles()
-        StopIteration: for empty files
-
-    Args:
-        filepath: path to the file.
-    """
-    first_line = next(iterate_lines_from_file(filepath))
-    return string_is_tokenized(first_line)
-
-
 class MetricsFiles:
 
     def __init__(self, directory: PathLike):
@@ -69,15 +56,22 @@ class RetroFiles(MetricsFiles):
     Class holding the locations of the files to write to or to read from for
     the evaluation of retro metrics.
     """
+    REORDERED_FILE_EXTENSION = '.reordered'
 
     def __init__(self, directory: PathLike):
         super().__init__(directory=directory)
         self.gt_products = self.directory / 'gt_products.txt'
         self.gt_precursors = self.directory / 'gt_precursors.txt'
+        self.class_token_products = self.directory / 'class_token_products.txt'
+        self.class_token_precursors = self.directory / 'class_token_precursors.txt'
         self.predicted_precursors = self.directory / 'predicted_precursors.txt'
         self.predicted_precursors_canonical = self.directory / 'predicted_precursors_canonical.txt'
+        self.predicted_precursors_log_probs = self.directory / 'predicted_precursors.txt.tokenized_log_probs'
         self.predicted_products = self.directory / 'predicted_products.txt'
         self.predicted_products_canonical = self.directory / 'predicted_products_canonical.txt'
+        self.predicted_products_log_probs = self.directory / 'predicted_products.txt.tokenized_log_probs'
+        self.predicted_rxn_canonical = self.directory / 'predicted_rxn_canonical.txt'
+        self.predicted_classes = self.directory / 'predicted_classes.txt'
 
 
 class ForwardFiles(MetricsFiles):
