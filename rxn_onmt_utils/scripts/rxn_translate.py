@@ -55,7 +55,7 @@ def main(
     setup_console_logger()
 
     logger.info(
-        f'RXN translation "{src_file}" -> "{tgt_file}" with model "{model}". '
+        f'RXN translation "{src_file}" -> "{pred_file}" with model "{model}". '
         'Note: there is no post-processing of the predictions.'
     )
     logger.info(f'rxn-onmt-utils version: {__version__}. ')
