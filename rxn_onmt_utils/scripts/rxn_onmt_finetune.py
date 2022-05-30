@@ -10,6 +10,7 @@ from typing import Tuple
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
+from rxn_onmt_utils import __version__
 from rxn_onmt_utils.model_introspection import get_model_rnn_size, model_vocab_is_compatible
 from rxn_onmt_utils.model_resize import ModelResizer
 from rxn_onmt_utils.rxn_models import defaults
@@ -58,6 +59,7 @@ def main(
     """Finetune an OpenNMT model."""
 
     setup_console_logger()
+    logger.info(f'Fine-tune RXN-OpenNMT model with rxn-onmt-utils, version {__version__}.')
 
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)

@@ -5,6 +5,7 @@ from typing import Optional
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
+from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models.forward_or_retro_translation import forward_or_retro_translation
 
 logger = logging.getLogger(__name__)
@@ -57,6 +58,7 @@ def main(
         f'RXN translation "{src_file}" -> "{tgt_file}" with model "{model}". '
         'Note: there is no post-processing of the predictions.'
     )
+    logger.info(f'rxn-onmt-utils version: {__version__}. ')
 
     forward_or_retro_translation(
         src_file=src_file,

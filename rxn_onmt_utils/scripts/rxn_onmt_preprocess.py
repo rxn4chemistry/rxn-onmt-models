@@ -12,6 +12,7 @@ import click
 from rxn_utilities.file_utilities import count_lines, load_list_from_file, dump_list_to_file
 from rxn_utilities.logging_utilities import setup_console_logger
 
+from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.rxn_models.utils import (
     preprocessed_id_names, OnmtPreprocessedFiles, RxnPreprocessingFiles
@@ -82,6 +83,7 @@ def main(
     `additional_data` parameter is given.
     """
     setup_console_logger()
+    logger.info(f'Preprocess data for OpenNMT with rxn-onmt-utils, version {__version__}.')
 
     main_data_files = RxnPreprocessingFiles(input_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(output_dir)

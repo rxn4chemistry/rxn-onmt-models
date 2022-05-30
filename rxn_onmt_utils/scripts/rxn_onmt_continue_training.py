@@ -5,15 +5,16 @@
 # ALL RIGHTS RESERVED
 import logging
 import subprocess
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
-import rxn_onmt_utils.rxn_models.defaults as defaults
+from rxn_onmt_utils import __version__
 from rxn_onmt_utils.model_introspection import (
-    model_vocab_is_compatible, get_model_dropout, get_model_seed
+    get_model_dropout, get_model_seed, model_vocab_is_compatible
 )
+from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.rxn_models.onmt_train_command import OnmtTrainCommand
 from rxn_onmt_utils.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
 
@@ -67,6 +68,10 @@ def main(
     """
 
     setup_console_logger()
+    logger.info(
+        'Continue training of RXN-OpenNMT model with rxn-onmt-utils, '
+        f'version {__version__}.'
+    )
 
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)

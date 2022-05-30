@@ -13,6 +13,7 @@ from rxn_reaction_preprocessing.config import (
 from rxn_reaction_preprocessing.main import preprocess_data
 from rxn_utilities.logging_utilities import setup_console_logger
 
+from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.rxn_models.utils import RxnPreprocessingFiles
 
@@ -44,6 +45,7 @@ def main(input_data: str, output_dir: str, split_seed: int) -> None:
         data.processed.test.products_tokens
     """
     setup_console_logger()
+    logger.info(f'Prepare reaction data for training with rxn-onmt-utils, version {__version__}.')
 
     # Running the command below fails if the paths are relative -> make them absolute
     input_data_path = Path(input_data).resolve()
