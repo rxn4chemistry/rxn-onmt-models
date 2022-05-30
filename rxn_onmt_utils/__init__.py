@@ -3,4 +3,4 @@
 # (C) Copyright IBM Corp. 2021
 # ALL RIGHTS RESERVED
 
-__version__ = "0.3.0"  # managed by bump2version
+__version__ = "0.3.1"  # managed by bump2version
