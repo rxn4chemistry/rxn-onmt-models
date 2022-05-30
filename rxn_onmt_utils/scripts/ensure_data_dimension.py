@@ -1,12 +1,15 @@
 import logging
+import math
+from pathlib import Path
 from typing import Iterable, Tuple
 
 import click
-import math
-
-from pathlib import Path
-
-from rxn_utilities.file_utilities import dump_list_to_file, PathLike, load_list_from_file, count_lines
+from rxn_utilities.file_utilities import (
+    PathLike,
+    count_lines,
+    dump_list_to_file,
+    load_list_from_file,
+)
 from rxn_utilities.logging_utilities import setup_console_logger
 
 logger = logging.getLogger(__name__)
@@ -20,7 +23,7 @@ def ensure_data_dimension(
     # Check the lengths of the files and ensure they are all the same
     file_length = [count_lines(txt_file) for txt_file in txt_files]
     if len(set(file_length)) != 1:
-        raise ValueError('The files provided have not the same number of lines.')
+        raise ValueError("The files provided have not the same number of lines.")
 
     # Check that there are no files with the same name
     filenames = [Path(txt_file).name for txt_file in txt_files]
@@ -41,25 +44,25 @@ def ensure_data_dimension(
         file_name = Path(txt_file).name
         for chunk_no, chunk_start in enumerate(range(0, file_length[0], max_dimension)):
             # create a sub_directory
-            sub_directory = Path(new_output_dir) / f'chunk_{chunk_no}'
+            sub_directory = Path(new_output_dir) / f"chunk_{chunk_no}"
             sub_directory.mkdir(parents=True, exist_ok=True)
             logger.info(f"Created directory {sub_directory} . Saving files .")
 
             # save all subfiles
             dump_list_to_file(
-                file_content[chunk_start:chunk_start + max_dimension],
-                Path(sub_directory) / file_name
+                file_content[chunk_start : chunk_start + max_dimension],
+                Path(sub_directory) / file_name,
             )
 
 
-@click.command(context_settings={'show_default': True})
-@click.argument('txt_files', nargs=-1)
-@click.option('--output_dir', required=True, help='Where to save all the files')
+@click.command(context_settings={"show_default": True})
+@click.argument("txt_files", nargs=-1)
+@click.option("--output_dir", required=True, help="Where to save all the files")
 @click.option(
-    '--max_dimension',
+    "--max_dimension",
     default=50000,
     type=int,
-    help='Maximum file length allowed without splitting'
+    help="Maximum file length allowed without splitting",
 )
 def main(txt_files: Tuple[str, ...], output_dir: str, max_dimension: int):
     """

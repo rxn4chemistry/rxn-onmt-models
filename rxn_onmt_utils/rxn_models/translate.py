@@ -1,6 +1,6 @@
 import logging
 import subprocess
-from typing import Optional, List
+from typing import List, Optional
 
 from rxn_utilities.file_utilities import PathLike, iterate_lines_from_file
 
@@ -11,8 +11,16 @@ logger.addHandler(logging.NullHandler())
 
 
 def translate(
-    model: PathLike, src: PathLike, tgt: Optional[PathLike], output: PathLike, n_best: int,
-    beam_size: int, max_length: int, batch_size: int, gpu: bool, as_external_command: bool
+    model: PathLike,
+    src: PathLike,
+    tgt: Optional[PathLike],
+    output: PathLike,
+    n_best: int,
+    beam_size: int,
+    max_length: int,
+    batch_size: int,
+    gpu: bool,
+    as_external_command: bool,
 ) -> None:
     """
     Run translate script.
@@ -36,7 +44,9 @@ def translate(
         as_external_command: runs the onmt command instead of Python code.
     """
     if not gpu:
-        logger.warning('GPU option not set. Only CPUs will be used. The translation may be slow!')
+        logger.warning(
+            "GPU option not set. Only CPUs will be used. The translation may be slow!"
+        )
 
     if as_external_command:
         fn = translate_as_external_command
@@ -52,29 +62,38 @@ def translate(
         beam_size=beam_size,
         max_length=max_length,
         batch_size=batch_size,
-        gpu=gpu
+        gpu=gpu,
     )
 
-    logger.info('Translation successful.')
+    logger.info("Translation successful.")
 
 
 def translate_as_python_code(
-    model: PathLike, src: PathLike, tgt: Optional[PathLike], output: PathLike, n_best: int,
-    beam_size: int, max_length: int, batch_size: int, gpu: bool
+    model: PathLike,
+    src: PathLike,
+    tgt: Optional[PathLike],
+    output: PathLike,
+    n_best: int,
+    beam_size: int,
+    max_length: int,
+    batch_size: int,
+    gpu: bool,
 ) -> None:
     """
     Translate directly from Python - not by executing the OpenNMT command as a subprocess.
 
     See the function translate() for the documentation of the arguments.
     """
-    logger.info(f'Running translation "{src}" -> "{output}", directly from Python code.')
+    logger.info(
+        f'Running translation "{src}" -> "{output}", directly from Python code.'
+    )
 
     if tgt is not None:
         # Note: the gold score is determined by comparing with the provided tgt.
         # This is not supported at the moment, when running from the Python code.
         logger.warning(
-            'No gold scores can be calculated at the moment '
-            'when translating directly in Python.'
+            "No gold scores can be calculated at the moment "
+            "when translating directly in Python."
         )
 
     translator = Translator.from_model_path(
@@ -82,26 +101,35 @@ def translate_as_python_code(
         beam_size=beam_size,
         max_length=max_length,
         batch_size=batch_size,
-        gpu=0 if gpu else -1
+        gpu=0 if gpu else -1,
     )
 
     src_iterator = iterate_lines_from_file(src)
-    results_iterator = translator.translate_multiple_with_scores(src_iterator, n_best=n_best)
+    results_iterator = translator.translate_multiple_with_scores(
+        src_iterator, n_best=n_best
+    )
 
     # Note: this corresponds to the name of our OpenNMT fork
-    log_probs_filename = str(output) + '_log_probs'
+    log_probs_filename = str(output) + "_log_probs"
 
-    with open(output, 'wt') as f_tgt:
-        with open(log_probs_filename, 'wt') as f_lp:
+    with open(output, "wt") as f_tgt:
+        with open(log_probs_filename, "wt") as f_lp:
             for result_list in results_iterator:
                 for result in result_list:
-                    f_tgt.write(f'{result.text}\n')
-                    f_lp.write(f'{result.score}\n')
+                    f_tgt.write(f"{result.text}\n")
+                    f_lp.write(f"{result.score}\n")
 
 
 def translate_as_external_command(
-    model: PathLike, src: PathLike, tgt: Optional[PathLike], output: PathLike, n_best: int,
-    beam_size: int, max_length: int, batch_size: int, gpu: bool
+    model: PathLike,
+    src: PathLike,
+    tgt: Optional[PathLike],
+    output: PathLike,
+    n_best: int,
+    beam_size: int,
+    max_length: int,
+    batch_size: int,
+    gpu: bool,
 ) -> None:
     """
     Translate by executing the OpenNMT command as a subprocess.
@@ -111,36 +139,36 @@ def translate_as_external_command(
 
     if not gpu:
         logger.warning(
-            'Running translation on CPU as a subprocess. Be careful '
-            'when executing on a cluster: the subprocess may try to access '
-            'all available cores.'
+            "Running translation on CPU as a subprocess. Be careful "
+            "when executing on a cluster: the subprocess may try to access "
+            "all available cores."
         )
 
     command: List[str] = [
-        'onmt_translate',
-        '-model',
+        "onmt_translate",
+        "-model",
         str(model),
-        '-src',
+        "-src",
         str(src),
-        '-output',
+        "-output",
         str(output),
-        '-log_probs',
-        '-n_best',
+        "-log_probs",
+        "-n_best",
         str(n_best),
-        '-beam_size',
+        "-beam_size",
         str(beam_size),
-        '-max_length',
+        "-max_length",
         str(max_length),
-        '-batch_size',
+        "-batch_size",
         str(batch_size),
     ]
     if tgt is not None:
-        command.extend(['-tgt', str(tgt)])
+        command.extend(["-tgt", str(tgt)])
     if gpu:
-        command.extend(['-gpu', '0'])
+        command.extend(["-gpu", "0"])
 
     command_str = " ".join(command)
-    logger.info(f'Running translation with command: {command_str}')
+    logger.info(f"Running translation with command: {command_str}")
     try:
         subprocess.check_call(command)
     except subprocess.CalledProcessError as e:

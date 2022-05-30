@@ -4,9 +4,9 @@
 # ALL RIGHTS RESERVED
 
 from argparse import Namespace
-from typing import List, Iterable, Union, Optional, Any, Iterator
+from typing import Any, Iterable, Iterator, List, Optional, Union
 
-from .internal_translation_utils import TranslationResult, RawTranslator, get_onmt_opt
+from .internal_translation_utils import RawTranslator, TranslationResult, get_onmt_opt
 
 
 class Translator:
@@ -40,9 +40,7 @@ class Translator:
         return [t[0].text for t in translations]
 
     def translate_multiple_with_scores(
-        self,
-        sentences: Iterable[str],
-        n_best: Optional[int] = None
+        self, sentences: Iterable[str], n_best: Optional[int] = None
     ) -> Iterator[List[TranslationResult]]:
         """
         Translate multiple sentences.
@@ -53,7 +51,7 @@ class Translator:
         """
         additional_opt_kwargs = {}
         if n_best is not None:
-            additional_opt_kwargs['n_best'] = n_best
+            additional_opt_kwargs["n_best"] = n_best
 
         translations = self.onmt_translator.translate_sentences_with_onmt(
             sentences, **additional_opt_kwargs
@@ -62,7 +60,9 @@ class Translator:
         return translations
 
     @classmethod
-    def from_model_path(cls, model_path: Union[str, Iterable[str]], **kwargs: Any) -> 'Translator':
+    def from_model_path(
+        cls, model_path: Union[str, Iterable[str]], **kwargs: Any
+    ) -> "Translator":
         """
         Create a Translator instance from the model path(s).
 
@@ -78,7 +78,7 @@ class Translator:
         return cls(opt=opt)
 
     @classmethod
-    def from_opt(cls, opt: Namespace) -> 'Translator':
+    def from_opt(cls, opt: Namespace) -> "Translator":
         """
         Create a Translator instance from the opt arguments.
 

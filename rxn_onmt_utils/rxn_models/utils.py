@@ -44,11 +44,10 @@ def string_is_tokenized(smiles_line: str) -> bool:
 
 
 class MetricsFiles:
-
     def __init__(self, directory: PathLike):
         self.directory = Path(directory)
-        self.log_file = self.directory / 'log.txt'
-        self.metrics_file = self.directory / 'metrics.json'
+        self.log_file = self.directory / "log.txt"
+        self.metrics_file = self.directory / "metrics.json"
 
 
 class RetroFiles(MetricsFiles):
@@ -56,22 +55,31 @@ class RetroFiles(MetricsFiles):
     Class holding the locations of the files to write to or to read from for
     the evaluation of retro metrics.
     """
-    REORDERED_FILE_EXTENSION = '.reordered'
+
+    REORDERED_FILE_EXTENSION = ".reordered"
 
     def __init__(self, directory: PathLike):
         super().__init__(directory=directory)
-        self.gt_products = self.directory / 'gt_products.txt'
-        self.gt_precursors = self.directory / 'gt_precursors.txt'
-        self.class_token_products = self.directory / 'class_token_products.txt'
-        self.class_token_precursors = self.directory / 'class_token_precursors.txt'
-        self.predicted_precursors = self.directory / 'predicted_precursors.txt'
-        self.predicted_precursors_canonical = self.directory / 'predicted_precursors_canonical.txt'
-        self.predicted_precursors_log_probs = self.directory / 'predicted_precursors.txt.tokenized_log_probs'
-        self.predicted_products = self.directory / 'predicted_products.txt'
-        self.predicted_products_canonical = self.directory / 'predicted_products_canonical.txt'
-        self.predicted_products_log_probs = self.directory / 'predicted_products.txt.tokenized_log_probs'
-        self.predicted_rxn_canonical = self.directory / 'predicted_rxn_canonical.txt'
-        self.predicted_classes = self.directory / 'predicted_classes.txt'
+        self.gt_products = self.directory / "gt_products.txt"
+        self.gt_precursors = self.directory / "gt_precursors.txt"
+        self.class_token_products = self.directory / "class_token_products.txt"
+        self.class_token_precursors = self.directory / "class_token_precursors.txt"
+        self.predicted_precursors = self.directory / "predicted_precursors.txt"
+        self.predicted_precursors_canonical = (
+            self.directory / "predicted_precursors_canonical.txt"
+        )
+        self.predicted_precursors_log_probs = (
+            self.directory / "predicted_precursors.txt.tokenized_log_probs"
+        )
+        self.predicted_products = self.directory / "predicted_products.txt"
+        self.predicted_products_canonical = (
+            self.directory / "predicted_products_canonical.txt"
+        )
+        self.predicted_products_log_probs = (
+            self.directory / "predicted_products.txt.tokenized_log_probs"
+        )
+        self.predicted_rxn_canonical = self.directory / "predicted_rxn_canonical.txt"
+        self.predicted_classes = self.directory / "predicted_classes.txt"
 
 
 class ForwardFiles(MetricsFiles):
@@ -82,10 +90,12 @@ class ForwardFiles(MetricsFiles):
 
     def __init__(self, directory: PathLike):
         super().__init__(directory=directory)
-        self.gt_products = self.directory / 'gt_products.txt'
-        self.gt_precursors = self.directory / 'gt_precursors.txt'
-        self.predicted_products = self.directory / 'predicted_products.txt'
-        self.predicted_products_canonical = self.directory / 'predicted_products_canonical.txt'
+        self.gt_products = self.directory / "gt_products.txt"
+        self.gt_precursors = self.directory / "gt_precursors.txt"
+        self.predicted_products = self.directory / "predicted_products.txt"
+        self.predicted_products_canonical = (
+            self.directory / "predicted_products_canonical.txt"
+        )
 
 
 def preprocessed_id_names(n_additional_sets: int) -> List[str]:
@@ -95,16 +105,17 @@ def preprocessed_id_names(n_additional_sets: int) -> List[str]:
     Args:
         n_additional_sets: how many sets there are in addition to the main set.
     """
-    return ['main_set'] + [f'additional_set_{i+1}' for i in range(n_additional_sets)]
+    return ["main_set"] + [f"additional_set_{i+1}" for i in range(n_additional_sets)]
 
 
 class ModelFiles:
     """
     Class to make it easy to get the names/paths of the trained OpenNMT models.
     """
-    ONMT_CONFIG_FILE = 'config_{idx}.yml'
-    MODEL_PREFIX = 'model'
-    MODEL_STEP_PATTERN = re.compile(r'^model_step_(\d+)\.pt$')
+
+    ONMT_CONFIG_FILE = "config_{idx}.yml"
+    MODEL_PREFIX = "model"
+    MODEL_STEP_PATTERN = re.compile(r"^model_step_(\d+)\.pt$")
 
     def __init__(self, model_dir: PathLike):
         # Directly converting to an absolute path
@@ -135,7 +146,9 @@ class ModelFiles:
         models_and_steps = [
             (self._get_checkpoint_step(path), path) for path in self.model_dir.iterdir()
         ]
-        models_and_steps = [(step, path) for step, path in models_and_steps if step is not None]
+        models_and_steps = [
+            (step, path) for step, path in models_and_steps if step is not None
+        ]
         if not models_and_steps:
             raise RuntimeError(f'No model found in "{self.model_dir}"')
 
@@ -155,7 +168,8 @@ class OnmtPreprocessedFiles:
     """
     Class to make it easy to get the names/paths of the OpenNMT-preprocessed files.
     """
-    PREFIX = 'preprocessed'
+
+    PREFIX = "preprocessed"
 
     def __init__(self, preprocessed_dir: PathLike):
         # Directly converting to an absolute path
@@ -171,7 +185,7 @@ class OnmtPreprocessedFiles:
 
     @property
     def vocab_file(self) -> Path:
-        return self.preprocess_prefix.with_suffix('.vocab.pt')
+        return self.preprocess_prefix.with_suffix(".vocab.pt")
 
 
 class RxnPreprocessingFiles:
@@ -180,7 +194,8 @@ class RxnPreprocessingFiles:
 
     This assumes that the default paths were used when calling rxn-data-pipeline.
     """
-    FILENAME_ROOT = 'data'
+
+    FILENAME_ROOT = "data"
 
     def __init__(self, processed_data_dir: PathLike):
         # Directly converting to an absolute path
@@ -196,81 +211,83 @@ class RxnPreprocessingFiles:
         Returns:
             Path to the file with the given extension.
         """
-        if not extension.startswith('.'):
-            extension = '.' + extension
-        return self.processed_data_dir / (RxnPreprocessingFiles.FILENAME_ROOT + extension)
+        if not extension.startswith("."):
+            extension = "." + extension
+        return self.processed_data_dir / (
+            RxnPreprocessingFiles.FILENAME_ROOT + extension
+        )
 
     @property
     def standardized_csv(self) -> Path:
-        return self._add_extension('standardized.csv')
+        return self._add_extension("standardized.csv")
 
     @property
     def processed_csv(self) -> Path:
-        return self._add_extension('processed.csv')
+        return self._add_extension("processed.csv")
 
     @property
     def processed_train_csv(self) -> Path:
-        return self._add_extension('processed.train.csv')
+        return self._add_extension("processed.train.csv")
 
     @property
     def processed_validation_csv(self) -> Path:
-        return self._add_extension('processed.validation.csv')
+        return self._add_extension("processed.validation.csv")
 
     @property
     def processed_test_csv(self) -> Path:
-        return self._add_extension('processed.test.csv')
+        return self._add_extension("processed.test.csv")
 
     @property
     def train_precursors(self) -> Path:
-        return self._add_extension('processed.train.precursors_tokens')
+        return self._add_extension("processed.train.precursors_tokens")
 
     @property
     def train_products(self) -> Path:
-        return self._add_extension('processed.train.products_tokens')
+        return self._add_extension("processed.train.products_tokens")
 
     @property
     def validation_precursors(self) -> Path:
-        return self._add_extension('processed.validation.precursors_tokens')
+        return self._add_extension("processed.validation.precursors_tokens")
 
     @property
     def validation_products(self) -> Path:
-        return self._add_extension('processed.validation.products_tokens')
+        return self._add_extension("processed.validation.products_tokens")
 
     @property
     def test_precursors(self) -> Path:
-        return self._add_extension('processed.test.precursors_tokens')
+        return self._add_extension("processed.test.precursors_tokens")
 
     @property
     def test_products(self) -> Path:
-        return self._add_extension('processed.test.products_tokens')
+        return self._add_extension("processed.test.products_tokens")
 
     def get_tokenized_src_file(self, split: str, model_task: str) -> Path:
-        if split == 'train' and model_task == 'forward':
+        if split == "train" and model_task == "forward":
             return self.train_precursors
-        if split == 'train' and model_task == 'retro':
+        if split == "train" and model_task == "retro":
             return self.train_products
-        if split == 'valid' and model_task == 'forward':
+        if split == "valid" and model_task == "forward":
             return self.validation_precursors
-        if split == 'valid' and model_task == 'retro':
+        if split == "valid" and model_task == "retro":
             return self.validation_products
-        if split == 'test' and model_task == 'forward':
+        if split == "test" and model_task == "forward":
             return self.test_precursors
-        if split == 'test' and model_task == 'retro':
+        if split == "test" and model_task == "retro":
             return self.test_products
         raise ValueError(f'Unsupported combination: "{split}", "{model_task}"')
 
     def get_tokenized_tgt_file(self, split: str, model_task: str) -> Path:
-        if split == 'train' and model_task == 'forward':
+        if split == "train" and model_task == "forward":
             return self.train_products
-        if split == 'train' and model_task == 'retro':
+        if split == "train" and model_task == "retro":
             return self.train_precursors
-        if split == 'valid' and model_task == 'forward':
+        if split == "valid" and model_task == "forward":
             return self.validation_products
-        if split == 'valid' and model_task == 'retro':
+        if split == "valid" and model_task == "retro":
             return self.validation_precursors
-        if split == 'test' and model_task == 'forward':
+        if split == "test" and model_task == "forward":
             return self.test_products
-        if split == 'test' and model_task == 'retro':
+        if split == "test" and model_task == "retro":
             return self.test_precursors
         raise ValueError(f'Unsupported combination: "{split}", "{model_task}"')
 
@@ -283,6 +300,7 @@ class RxnCommand(Flag):
     This enum allows for easily checking which commands some parameters relate
     to (see Parameter and TrainingPlanner classes).
     """
+
     T = 1  # Train
     C = 2  # Continue training
     F = 4  # Fine-tune

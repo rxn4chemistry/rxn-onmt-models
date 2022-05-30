@@ -15,10 +15,14 @@ install:
   - pip install rdkit-pypi==2021.3.2
 
 script:
-  - yapf --diff --recursive .
-  - flake8 .
-  - mypy rxn_onmt_utils
-  - pytest rxn_onmt_utils
+  # Style enforcement
+  - python -m black --check --diff --color .
+  - python -m isort --check --diff .
+  - python -m flake8 .
+  # Static typing
+  - python -m mypy .
+  # Test suite
+  - pytest
 
 jobs:
   include:

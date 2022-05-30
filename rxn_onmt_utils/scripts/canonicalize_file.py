@@ -2,13 +2,20 @@ import logging
 
 import click
 from rxn_chemutils.multicomponent_smiles import (
-    canonicalize_multicomponent_smiles, sort_multicomponent_smiles
+    canonicalize_multicomponent_smiles,
+    sort_multicomponent_smiles,
 )
 from rxn_chemutils.reaction_equation import canonicalize_compounds, sort_compounds
 from rxn_chemutils.reaction_smiles import (
-    determine_format, parse_reaction_smiles, to_reaction_smiles
+    determine_format,
+    parse_reaction_smiles,
+    to_reaction_smiles,
 )
-from rxn_utilities.file_utilities import dump_list_to_file, iterate_lines_from_file, PathLike
+from rxn_utilities.file_utilities import (
+    PathLike,
+    dump_list_to_file,
+    iterate_lines_from_file,
+)
 from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path
@@ -17,9 +24,11 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def canonicalize_line(smiles_line: str, invalid_placeholder: str, sort_molecules: bool) -> str:
+def canonicalize_line(
+    smiles_line: str, invalid_placeholder: str, sort_molecules: bool
+) -> str:
     try:
-        if '>' in smiles_line:
+        if ">" in smiles_line:
             # we have a reaction SMILES
             reaction_format = determine_format(smiles_line)
             reaction = parse_reaction_smiles(smiles_line, reaction_format)
@@ -28,7 +37,7 @@ def canonicalize_line(smiles_line: str, invalid_placeholder: str, sort_molecules
                 reaction = sort_compounds(reaction)
             return to_reaction_smiles(reaction, reaction_format)
         else:
-            smiles = canonicalize_multicomponent_smiles(smiles_line, fragment_bond='~')
+            smiles = canonicalize_multicomponent_smiles(smiles_line, fragment_bond="~")
             if sort_molecules:
                 smiles = sort_multicomponent_smiles(smiles)
             return smiles
@@ -40,8 +49,8 @@ def canonicalize_line(smiles_line: str, invalid_placeholder: str, sort_molecules
 def canonicalize_file(
     input_file: PathLike,
     output_file: PathLike,
-    invalid_placeholder: str = '',
-    sort_molecules: bool = False
+    invalid_placeholder: str = "",
+    sort_molecules: bool = False,
 ) -> None:
     raise_if_identical_path(input_file, output_file)
     logger.info(f'Canonicalizing file "{input_file}" -> "{output_file}".')
@@ -56,13 +65,13 @@ def canonicalize_file(
 
 
 @click.command()
-@click.option('--input_file', '-i', required=True, help='File to canonicalize')
-@click.option('--output_file', '-o', required=True, help='Canonicalized file')
+@click.option("--input_file", "-i", required=True, help="File to canonicalize")
+@click.option("--output_file", "-o", required=True, help="Canonicalized file")
 @click.option(
-    '--invalid_placeholder',
-    default='',
+    "--invalid_placeholder",
+    default="",
     type=str,
-    help='What to output when the canonicalization fails'
+    help="What to output when the canonicalization fails",
 )
 def main(input_file: str, output_file: str, invalid_placeholder: str) -> None:
     setup_console_logger()
@@ -70,9 +79,11 @@ def main(input_file: str, output_file: str, invalid_placeholder: str) -> None:
     # Note: we put the actual code in a separate function, so that it can be
     # called also as a Python function.
     canonicalize_file(
-        input_file=input_file, output_file=output_file, invalid_placeholder=invalid_placeholder
+        input_file=input_file,
+        output_file=output_file,
+        invalid_placeholder=invalid_placeholder,
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

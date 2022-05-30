@@ -64,7 +64,9 @@ def _equivalent(pred_smiles: str, tgt_smiles: str) -> bool:
     help="Where to load the model from (will take the last checkpoint)",
 )
 @click.option("--model_task", type=click.Choice(["forward", "retro"]), required=True)
-@click.option("--output_json", type=str, required=True, help="JSON file where to save the metrics")
+@click.option(
+    "--output_json", type=str, required=True, help="JSON file where to save the metrics"
+)
 @click.option(
     "--last_checkpoint_filepath",
     type=str,
@@ -94,7 +96,7 @@ def evaluate(
     data_files = RxnPreprocessingFiles(data_dir)
 
     last_model = model_files.get_last_checkpoint()
-    logging.info(f'Last model checkpoint: {last_model}')
+    logging.info(f"Last model checkpoint: {last_model}")
 
     copy(last_model, last_checkpoint_filepath)
     logging.info(f'Copied "{last_model}" to "{last_checkpoint_filepath}"')
@@ -110,22 +112,26 @@ def evaluate(
         str(last_model), beam_size=10, max_length=300, gpu=(0 if use_gpu else -1)
     )
 
-    logging.info(f'Translating {len(src)} samples...')
+    logging.info(f"Translating {len(src)} samples...")
     pred = translator.translate_sentences(src)
-    logging.info(f'Translating {len(src)} samples... Done.')
+    logging.info(f"Translating {len(src)} samples... Done.")
 
     if len(pred) != len(tgt):
-        raise RuntimeError(f"pred and tgt have different lengths ({len(pred)} != {len(tgt)})")
+        raise RuntimeError(
+            f"pred and tgt have different lengths ({len(pred)} != {len(tgt)})"
+        )
 
-    logging.info('Canonicalizing and standardizing...')
+    logging.info("Canonicalizing and standardizing...")
     n_correct = sum(
-        1 for pred_smiles, tgt_smiles in zip(pred, tgt) if _equivalent(pred_smiles, tgt_smiles)
+        1
+        for pred_smiles, tgt_smiles in zip(pred, tgt)
+        if _equivalent(pred_smiles, tgt_smiles)
     )
-    logging.info('Canonicalizing and standardizing... Done.')
+    logging.info("Canonicalizing and standardizing... Done.")
 
     top1_accuracy = n_correct / len(tgt)
     metrics = {"top1_accuracy": top1_accuracy}
-    logging.info(f'Metrics: {metrics}')
+    logging.info(f"Metrics: {metrics}")
 
     logging.info(f'Saving metrics to "{output_json}"')
     with open(output_json, "wt") as f:

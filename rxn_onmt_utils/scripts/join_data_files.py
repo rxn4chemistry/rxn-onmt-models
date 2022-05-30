@@ -1,12 +1,10 @@
 import logging
-from typing import Tuple, List
+import re
+import shutil
+from pathlib import Path
+from typing import List, Tuple
 
 import click
-import shutil
-import re
-
-from pathlib import Path
-
 from rxn_utilities.file_utilities import PathLike
 from rxn_utilities.logging_utilities import setup_console_logger
 
@@ -20,7 +18,7 @@ def sorted_chunk_directories(input_path: Path) -> List[Path]:
     # We match the directories ending with a number
     directory_and_directory_no: List[Tuple[Path, int]] = []
     for subdir in input_path.iterdir():
-        match = re.match(r'.*?(\d+)$', str(subdir))
+        match = re.match(r".*?(\d+)$", str(subdir))
         if match is not None:
             directory_and_directory_no.append((subdir, int(match.group(1))))
 
@@ -39,12 +37,12 @@ def join_data_files(input_dir: PathLike, output_dir: PathLike) -> None:
     output_path.mkdir(parents=True, exist_ok=True)
 
     # Assuming that all directories contain the same files
-    filenames = [filename.name for filename in (Path(input_dir) / 'chunk_0').iterdir()]
+    filenames = [filename.name for filename in (Path(input_dir) / "chunk_0").iterdir()]
     sorted_chunk_dirs = sorted_chunk_directories(Path(input_dir))
     for filename in filenames:
         out_file_path = output_path / filename
         logger.info(f"Joining files of type: {filename}")
-        with open(out_file_path, 'wb') as f:
+        with open(out_file_path, "wb") as f:
             # looping over the directories and skipping files or directories in the wrong format
             # directories need to end with a digit
 
@@ -52,19 +50,19 @@ def join_data_files(input_dir: PathLike, output_dir: PathLike) -> None:
                 src_path = path / filename
                 logger.debug(f"Source file: {src_path}")
                 if src_path.exists():
-                    shutil.copyfileobj(open(src_path, 'rb'), f)
+                    shutil.copyfileobj(open(src_path, "rb"), f)
                 else:
                     # Differing files between the 'chunk' directories are skipped
                     logger.warning(f"The file '{src_path}' does not exist. Not joining")
 
 
-@click.command(context_settings={'show_default': True})
+@click.command(context_settings={"show_default": True})
 @click.option(
-    '--input_dir',
+    "--input_dir",
     required=True,
-    help='Folder containing different subfolders with the data chunks.'
+    help="Folder containing different subfolders with the data chunks.",
 )
-@click.option('--output_dir', required=True, help='Where to save all the files.')
+@click.option("--output_dir", required=True, help="Where to save all the files.")
 def main(input_dir: str, output_dir: str):
     """
     Joins files which were before splitted with the script ensure_data_dimension.py

@@ -6,13 +6,15 @@ from rxn_onmt_utils.rxn_models.reaction_combiner import ReactionCombiner
 
 
 @click.command()
-@click.argument('precursors_file')
-@click.argument('products_file')
-@click.option('--no-standardize', is_flag=True)
+@click.argument("precursors_file")
+@click.argument("products_file")
+@click.option("--no-standardize", is_flag=True)
 @click.option(
-    '--reaction_format',
-    type=click.Choice(['standard', 'standard_with_tilde', 'extended'], case_sensitive=False),
-    default='extended'
+    "--reaction_format",
+    type=click.Choice(
+        ["standard", "standard_with_tilde", "extended"], case_sensitive=False
+    ),
+    default="extended",
 )
 def main(
     precursors_file: str, products_file: str, no_standardize: bool, reaction_format: str
@@ -27,12 +29,12 @@ def main(
 
     combiner = ReactionCombiner(
         standardize=not no_standardize,
-        reaction_format=ReactionFormat.from_string(reaction_format)
+        reaction_format=ReactionFormat.from_string(reaction_format),
     )
 
     for reaction_smiles in combiner.combine(precursors, products):
         print(reaction_smiles)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

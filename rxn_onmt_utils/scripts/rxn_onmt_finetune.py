@@ -11,7 +11,10 @@ import click
 from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils import __version__
-from rxn_onmt_utils.model_introspection import get_model_rnn_size, model_vocab_is_compatible
+from rxn_onmt_utils.model_introspection import (
+    get_model_rnn_size,
+    model_vocab_is_compatible,
+)
 from rxn_onmt_utils.model_resize import ModelResizer
 from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.rxn_models.onmt_train_command import OnmtTrainCommand
@@ -24,15 +27,17 @@ logger.addHandler(logging.NullHandler())
 @click.command(context_settings=dict(show_default=True))
 @click.option("--batch_size", default=defaults.BATCH_SIZE)
 @click.option(
-    '--data_weights',
+    "--data_weights",
     type=int,
     multiple=True,
-    help='Weights of the different data sets for training. Only needed in a multi-task setting.'
+    help="Weights of the different data sets for training. Only needed in a multi-task setting.",
 )
 @click.option("--dropout", default=defaults.DROPOUT)
 @click.option("--learning_rate", type=float, default=0.06)
-@click.option("--model_output_dir", type=str, required=True, help="Where to save the models")
-@click.option("--no_gpu", is_flag=True, help='Run the training on CPU (slow!)')
+@click.option(
+    "--model_output_dir", type=str, required=True, help="Where to save the models"
+)
+@click.option("--no_gpu", is_flag=True, help="Run the training on CPU (slow!)")
 @click.option(
     "--preprocess_dir",
     type=str,
@@ -40,7 +45,9 @@ logger.addHandler(logging.NullHandler())
     help="Directory with OpenNMT-preprocessed files",
 )
 @click.option("--seed", default=defaults.SEED)
-@click.option("--train_from", type=str, required=True, help="Path to the model to start from")
+@click.option(
+    "--train_from", type=str, required=True, help="Path to the model to start from"
+)
 @click.option("--train_num_steps", "--finetune_num_steps", default=100000)
 @click.option("--warmup_steps", default=defaults.WARMUP_STEPS)
 def main(
@@ -59,7 +66,9 @@ def main(
     """Finetune an OpenNMT model."""
 
     setup_console_logger()
-    logger.info(f'Fine-tune RXN-OpenNMT model with rxn-onmt-utils, version {__version__}.')
+    logger.info(
+        f"Fine-tune RXN-OpenNMT model with rxn-onmt-utils, version {__version__}."
+    )
 
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
@@ -82,7 +91,7 @@ def main(
     # when resetting the decay algorithm for the learning rate, this value
     # is necessary - and does not get it from the model checkpoint (OpenNMT bug).
     rnn_size = get_model_rnn_size(train_from)
-    logger.info(f'Loaded the value of rnn_size from the model: {rnn_size}.')
+    logger.info(f"Loaded the value of rnn_size from the model: {rnn_size}.")
 
     config_file = model_files.next_config_file()
 
@@ -111,7 +120,9 @@ def main(
     logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
-    logger.info(f'Fine-tuning successful. Models saved under "{str(model_files.model_dir)}".')
+    logger.info(
+        f'Fine-tuning successful. Models saved under "{str(model_files.model_dir)}".'
+    )
 
 
 if __name__ == "__main__":

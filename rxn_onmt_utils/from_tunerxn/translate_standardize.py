@@ -6,7 +6,7 @@
 
 
 def translate_standardize(
-    input_file_path: str, output_file_path: str, fragment_bond: str = '.'
+    input_file_path: str, output_file_path: str, fragment_bond: str = "."
 ) -> None:
     """Standardize for translation.
 
@@ -31,4 +31,4 @@ def translate_standardize(
     # # Exporting standardized samples
     # std.df.to_csv(output_file_path)
 
-    raise RuntimeError('Not adapted yet to the new syntax')
+    raise RuntimeError("Not adapted yet to the new syntax")

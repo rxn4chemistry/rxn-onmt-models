@@ -1,5 +1,5 @@
 from argparse import Namespace
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 import torch
 from onmt.inputters.text_dataset import TextMultiField
@@ -14,7 +14,7 @@ def get_model_vocab(model_path: PathLike) -> List[str]:
         model_path: model checkpoint, such as `model_step_100000.pt`.
     """
     checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
-    vocab = checkpoint['vocab']
+    vocab = checkpoint["vocab"]
     return _torch_vocab_to_list(vocab)
 
 
@@ -44,10 +44,10 @@ def model_vocab_is_compatible(model_pt: PathLike, vocab_pt: PathLike) -> bool:
 
 
 def _torch_vocab_to_list(vocab: Dict[str, Any]) -> List[str]:
-    src_vocab = _multifield_vocab_to_list(vocab['src'])
-    tgt_vocab = _multifield_vocab_to_list(vocab['tgt'])
+    src_vocab = _multifield_vocab_to_list(vocab["src"])
+    tgt_vocab = _multifield_vocab_to_list(vocab["tgt"])
     if src_vocab != tgt_vocab:
-        raise RuntimeError('Handling of different src/tgt vocab not implemented')
+        raise RuntimeError("Handling of different src/tgt vocab not implemented")
     return src_vocab
 
 
@@ -63,7 +63,7 @@ def get_model_opt(model_path: PathLike) -> Namespace:
         model_path: model checkpoint, such as `model_step_100000.pt`.
     """
     checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
-    return checkpoint['opt']
+    return checkpoint["opt"]
 
 
 def get_model_rnn_size(model_path: PathLike) -> int:
@@ -88,7 +88,7 @@ def get_model_dropout(model_path: PathLike) -> float:
     # training). We do not support this at the moment.
     dropouts = get_model_opt(model_path).dropout
     if len(dropouts) != 1:
-        raise ValueError(f'Expected one dropout value. Actual: {dropouts}')
+        raise ValueError(f"Expected one dropout value. Actual: {dropouts}")
     return dropouts[0]
 
 

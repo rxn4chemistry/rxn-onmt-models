@@ -20,28 +20,33 @@ logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings=dict(show_default=True))
-@click.option('--batch_size', default=defaults.BATCH_SIZE)
+@click.option("--batch_size", default=defaults.BATCH_SIZE)
 @click.option(
-    '--data_weights',
+    "--data_weights",
     type=int,
     multiple=True,
-    help='Weights of the different data sets for training. Only needed in a multi-task setting.'
+    help="Weights of the different data sets for training. Only needed in a multi-task setting.",
 )
-@click.option('--dropout', default=defaults.DROPOUT)
-@click.option('--heads', default=defaults.HEADS)
-@click.option('--layers', default=defaults.LAYERS)
-@click.option('--learning_rate', type=float, default=defaults.LEARNING_RATE)
-@click.option('--model_output_dir', type=str, required=True, help='Where to save the models')
-@click.option('--no_gpu', is_flag=True, help='Run the training on CPU (slow!)')
+@click.option("--dropout", default=defaults.DROPOUT)
+@click.option("--heads", default=defaults.HEADS)
+@click.option("--layers", default=defaults.LAYERS)
+@click.option("--learning_rate", type=float, default=defaults.LEARNING_RATE)
 @click.option(
-    '--preprocess_dir', type=str, required=True, help='Directory with OpenNMT-preprocessed files'
+    "--model_output_dir", type=str, required=True, help="Where to save the models"
 )
-@click.option('--rnn_size', default=defaults.RNN_SIZE)
-@click.option('--seed', default=defaults.SEED)
-@click.option('--train_num_steps', default=100000)
-@click.option('--transformer_ff', default=defaults.TRANSFORMER_FF)
-@click.option('--warmup_steps', default=defaults.WARMUP_STEPS)
-@click.option('--word_vec_size', default=defaults.WORD_VEC_SIZE)
+@click.option("--no_gpu", is_flag=True, help="Run the training on CPU (slow!)")
+@click.option(
+    "--preprocess_dir",
+    type=str,
+    required=True,
+    help="Directory with OpenNMT-preprocessed files",
+)
+@click.option("--rnn_size", default=defaults.RNN_SIZE)
+@click.option("--seed", default=defaults.SEED)
+@click.option("--train_num_steps", default=100000)
+@click.option("--transformer_ff", default=defaults.TRANSFORMER_FF)
+@click.option("--warmup_steps", default=defaults.WARMUP_STEPS)
+@click.option("--word_vec_size", default=defaults.WORD_VEC_SIZE)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
@@ -67,7 +72,7 @@ def main(
     """
 
     setup_console_logger()
-    logger.info(f'Train RXN-OpenNMT model with rxn-onmt-utils, version {__version__}.')
+    logger.info(f"Train RXN-OpenNMT model with rxn-onmt-utils, version {__version__}.")
 
     model_files = ModelFiles(model_output_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
@@ -102,7 +107,9 @@ def main(
     logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
-    logger.info(f'Training successful. Models saved under "{str(model_files.model_dir)}".')
+    logger.info(
+        f'Training successful. Models saved under "{str(model_files.model_dir)}".'
+    )
 
 
 if __name__ == "__main__":

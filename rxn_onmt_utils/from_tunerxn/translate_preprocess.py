@@ -7,13 +7,13 @@ import re
 import rxn_reaction_preprocessing as rrp
 from rdkit import RDLogger
 
-RDLogger.DisableLog('rdApp.*')
+RDLogger.DisableLog("rdApp.*")
 
 
 def translate_preprocess(
     input_file_path: str,
     output_file_path: str,
-    fragment_bond: str = '.',
+    fragment_bond: str = ".",
     max_reactants: int = 10,
     max_agents: int = 0,
     max_products: int = 1,
@@ -45,11 +45,7 @@ def translate_preprocess(
 
     # This is for the special SMILES extension where agents are separated by pipe.
     def clean_func(rxn: str) -> str:
-        return re.sub(
-            r'(?<=\[)([0-9]+)(?=[A-Za-z])',  # Remove isotopes
-            '',
-            rxn
-        )
+        return re.sub(r"(?<=\[)([0-9]+)(?=[A-Za-z])", "", rxn)  # Remove isotopes
 
     # This is the function that is applied to each reaction.
     def apply_func(reaction: rrp.Reaction) -> rrp.Reaction:
@@ -78,7 +74,7 @@ def translate_preprocess(
         max_absolute_formal_charge=max_absolute_formal_charge,
     )
 
-    pp = rrp.Preprocessor.read_csv(input_file_path, 'rxn', fragment_bond=fragment_bond)
+    pp = rrp.Preprocessor.read_csv(input_file_path, "rxn", fragment_bond=fragment_bond)
 
     # In a first step, let's clean the data using the cleaning function
     # defined above

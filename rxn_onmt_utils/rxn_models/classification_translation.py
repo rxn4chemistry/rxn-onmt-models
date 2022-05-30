@@ -4,10 +4,14 @@ from typing import Optional, Union
 
 from rxn_utilities.file_utilities import is_path_exists_or_creatable
 
-from .tokenize_file import tokenize_file, detokenize_classification_file, tokenize_classification_file, \
-    classification_file_is_tokenized
+from .tokenize_file import (
+    classification_file_is_tokenized,
+    detokenize_classification_file,
+    file_is_tokenized,
+    tokenize_classification_file,
+    tokenize_file,
+)
 from .translate import translate
-from .tokenize_file import file_is_tokenized
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -23,7 +27,7 @@ def classification_translation(
     batch_size: int,
     gpu: bool,
     max_length: int = 3,
-    as_external_command: bool = False
+    as_external_command: bool = False,
 ) -> None:
     """
     Do a classification translation.
@@ -50,8 +54,8 @@ def classification_translation(
     if file_is_tokenized(src_file):
         tokenized_src = src_file
     else:
-        tokenized_src = str(src_file) + '.tokenized'
-        tokenize_file(src_file, tokenized_src, invalid_placeholder='')
+        tokenized_src = str(src_file) + ".tokenized"
+        tokenize_file(src_file, tokenized_src, invalid_placeholder="")
 
     # tgt
     if tgt_file is None:
@@ -59,10 +63,10 @@ def classification_translation(
     elif classification_file_is_tokenized(tgt_file):
         tokenized_tgt = tgt_file
     else:
-        tokenized_tgt = str(tgt_file) + '.tokenized'
+        tokenized_tgt = str(tgt_file) + ".tokenized"
         tokenize_classification_file(tgt_file, tokenized_tgt)
 
-    tokenized_pred = str(pred_file) + '.tokenized'
+    tokenized_pred = str(pred_file) + ".tokenized"
 
     translate(
         model=model,
@@ -74,7 +78,7 @@ def classification_translation(
         max_length=max_length,
         batch_size=batch_size,
         gpu=gpu,
-        as_external_command=as_external_command
+        as_external_command=as_external_command,
     )
 
     detokenize_classification_file(tokenized_pred, pred_file)

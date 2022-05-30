@@ -1,9 +1,9 @@
 import logging
 from typing import Optional
 
-from rxn_utilities.file_utilities import is_path_exists_or_creatable, PathLike
+from rxn_utilities.file_utilities import PathLike, is_path_exists_or_creatable
 
-from .tokenize_file import tokenize_file, detokenize_file, file_is_tokenized
+from .tokenize_file import detokenize_file, file_is_tokenized, tokenize_file
 from .translate import translate
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ def forward_or_retro_translation(
     batch_size: int,
     gpu: bool,
     max_length: int = 300,
-    as_external_command: bool = False
+    as_external_command: bool = False,
 ) -> None:
     """
     Do a forward or retro translation.
@@ -49,8 +49,8 @@ def forward_or_retro_translation(
     if file_is_tokenized(src_file):
         tokenized_src = src_file
     else:
-        tokenized_src = str(src_file) + '.tokenized'
-        tokenize_file(src_file, tokenized_src, invalid_placeholder='')
+        tokenized_src = str(src_file) + ".tokenized"
+        tokenize_file(src_file, tokenized_src, invalid_placeholder="")
 
     # tgt
     if tgt_file is None:
@@ -58,10 +58,10 @@ def forward_or_retro_translation(
     elif file_is_tokenized(tgt_file):
         tokenized_tgt = tgt_file
     else:
-        tokenized_tgt = str(tgt_file) + '.tokenized'
-        tokenize_file(tgt_file, tokenized_tgt, invalid_placeholder='')
+        tokenized_tgt = str(tgt_file) + ".tokenized"
+        tokenize_file(tgt_file, tokenized_tgt, invalid_placeholder="")
 
-    tokenized_pred = str(pred_file) + '.tokenized'
+    tokenized_pred = str(pred_file) + ".tokenized"
 
     translate(
         model=model,
@@ -73,7 +73,7 @@ def forward_or_retro_translation(
         max_length=max_length,
         batch_size=batch_size,
         gpu=gpu,
-        as_external_command=as_external_command
+        as_external_command=as_external_command,
     )
 
     detokenize_file(tokenized_pred, pred_file)

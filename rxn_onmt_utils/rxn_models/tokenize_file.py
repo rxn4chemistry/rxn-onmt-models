@@ -1,8 +1,16 @@
 import logging
 import shutil
 
-from rxn_chemutils.tokenization import tokenize_smiles, TokenizationError, detokenize_smiles
-from rxn_utilities.file_utilities import iterate_lines_from_file, dump_list_to_file, PathLike
+from rxn_chemutils.tokenization import (
+    TokenizationError,
+    detokenize_smiles,
+    tokenize_smiles,
+)
+from rxn_utilities.file_utilities import (
+    PathLike,
+    dump_list_to_file,
+    iterate_lines_from_file,
+)
 
 from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path, string_is_tokenized
 
@@ -19,13 +27,14 @@ def tokenize_line(smiles_line: str, invalid_placeholder: str) -> str:
 
 
 def tokenize_file(
-    input_file: PathLike, output_file: PathLike, invalid_placeholder: str = ''
+    input_file: PathLike, output_file: PathLike, invalid_placeholder: str = ""
 ) -> None:
     raise_if_identical_path(input_file, output_file)
     logger.info(f'Tokenizing "{input_file}" -> "{output_file}".')
 
     tokenized = (
-        tokenize_line(line, invalid_placeholder) for line in iterate_lines_from_file(input_file)
+        tokenize_line(line, invalid_placeholder)
+        for line in iterate_lines_from_file(input_file)
     )
 
     dump_list_to_file(tokenized, output_file)
@@ -38,7 +47,9 @@ def detokenize_file(
     raise_if_identical_path(input_file, output_file)
     logger.info(f'Detokenizing "{input_file}" -> "{output_file}".')
 
-    detokenized = (detokenize_smiles(line) for line in iterate_lines_from_file(input_file))
+    detokenized = (
+        detokenize_smiles(line) for line in iterate_lines_from_file(input_file)
+    )
     dump_list_to_file(detokenized, output_file)
 
 
@@ -53,11 +64,11 @@ def detokenize_class(tokenized_class: str) -> str:
     Raises:
         ValueError: if the input string format is not correct
     """
-    if tokenized_class == '0':
+    if tokenized_class == "0":
         return tokenized_class
 
-    splitted_class = tokenized_class.split(' ')
-    if len(splitted_class) == 1 and len(splitted_class[0].split('.')) == 3:
+    splitted_class = tokenized_class.split(" ")
+    if len(splitted_class) == 1 and len(splitted_class[0].split(".")) == 3:
         # here the class is already detokenized
         return tokenized_class
     if len(splitted_class) != 3:
@@ -78,11 +89,11 @@ def tokenize_class(detokenized_class: str) -> str:
     Raises:
         ValueError: if the input string format is not correct
     """
-    if detokenized_class == '0':
+    if detokenized_class == "0":
         return detokenized_class
 
-    splitted_class = detokenized_class.split('.')
-    if len(splitted_class) == 4 and len(detokenized_class.split(' ')) == 3:
+    splitted_class = detokenized_class.split(".")
+    if len(splitted_class) == 4 and len(detokenized_class.split(" ")) == 3:
         # here the class is already tokenized
         return detokenized_class
     if len(splitted_class) != 3:
@@ -110,7 +121,7 @@ def detokenize_class_line(class_line: str, invalid_placeholder: str) -> str:
 
 
 def detokenize_classification_file(
-    input_file: PathLike, output_file: PathLike, invalid_placeholder: str = ''
+    input_file: PathLike, output_file: PathLike, invalid_placeholder: str = ""
 ) -> None:
     raise_if_identical_path(input_file, output_file)
     logger.info(f'Detokenizing "{input_file}" -> "{output_file}".')
@@ -123,7 +134,7 @@ def detokenize_classification_file(
 
 
 def tokenize_classification_file(
-    input_file: PathLike, output_file: PathLike, invalid_placeholder: str = ''
+    input_file: PathLike, output_file: PathLike, invalid_placeholder: str = ""
 ) -> None:
     raise_if_identical_path(input_file, output_file)
     logger.info(f'Tokenizing "{input_file}" -> "{output_file}".')

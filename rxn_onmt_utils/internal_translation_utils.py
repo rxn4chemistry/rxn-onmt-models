@@ -8,7 +8,7 @@ import os
 import tempfile
 from argparse import Namespace
 from itertools import repeat
-from typing import List, Optional, Iterable, Any, Iterator
+from typing import Any, Iterable, Iterator, List, Optional
 
 import attr
 import onmt.opts as opts
@@ -22,6 +22,7 @@ class TranslationResult:
     """
     Struct containing the result of a translation with OpenNMT.
     """
+
     text: str
     score: float
 
@@ -34,10 +35,10 @@ class RawTranslator:
     def __init__(self, opt: Namespace):
         self.opt = opt
         self.score_for_empty_input = -9999.9999
-        self.dummy_string_for_empty_input = 'C . C . C . C'
+        self.dummy_string_for_empty_input = "C . C . C . C"
 
         # to avoid the creation of an unnecessary file
-        out_file = open(os.devnull, 'w')
+        out_file = open(os.devnull, "w")
         self.internal_translator = build_translator(
             self.opt, report_score=False, out_file=out_file
         )
@@ -65,18 +66,18 @@ class RawTranslator:
             empty_input: List[bool] = []
 
             # write source sentences to temporary input file
-            with open(new_opt.src, 'wt') as f:
+            with open(new_opt.src, "wt") as f:
                 for sentence in sentences:
                     # In order to avoid problems with batches full of empty string on GPUs,
                     # we write a dummy line instead of the empty string. These lines
                     # are post-processed again below to replace the predictions by
                     # empty strings.
                     is_empty = False
-                    if sentence == '':
+                    if sentence == "":
                         sentence = self.dummy_string_for_empty_input
                         is_empty = True
 
-                    f.write(f'{sentence}\n')
+                    f.write(f"{sentence}\n")
                     empty_input.append(is_empty)
 
             for translation_results, is_empty in zip(
@@ -86,7 +87,7 @@ class RawTranslator:
                 # an empty string with adequate score
                 if is_empty:
                     yield [
-                        TranslationResult('', self.score_for_empty_input)
+                        TranslationResult("", self.score_for_empty_input)
                         for _ in translation_results
                     ]
                 else:
@@ -107,8 +108,11 @@ class RawTranslator:
         self.internal_translator.n_best = opt.n_best
 
         src_shards = split_corpus(opt.src, opt.shard_size)
-        tgt_shards = split_corpus(opt.tgt, opt.shard_size) \
-            if opt.tgt is not None else repeat(None)
+        tgt_shards = (
+            split_corpus(opt.tgt, opt.shard_size)
+            if opt.tgt is not None
+            else repeat(None)
+        )
         shard_pairs = zip(src_shards, tgt_shards)
 
         for i, (src_shard, tgt_shard) in enumerate(shard_pairs):
@@ -118,7 +122,7 @@ class RawTranslator:
                 src_dir=opt.src_dir,
                 batch_size=opt.batch_size,
                 batch_type=opt.batch_type,
-                attn_debug=opt.attn_debug
+                attn_debug=opt.attn_debug,
             )
             for score_list, translation_list in zip(l1, l2):
                 yield [
@@ -145,8 +149,8 @@ def get_onmt_opt(
 
     # Some values are needed and must be parsed from args, other values can
     # simply be overwritten from the default ones
-    src = src_file if src_file is not None else '(unused)'
-    output = output_file if output_file is not None else '(unused)'
+    src = src_file if src_file is not None else "(unused)"
+    output = output_file if output_file is not None else "(unused)"
     args_str = f'--model {" ".join(translation_model)} --src {src} --output {output}'
     args = args_str.split()
 
@@ -164,7 +168,7 @@ def onmt_parser() -> ArgumentParser:
     Create the OpenNMT parser, adapted from OpenNMT-Py repo.
     """
 
-    parser = ArgumentParser(description='translate.py')
+    parser = ArgumentParser(description="translate.py")
 
     opts.config_opts(parser)
     opts.translate_opts(parser)

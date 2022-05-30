@@ -12,7 +12,9 @@ from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.model_introspection import (
-    get_model_dropout, get_model_seed, model_vocab_is_compatible
+    get_model_dropout,
+    get_model_seed,
+    model_vocab_is_compatible,
 )
 from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.rxn_models.onmt_train_command import OnmtTrainCommand
@@ -28,10 +30,12 @@ logger.addHandler(logging.NullHandler())
     "--data_weights",
     type=int,
     multiple=True,
-    help='Weights of the different data sets for training. Only needed in a multi-task setting.'
+    help="Weights of the different data sets for training. Only needed in a multi-task setting.",
 )
-@click.option("--model_output_dir", type=str, required=True, help="Where to save the models")
-@click.option("--no_gpu", is_flag=True, help='Run the training on CPU (slow!)')
+@click.option(
+    "--model_output_dir", type=str, required=True, help="Where to save the models"
+)
+@click.option("--no_gpu", is_flag=True, help="Run the training on CPU (slow!)")
 @click.option(
     "--preprocess_dir",
     type=str,
@@ -42,14 +46,14 @@ logger.addHandler(logging.NullHandler())
     "--train_from",
     type=str,
     help=(
-        'Model to continue training from. If not specified, '
-        'the last checkpoint from model_output_dir will be taken.'
-    )
+        "Model to continue training from. If not specified, "
+        "the last checkpoint from model_output_dir will be taken."
+    ),
 )
 @click.option(
     "--train_num_steps",
     default=100000,
-    help="Number of steps, including steps from the initial training run."
+    help="Number of steps, including steps from the initial training run.",
 )
 def main(
     batch_size: int,
@@ -69,8 +73,8 @@ def main(
 
     setup_console_logger()
     logger.info(
-        'Continue training of RXN-OpenNMT model with rxn-onmt-utils, '
-        f'version {__version__}.'
+        "Continue training of RXN-OpenNMT model with rxn-onmt-utils, "
+        f"version {__version__}."
     )
 
     model_files = ModelFiles(model_output_dir)
@@ -78,11 +82,11 @@ def main(
 
     if train_from is None:
         train_from = str(model_files.get_last_checkpoint())
-    logger.info(f'Training will be continued from {train_from}')
+    logger.info(f"Training will be continued from {train_from}")
 
     if not model_vocab_is_compatible(train_from, onmt_preprocessed_files.vocab_file):
         raise RuntimeError(
-            'The vocabularies are not compatible. It is not advised to continue training.'
+            "The vocabularies are not compatible. It is not advised to continue training."
         )
 
     config_file = model_files.next_config_file()
@@ -111,7 +115,9 @@ def main(
     logger.info(f'Running command: {" ".join(command_and_args)}')
     _ = subprocess.run(command_and_args, check=True)
 
-    logger.info(f'Training successful. Models saved under "{str(model_files.model_dir)}".')
+    logger.info(
+        f'Training successful. Models saved under "{str(model_files.model_dir)}".'
+    )
 
 
 if __name__ == "__main__":

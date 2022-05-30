@@ -1,13 +1,13 @@
 import logging
 from pathlib import Path
-from typing import Union, List, Tuple
+from typing import List, Tuple, Union
 
 import click
+from rxn_utilities.container_utilities import chunker
+from rxn_utilities.file_utilities import dump_list_to_file, load_list_from_file
 
 from rxn_onmt_utils.rxn_models.metrics import get_multiplier
 from rxn_onmt_utils.rxn_models.utils import RetroFiles
-from rxn_utilities.container_utilities import chunker
-from rxn_utilities.file_utilities import dump_list_to_file, load_list_from_file
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -43,7 +43,9 @@ def reorder_retro_predictions_class_token(
             -> sorted([top2 prediction('[i] x') for i in number_class_tokens])
             ...
     """
-    logger.info(f'Reordering file "{predictions_file}", based on {n_class_tokens} class tokens.')
+    logger.info(
+        f'Reordering file "{predictions_file}", based on {n_class_tokens} class tokens.'
+    )
 
     # We load the files and chunk the confidences
     ground_truth = load_list_from_file(ground_truth_file)
@@ -77,45 +79,69 @@ def reorder_retro_predictions_class_token(
             # For each class token take the topn prediction and reorder them based on the
             # (negative) confidence (index x[1])
             topn_per_class_token = [
-                chunk[topn] for chunk in chunker(pred_and_conf, chunk_size=topx_per_class_token)
+                chunk[topn]
+                for chunk in chunker(pred_and_conf, chunk_size=topx_per_class_token)
             ]
-            reordered = sorted(topn_per_class_token, key=lambda x: float(x[1]), reverse=True)
+            reordered = sorted(
+                topn_per_class_token, key=lambda x: float(x[1]), reverse=True
+            )
             predictions_and_confidences_reordered.extend(reordered)
 
     dump_list_to_file(
         (pred for pred, _, _, _ in predictions_and_confidences_reordered),
-        str(predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION
+        str(predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION,
     )
     dump_list_to_file(
         (conf for _, conf, _, _ in predictions_and_confidences_reordered),
-        str(confidences_file) + RetroFiles.REORDERED_FILE_EXTENSION
+        str(confidences_file) + RetroFiles.REORDERED_FILE_EXTENSION,
     )
     dump_list_to_file(
         (fwd_pred for _, _, fwd_pred, _ in predictions_and_confidences_reordered),
-        str(fwd_predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION
+        str(fwd_predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION,
     )
     dump_list_to_file(
-        (classes_pred for _, _, _, classes_pred in predictions_and_confidences_reordered),
-        str(classes_predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION
+        (
+            classes_pred
+            for _, _, _, classes_pred in predictions_and_confidences_reordered
+        ),
+        str(classes_predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION,
     )
 
 
 @click.command()
-@click.option('--ground_truth_file', '-g', required=True, help='File with ground truth.')
-@click.option('--predictions_file', '-p', required=True, help='File with the predictions.')
-@click.option('--confidences_file', '-l', required=True, help='File with the confidences.')
 @click.option(
-    '--fwd_predictions_file', '-f', required=True, help='File with the forward predictions.'
+    "--ground_truth_file", "-g", required=True, help="File with ground truth."
 )
 @click.option(
-    '--classes_predictions_file', '-c', required=True, help='File with the classes predictions.'
+    "--predictions_file", "-p", required=True, help="File with the predictions."
 )
-@click.option('--n_class_tokens', '-n', required=True, type=int, help='Number of class tokens.')
+@click.option(
+    "--confidences_file", "-l", required=True, help="File with the confidences."
+)
+@click.option(
+    "--fwd_predictions_file",
+    "-f",
+    required=True,
+    help="File with the forward predictions.",
+)
+@click.option(
+    "--classes_predictions_file",
+    "-c",
+    required=True,
+    help="File with the classes predictions.",
+)
+@click.option(
+    "--n_class_tokens", "-n", required=True, type=int, help="Number of class tokens."
+)
 def main(
-    ground_truth_file: str, predictions_file: str, confidences_file: str,
-    fwd_predictions_file: str, classes_predictions_file: str, n_class_tokens: int
+    ground_truth_file: str,
+    predictions_file: str,
+    confidences_file: str,
+    fwd_predictions_file: str,
+    classes_predictions_file: str,
+    n_class_tokens: int,
 ) -> None:
-    logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level='INFO')
+    logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level="INFO")
 
     # Note: we put the actual code in a separate function, so that it can be
     # called also as a Python function.
@@ -125,9 +151,9 @@ def main(
         confidences_file=confidences_file,
         fwd_predictions_file=fwd_predictions_file,
         classes_predictions_file=classes_predictions_file,
-        n_class_tokens=n_class_tokens
+        n_class_tokens=n_class_tokens,
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

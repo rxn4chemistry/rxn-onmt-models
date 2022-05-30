@@ -13,4 +13,5 @@ def set_num_threads(n: int) -> None:
     was not the case.
     """
     import torch
+
     torch.set_num_threads(n)
