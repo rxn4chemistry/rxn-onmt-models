@@ -34,13 +34,19 @@ def test_file_is_tokenized():
 
         # empty file
         dump_list_to_file([], temporary_path / "d.txt")
-        with pytest.raises(StopIteration):
+        with pytest.raises(RuntimeError):
             _ = file_is_tokenized(temporary_path / "d.txt")
 
         # Invalid SMILES
         dump_list_to_file(["I N V A L I D", "CC.C"], temporary_path / "e.txt")
         with pytest.raises(TokenizationError):
             _ = file_is_tokenized(temporary_path / "e.txt")
+
+        # Empty first line - needs to check the second line!
+        dump_list_to_file(["", "C C O >> C C O"], temporary_path / "f.txt")
+        assert file_is_tokenized(temporary_path / "f.txt")
+        dump_list_to_file(["", "CCO>>CCO"], temporary_path / "g.txt")
+        assert not file_is_tokenized(temporary_path / "g.txt")
 
 
 def test_tokenize_class():
@@ -101,7 +107,7 @@ def test_classification_file_is_tokenized():
 
         # empty file
         dump_list_to_file([], temporary_path / "d.txt")
-        with pytest.raises(StopIteration):
+        with pytest.raises(RuntimeError):
             _ = classification_file_is_tokenized(temporary_path / "d.txt")
 
         # Invalid

@@ -151,7 +151,7 @@ def classification_string_is_tokenized(classification_line: str) -> bool:
     Whether a classification line is tokenized or not.
 
     Args:
-        smiles_line: line to inspect
+        classification_line: line to inspect
 
     Raises:
         ValueError: for errors in tokenization or detokenization
@@ -166,34 +166,46 @@ def classification_file_is_tokenized(filepath: PathLike) -> bool:
     Whether a file contains tokenized classes or not.
     '1.2.3' -> '1 1.2 1.2.3'
 
-    By default, this looks at the first line of the file only!
+    By default, this looks at the first non-empty line of the file only!
 
     Raises:
         ValueError: for errors in tokenization or detokenization
-        StopIteration: for empty files
+        RuntimeError: for empty files or files with empty lines only.
 
     Args:
         filepath: path to the file.
     """
-    first_line = next(iterate_lines_from_file(filepath))
-    return classification_string_is_tokenized(first_line)
+    for line in iterate_lines_from_file(filepath):
+        # Ignore empty lines
+        if line == "":
+            continue
+        return classification_string_is_tokenized(line)
+    raise RuntimeError(
+        f'Could not determine whether "{filepath}" is class-tokenized: empty lines only.'
+    )
 
 
 def file_is_tokenized(filepath: PathLike) -> bool:
     """
     Whether a file contains tokenized SMILES or not.
 
-    By default, this looks at the first line of the file only!
+    By default, this looks at the first non-empty line of the file only!
 
     Raises:
         TokenizationError: propagated from tokenize_smiles()
-        StopIteration: for empty files
+        RuntimeError: for empty files or files with empty lines only.
 
     Args:
         filepath: path to the file.
     """
-    first_line = next(iterate_lines_from_file(filepath))
-    return string_is_tokenized(first_line)
+    for line in iterate_lines_from_file(filepath):
+        # Ignore empty lines
+        if line == "":
+            continue
+        return string_is_tokenized(line)
+    raise RuntimeError(
+        f'Could not determine whether "{filepath}" is tokenized: empty lines only.'
+    )
 
 
 def copy_as_detokenized(src: PathLike, dest: PathLike) -> None:
