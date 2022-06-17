@@ -57,7 +57,7 @@ class Translator:
             sentences, **additional_opt_kwargs
         )
 
-        return translations
+        yield from translations
 
     @classmethod
     def from_model_path(
