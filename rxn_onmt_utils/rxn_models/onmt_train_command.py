@@ -1,6 +1,6 @@
 from typing import Any, List, Tuple
 
-from rxn_utilities.file_utilities import PathLike
+from rxn.utilities.files import PathLike
 
 from rxn_onmt_utils.rxn_models.utils import RxnCommand, preprocessed_id_names
 

@@ -9,12 +9,8 @@ import subprocess
 from typing import Optional, Tuple
 
 import click
-from rxn_utilities.file_utilities import (
-    count_lines,
-    dump_list_to_file,
-    load_list_from_file,
-)
-from rxn_utilities.logging_utilities import setup_console_logger
+from rxn.utilities.files import count_lines, dump_list_to_file, load_list_from_file
+from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults

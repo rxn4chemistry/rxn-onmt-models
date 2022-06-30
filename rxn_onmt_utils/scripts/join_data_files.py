@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import List, Tuple
 
 import click
-from rxn_utilities.file_utilities import PathLike
-from rxn_utilities.logging_utilities import setup_console_logger
+from rxn.utilities.files import PathLike
+from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path
 

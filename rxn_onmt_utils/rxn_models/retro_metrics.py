@@ -1,7 +1,7 @@
 import os
 from typing import Any, Dict, Iterable, Optional
 
-from rxn_utilities.file_utilities import PathLike, iterate_lines_from_file
+from rxn.utilities.files import PathLike, iterate_lines_from_file
 
 from .metrics import class_diversity, coverage, round_trip_accuracy, top_n_accuracy
 from .utils import RetroFiles

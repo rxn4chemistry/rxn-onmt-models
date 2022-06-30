@@ -1,6 +1,6 @@
 import click
-from rxn_chemutils.reaction_smiles import ReactionFormat
-from rxn_utilities.file_utilities import load_list_from_file
+from rxn.chemutils.reaction_smiles import ReactionFormat
+from rxn.utilities.files import load_list_from_file
 
 from rxn_onmt_utils.rxn_models.reaction_combiner import ReactionCombiner
 

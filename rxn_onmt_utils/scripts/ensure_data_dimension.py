@@ -4,13 +4,13 @@ from pathlib import Path
 from typing import Iterable, Tuple
 
 import click
-from rxn_utilities.file_utilities import (
+from rxn.utilities.files import (
     PathLike,
     count_lines,
     dump_list_to_file,
     load_list_from_file,
 )
-from rxn_utilities.logging_utilities import setup_console_logger
+from rxn.utilities.logging import setup_console_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

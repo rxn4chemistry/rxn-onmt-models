@@ -7,8 +7,8 @@ import itertools
 from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
-from rxn_chemutils.conversion import canonicalize_smiles, smiles_to_inchi
-from rxn_chemutils.tokenization import detokenize_smiles
+from rxn.chemutils.conversion import canonicalize_smiles, smiles_to_inchi
+from rxn.chemutils.tokenization import detokenize_smiles
 
 INVALID_PRODUCT = "[INVALID]"
 

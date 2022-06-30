@@ -6,8 +6,8 @@ from itertools import count
 from pathlib import Path
 from typing import List, Optional
 
-from rxn_chemutils.tokenization import detokenize_smiles, tokenize_smiles
-from rxn_utilities.file_utilities import PathLike
+from rxn.chemutils.tokenization import detokenize_smiles, tokenize_smiles
+from rxn.utilities.files import PathLike
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

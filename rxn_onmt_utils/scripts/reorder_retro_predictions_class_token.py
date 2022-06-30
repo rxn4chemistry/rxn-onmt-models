@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import List, Tuple, Union
 
 import click
-from rxn_utilities.container_utilities import chunker
-from rxn_utilities.file_utilities import dump_list_to_file, load_list_from_file
+from rxn.utilities.containers import chunker
+from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
 from rxn_onmt_utils.rxn_models.metrics import get_multiplier
 from rxn_onmt_utils.rxn_models.utils import RetroFiles

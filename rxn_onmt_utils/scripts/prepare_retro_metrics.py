@@ -4,13 +4,13 @@ from pathlib import Path
 from typing import Optional, Union
 
 import click
-from rxn_chemutils.tokenization import detokenize_smiles
-from rxn_utilities.file_utilities import (
+from rxn.chemutils.tokenization import detokenize_smiles
+from rxn.utilities.files import (
     dump_list_to_file,
     iterate_lines_from_file,
     load_list_from_file,
 )
-from rxn_utilities.logging_utilities import setup_console_and_file_logger
+from rxn.utilities.logging import setup_console_and_file_logger
 
 from rxn_onmt_utils.rxn_models.classification_translation import (
     classification_translation,

@@ -1,7 +1,7 @@
 from typing import Dict, List, Sequence, Tuple, TypeVar
 
 import numpy as np
-from rxn_utilities.container_utilities import chunker
+from rxn.utilities.containers import chunker
 
 T = TypeVar("T")
 

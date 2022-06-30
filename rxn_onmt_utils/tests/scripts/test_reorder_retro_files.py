@@ -1,7 +1,7 @@
 import tempfile
 from pathlib import Path
 
-from rxn_utilities.file_utilities import dump_list_to_file, load_list_from_file
+from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
 from rxn_onmt_utils.rxn_models.utils import RetroFiles
 from rxn_onmt_utils.scripts.reorder_retro_predictions_class_token import (

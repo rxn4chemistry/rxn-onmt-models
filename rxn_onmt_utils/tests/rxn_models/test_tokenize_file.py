@@ -2,8 +2,8 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from rxn_chemutils.tokenization import TokenizationError
-from rxn_utilities.file_utilities import dump_list_to_file, load_list_from_file
+from rxn.chemutils.tokenization import TokenizationError
+from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
 from rxn_onmt_utils.rxn_models.tokenize_file import (
     classification_file_is_tokenized,

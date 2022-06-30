@@ -1,16 +1,12 @@
 import logging
 import shutil
 
-from rxn_chemutils.tokenization import (
+from rxn.chemutils.tokenization import (
     TokenizationError,
     detokenize_smiles,
     tokenize_smiles,
 )
-from rxn_utilities.file_utilities import (
-    PathLike,
-    dump_list_to_file,
-    iterate_lines_from_file,
-)
+from rxn.utilities.files import PathLike, dump_list_to_file, iterate_lines_from_file
 
 from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path, string_is_tokenized
 

@@ -1,5 +1,5 @@
 import pytest
-from rxn_chemutils.reaction_smiles import ReactionFormat
+from rxn.chemutils.reaction_smiles import ReactionFormat
 
 from rxn_onmt_utils.rxn_models.reaction_combiner import ReactionCombiner
 

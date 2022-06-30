@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 import click
-from rxn_utilities.logging_utilities import setup_console_logger
+from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils.rxn_models.forward_or_retro_translation import (
     forward_or_retro_translation,

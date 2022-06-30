@@ -1,13 +1,13 @@
 from itertools import chain, repeat
 from typing import Iterator, List, Tuple
 
-from rxn_chemutils.reaction_equation import canonicalize_compounds, sort_compounds
-from rxn_chemutils.reaction_smiles import (
+from rxn.chemutils.reaction_equation import canonicalize_compounds, sort_compounds
+from rxn.chemutils.reaction_smiles import (
     ReactionFormat,
     parse_any_reaction_smiles,
     to_reaction_smiles,
 )
-from rxn_chemutils.tokenization import detokenize_smiles
+from rxn.chemutils.tokenization import detokenize_smiles
 
 
 class ReactionCombiner:

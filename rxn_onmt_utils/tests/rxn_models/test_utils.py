@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from rxn_chemutils.tokenization import TokenizationError
+from rxn.chemutils.tokenization import TokenizationError
 
 from rxn_onmt_utils.rxn_models.utils import ModelFiles, string_is_tokenized
 

@@ -2,7 +2,7 @@ import os.path
 import tempfile
 from pathlib import Path
 
-from rxn_utilities.file_utilities import dump_list_to_file, load_list_from_file
+from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
 from rxn_onmt_utils.scripts.join_data_files import join_data_files
 

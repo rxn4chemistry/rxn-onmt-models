@@ -8,7 +8,7 @@ import subprocess
 from typing import Tuple
 
 import click
-from rxn_utilities.logging_utilities import setup_console_logger
+from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults

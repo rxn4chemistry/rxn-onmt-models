@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from rxn_utilities.file_utilities import PathLike, is_path_exists_or_creatable
+from rxn.utilities.files import PathLike, is_path_exists_or_creatable
 
 from .tokenize_file import detokenize_file, file_is_tokenized, tokenize_file
 from .translate import translate

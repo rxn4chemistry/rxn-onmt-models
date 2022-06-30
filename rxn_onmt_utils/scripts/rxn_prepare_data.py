@@ -7,6 +7,7 @@ import logging
 from pathlib import Path
 
 import click
+from rxn.utilities.logging import setup_console_logger
 from rxn_reaction_preprocessing.config import (
     Config,
     DataConfig,
@@ -16,7 +17,6 @@ from rxn_reaction_preprocessing.config import (
     StandardizeConfig,
 )
 from rxn_reaction_preprocessing.main import preprocess_data
-from rxn_utilities.logging_utilities import setup_console_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults

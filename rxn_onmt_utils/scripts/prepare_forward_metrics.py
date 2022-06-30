@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 
 import click
-from rxn_utilities.logging_utilities import setup_console_and_file_logger
+from rxn.utilities.logging import setup_console_and_file_logger
 
 from rxn_onmt_utils.rxn_models.forward_metrics import ForwardMetrics
 from rxn_onmt_utils.rxn_models.forward_or_retro_translation import (

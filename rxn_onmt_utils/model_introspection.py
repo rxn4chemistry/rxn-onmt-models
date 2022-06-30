@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 import torch
 from onmt.inputters.text_dataset import TextMultiField
-from rxn_utilities.file_utilities import PathLike
+from rxn.utilities.files import PathLike
 
 
 def get_model_vocab(model_path: PathLike) -> List[str]:

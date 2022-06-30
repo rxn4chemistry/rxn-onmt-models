@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 from onmt.model_builder import build_model  # type: ignore
 from onmt.utils.parse import ArgumentParser  # type: ignore
-from rxn_utilities.file_utilities import PathLike
+from rxn.utilities.files import PathLike
 from torch.nn.init import xavier_uniform_
 
 logger = logging.getLogger(__name__)

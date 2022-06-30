@@ -1,22 +1,18 @@
 import logging
 
 import click
-from rxn_chemutils.multicomponent_smiles import (
+from rxn.chemutils.multicomponent_smiles import (
     canonicalize_multicomponent_smiles,
     sort_multicomponent_smiles,
 )
-from rxn_chemutils.reaction_equation import canonicalize_compounds, sort_compounds
-from rxn_chemutils.reaction_smiles import (
+from rxn.chemutils.reaction_equation import canonicalize_compounds, sort_compounds
+from rxn.chemutils.reaction_smiles import (
     determine_format,
     parse_reaction_smiles,
     to_reaction_smiles,
 )
-from rxn_utilities.file_utilities import (
-    PathLike,
-    dump_list_to_file,
-    iterate_lines_from_file,
-)
-from rxn_utilities.logging_utilities import setup_console_logger
+from rxn.utilities.files import PathLike, dump_list_to_file, iterate_lines_from_file
+from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path
 

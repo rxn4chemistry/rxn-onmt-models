@@ -5,7 +5,7 @@ from typing import Any, Dict, Tuple
 
 import click
 import pandas as pd
-from rxn_utilities.logging_utilities import setup_console_logger
+from rxn.utilities.logging import setup_console_logger
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

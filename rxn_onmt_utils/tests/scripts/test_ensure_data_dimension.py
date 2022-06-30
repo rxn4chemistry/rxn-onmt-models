@@ -2,7 +2,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from rxn_utilities.file_utilities import dump_list_to_file, load_list_from_file
+from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
 from rxn_onmt_utils.scripts.ensure_data_dimension import ensure_data_dimension
 

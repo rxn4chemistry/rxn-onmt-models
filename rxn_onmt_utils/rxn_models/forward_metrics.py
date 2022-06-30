@@ -1,6 +1,6 @@
 from typing import Any, Dict, Iterable
 
-from rxn_utilities.file_utilities import PathLike, iterate_lines_from_file
+from rxn.utilities.files import PathLike, iterate_lines_from_file
 
 from .metrics import top_n_accuracy
 from .utils import ForwardFiles
