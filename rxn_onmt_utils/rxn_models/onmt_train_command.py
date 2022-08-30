@@ -244,7 +244,7 @@ class OnmtTrainCommand:
         no_gpu: bool,
         data_weights: Tuple[int, ...],
         report_every: int,
-        save_checkpoint_steps: int
+        save_checkpoint_steps: int,
     ) -> "OnmtTrainCommand":
         return cls(
             command_type=RxnCommand.F,
@@ -262,5 +262,5 @@ class OnmtTrainCommand:
             train_steps=train_steps,
             warmup_steps=warmup_steps,
             report_every=report_every,
-            save_checkpoint_steps=save_checkpoint_steps
+            save_checkpoint_steps=save_checkpoint_steps,
         )

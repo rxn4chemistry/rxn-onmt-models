@@ -65,7 +65,7 @@ def main(
     train_num_steps: int,
     warmup_steps: int,
     report_every: int,
-    save_checkpoint_steps: int
+    save_checkpoint_steps: int,
 ) -> None:
     """Finetune an OpenNMT model."""
 
@@ -113,7 +113,7 @@ def main(
         no_gpu=no_gpu,
         data_weights=data_weights,
         report_every=report_every,
-        save_checkpoint_steps=save_checkpoint_steps
+        save_checkpoint_steps=save_checkpoint_steps,
     )
 
     # Write config file
