@@ -99,18 +99,13 @@ class OnmtTrainCommand:
                     )
                 continue
 
-            needs_value = arg.default is None
-
-            # Case 1: needs value but nothing given
-            if needs_value and not arg_given:
-                raise ValueError(f"No value given for {arg.key}")
-            # Case 2: needs value and something given
-            elif needs_value and arg_given:
+            # Case 1: something given (whether there was a default or not)
+            if arg_given:
                 value = str(self._kwargs[arg.key])
-            # Case 3: does not need value, something given
-            elif arg_given:
-                raise ValueError(f"Value given for {arg.key}, but nothing was needed.")
-            # Case 4: does not need value and nothing given
+            # Case 2: default is None (i.e. a value is needed) but nothing was given
+            elif arg.default is None:
+                raise ValueError(f"No value given for {arg.key}")
+            # Case 3: does not need value and nothing given
             else:
                 value = str(arg.default)
 
