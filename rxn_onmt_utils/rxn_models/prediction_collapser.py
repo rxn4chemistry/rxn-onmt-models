@@ -19,7 +19,7 @@ class BaseCollapser:
     """
     Helper class for collapsing things.
 
-    Can be especially useful for extending things in the future, if we
+    Having this base collapser can be useful for extending things in the future, if we
     want to make this class more general than just working with tuples.
     """
 
