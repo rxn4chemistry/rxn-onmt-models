@@ -9,8 +9,10 @@ from pathlib import Path
 import click
 from rxn.utilities.logging import setup_console_logger
 from rxn_reaction_preprocessing.config import (
+    CommonConfig,
     Config,
     DataConfig,
+    FragmentBond,
     InitialDataFormat,
     RxnImportConfig,
     SplitConfig,
@@ -37,7 +39,12 @@ logger.addHandler(logging.NullHandler())
 @click.option(
     "--split_seed", default=defaults.SEED, help="Random seed for splitting step"
 )
-def main(input_data: str, output_dir: str, split_seed: int) -> None:
+@click.option(
+    "--fragment_bond",
+    type=click.Choice(["DOT", "TILDE"], case_sensitive=False),
+    default="DOT",
+)
+def main(input_data: str, output_dir: str, split_seed: int, fragment_bond: str) -> None:
     """Preprocess the data to generate a dataset for training transformer models.
 
     The script will automatically generate the following files in output_dir:
@@ -76,6 +83,7 @@ def main(input_data: str, output_dir: str, split_seed: int) -> None:
             proc_dir=str(output_dir_path),
             name=RxnPreprocessingFiles.FILENAME_ROOT,
         ),
+        common=CommonConfig(fragment_bond=FragmentBond[fragment_bond]),
         rxn_import=RxnImportConfig(data_format=InitialDataFormat.TXT),
         standardize=StandardizeConfig(
             annotation_file_paths=[], discard_unannotated_metals=False
