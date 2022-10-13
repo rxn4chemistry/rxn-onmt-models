@@ -8,7 +8,11 @@ from rxn.chemutils.tokenization import (
 )
 from rxn.utilities.files import PathLike, dump_list_to_file, iterate_lines_from_file
 
-from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path, string_is_tokenized
+from rxn_onmt_utils.rxn_models.utils import (
+    UnclearWhetherTokenized,
+    raise_if_identical_path,
+    string_is_tokenized,
+)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -47,6 +51,29 @@ def detokenize_file(
         detokenize_smiles(line) for line in iterate_lines_from_file(input_file)
     )
     dump_list_to_file(detokenized, output_file)
+
+
+def ensure_tokenized_file(
+    file: PathLike, postfix: str = ".tokenized", invalid_placeholder: str = ""
+) -> str:
+    """
+    Ensure that a file is tokenized: do nothing if the file is already tokenized, create
+    a tokenized copy otherwise.
+
+    Args:
+        file: path to the file that we want to ensure is tokenized.
+        postfix: postfix to add to the tokenized copy (if applicable).
+        invalid_placeholder: placeholder for lines that cannot be tokenized (if applicable).
+
+    Returns:
+        The path to the tokenized file (original path, or path to new file).
+    """
+    if file_is_tokenized(file):
+        return str(file)
+
+    tokenized_copy = str(file) + postfix
+    tokenize_file(file, tokenized_copy, invalid_placeholder=invalid_placeholder)
+    return tokenized_copy
 
 
 def detokenize_class(tokenized_class: str) -> str:
@@ -194,11 +221,13 @@ def file_is_tokenized(filepath: PathLike) -> bool:
     Args:
         filepath: path to the file.
     """
+    # Iterative formulation in case the first line(s) of the file don't make it
+    # clear whether tokenized or not.
     for line in iterate_lines_from_file(filepath):
-        # Ignore empty lines
-        if line == "":
+        try:
+            return string_is_tokenized(line)
+        except UnclearWhetherTokenized:
             continue
-        return string_is_tokenized(line)
     raise RuntimeError(
         f'Could not determine whether "{filepath}" is tokenized: empty lines only.'
     )

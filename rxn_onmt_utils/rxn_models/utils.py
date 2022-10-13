@@ -6,11 +6,18 @@ from itertools import count
 from pathlib import Path
 from typing import List, Optional
 
-from rxn.chemutils.tokenization import detokenize_smiles, tokenize_smiles
+from rxn.chemutils.tokenization import detokenize_smiles, to_tokens
 from rxn.utilities.files import PathLike
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+
+class UnclearWhetherTokenized(ValueError):
+    """Exception raised when unclear if something was tokenized or not."""
+
+    def __init__(self, string: str):
+        super().__init__(f'Cannot determine if "{string}" is tokenized.')
 
 
 def convert_class_token_idx_for_tranlation_models(class_token_idx: int) -> str:
@@ -30,17 +37,20 @@ def raise_if_identical_path(input_path: PathLike, output_path: PathLike) -> None
 
 def string_is_tokenized(smiles_line: str) -> bool:
     """
-    Whether a line is tokenized or not.
+    Whether a string is a tokenized SMILES or not.
 
     Args:
-        smiles_line: line to inspect
+        smiles_line: string to inspect
 
     Raises:
+        ValueError: if not possible to determine whether tokenized or not
         TokenizationError: propagated directly from tokenize_smiles()
     """
     detokenized = detokenize_smiles(smiles_line)
-    tokenized = tokenize_smiles(detokenized)
-    return smiles_line == tokenized
+    tokens = to_tokens(detokenized)
+    if len(tokens) < 2:
+        raise UnclearWhetherTokenized(smiles_line)
+    return " ".join(tokens) == smiles_line
 
 
 class MetricsFiles:

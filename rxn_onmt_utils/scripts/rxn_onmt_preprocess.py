@@ -6,14 +6,20 @@
 import logging
 import random
 import subprocess
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import click
-from rxn.utilities.files import count_lines, dump_list_to_file, load_list_from_file
+from rxn.utilities.files import (
+    PathLike,
+    count_lines,
+    dump_list_to_file,
+    load_list_from_file,
+)
 from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults
+from rxn_onmt_utils.rxn_models.tokenize_file import ensure_tokenized_file
 from rxn_onmt_utils.rxn_models.utils import (
     OnmtPreprocessedFiles,
     RxnPreprocessingFiles,
@@ -100,13 +106,13 @@ def main(
     main_data_files = RxnPreprocessingFiles(input_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(output_dir)
 
-    train_src = main_data_files.get_tokenized_src_file("train", model_task)
-    train_tgt = main_data_files.get_tokenized_tgt_file("train", model_task)
-    valid_src = main_data_files.get_tokenized_src_file("valid", model_task)
-    valid_tgt = main_data_files.get_tokenized_tgt_file("valid", model_task)
+    train_src: PathLike = main_data_files.get_tokenized_src_file("train", model_task)
+    train_tgt: PathLike = main_data_files.get_tokenized_tgt_file("train", model_task)
+    valid_src: PathLike = main_data_files.get_tokenized_src_file("valid", model_task)
+    valid_tgt: PathLike = main_data_files.get_tokenized_tgt_file("valid", model_task)
 
-    train_srcs = [train_src]
-    train_tgts = [train_tgt]
+    train_srcs: List[PathLike] = [train_src]
+    train_tgts: List[PathLike] = [train_tgt]
 
     for i, additional_data_path in enumerate(additional_data, 1):
         data_files = RxnPreprocessingFiles(additional_data_path)
@@ -137,6 +143,12 @@ def main(
         logger.info(
             f'The truncated validation set was saved to "{valid_src}" and "{valid_tgt}".'
         )
+
+    # Tokenize all the files if necessary
+    train_srcs = [ensure_tokenized_file(f) for f in train_srcs]
+    train_tgts = [ensure_tokenized_file(f) for f in train_tgts]
+    valid_src = ensure_tokenized_file(valid_src)
+    valid_tgt = ensure_tokenized_file(valid_tgt)
 
     # yapf: disable
     command_and_args = [
