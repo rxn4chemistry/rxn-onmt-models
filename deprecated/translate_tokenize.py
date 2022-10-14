@@ -6,7 +6,7 @@
 from typing import Tuple
 
 import pandas as pd
-import rxn_reaction_preprocessing as rrp
+import rxn.reaction_preprocessing as rrp
 
 
 def translate_tokenize(input_output_pairs: Tuple[str, ...], model_task: str) -> None:

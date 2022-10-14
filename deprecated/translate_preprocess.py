@@ -4,7 +4,7 @@
 # ALL RIGHTS RESERVED
 import re
 
-import rxn_reaction_preprocessing as rrp
+import rxn.reaction_preprocessing as rrp
 from rdkit import RDLogger
 
 RDLogger.DisableLog("rdApp.*")
