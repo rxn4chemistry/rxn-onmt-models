@@ -235,71 +235,88 @@ class RxnPreprocessingFiles:
     def processed_csv(self) -> Path:
         return self._add_extension("processed.csv")
 
+    def get_processed_csv_for_split(self, split: str) -> Path:
+        split = self._validate_split(split)
+        return self._add_extension(f"processed.{split}.csv")
+
     @property
     def processed_train_csv(self) -> Path:
-        return self._add_extension("processed.train.csv")
+        return self.get_processed_csv_for_split("train")
 
     @property
     def processed_validation_csv(self) -> Path:
-        return self._add_extension("processed.validation.csv")
+        return self.get_processed_csv_for_split("validation")
 
     @property
     def processed_test_csv(self) -> Path:
-        return self._add_extension("processed.test.csv")
+        return self.get_processed_csv_for_split("test")
+
+    def get_precursors_for_split(self, split: str) -> Path:
+        split = self._validate_split(split)
+        return self._add_extension(f"processed.{split}.precursors_tokens")
+
+    def get_products_for_split(self, split: str) -> Path:
+        split = self._validate_split(split)
+        return self._add_extension(f"processed.{split}.products_tokens")
 
     @property
     def train_precursors(self) -> Path:
-        return self._add_extension("processed.train.precursors_tokens")
+        return self.get_precursors_for_split("train")
 
     @property
     def train_products(self) -> Path:
-        return self._add_extension("processed.train.products_tokens")
+        return self.get_products_for_split("train")
 
     @property
     def validation_precursors(self) -> Path:
-        return self._add_extension("processed.validation.precursors_tokens")
+        return self.get_precursors_for_split("validation")
 
     @property
     def validation_products(self) -> Path:
-        return self._add_extension("processed.validation.products_tokens")
+        return self.get_products_for_split("validation")
 
     @property
     def test_precursors(self) -> Path:
-        return self._add_extension("processed.test.precursors_tokens")
+        return self.get_precursors_for_split("test")
 
     @property
     def test_products(self) -> Path:
-        return self._add_extension("processed.test.products_tokens")
+        return self.get_products_for_split("test")
+
+    def get_context_src_for_split(self, split: str) -> Path:
+        split = self._validate_split(split)
+        return self._add_extension(f"processed.{split}.context.src")
+
+    def get_context_tgt_for_split(self, split: str) -> Path:
+        split = self._validate_split(split)
+        return self._add_extension(f"processed.{split}.context.tgt")
+
+    def _validate_split(self, split: str) -> str:
+        if split == "train":
+            return "train"
+        if split == "valid" or split == "validation":
+            return "validation"
+        if split == "test":
+            return "test"
+        raise ValueError(f'Unsupported split: "{split}"')
 
     def get_tokenized_src_file(self, split: str, model_task: str) -> Path:
-        if split == "train" and model_task == "forward":
-            return self.train_precursors
-        if split == "train" and model_task == "retro":
-            return self.train_products
-        if split == "valid" and model_task == "forward":
-            return self.validation_precursors
-        if split == "valid" and model_task == "retro":
-            return self.validation_products
-        if split == "test" and model_task == "forward":
-            return self.test_precursors
-        if split == "test" and model_task == "retro":
-            return self.test_products
-        raise ValueError(f'Unsupported combination: "{split}", "{model_task}"')
+        if model_task == "forward":
+            return self.get_precursors_for_split(split)
+        if model_task == "retro":
+            return self.get_products_for_split(split)
+        if model_task == "context":
+            return self.get_context_src_for_split(split)
+        raise ValueError(f'Unsupported model task: "{model_task}"')
 
     def get_tokenized_tgt_file(self, split: str, model_task: str) -> Path:
-        if split == "train" and model_task == "forward":
-            return self.train_products
-        if split == "train" and model_task == "retro":
-            return self.train_precursors
-        if split == "valid" and model_task == "forward":
-            return self.validation_products
-        if split == "valid" and model_task == "retro":
-            return self.validation_precursors
-        if split == "test" and model_task == "forward":
-            return self.test_products
-        if split == "test" and model_task == "retro":
-            return self.test_precursors
-        raise ValueError(f'Unsupported combination: "{split}", "{model_task}"')
+        if model_task == "forward":
+            return self.get_products_for_split(split)
+        if model_task == "retro":
+            return self.get_precursors_for_split(split)
+        if model_task == "context":
+            return self.get_context_tgt_for_split(split)
+        raise ValueError(f'Unsupported model task: "{model_task}"')
 
 
 class RxnCommand(Flag):
