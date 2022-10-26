@@ -29,7 +29,16 @@ logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings=dict(show_default=True))
-@click.option("--input_data", type=str, required=True, help="Input data TXT")
+@click.option("--input_data", type=str, required=True, help="Input data TXT or CSV")
+@click.option(
+    "--import_from",
+    type=str,
+    default="txt",
+    help=(
+        'Column to import reaction SMILES from in a CSV. The default, "txt", '
+        "means the input file is a simple TXT file."
+    ),
+)
 @click.option(
     "--output_dir",
     type=str,
@@ -44,7 +53,13 @@ logger.addHandler(logging.NullHandler())
     type=click.Choice(["DOT", "TILDE"], case_sensitive=False),
     default="DOT",
 )
-def main(input_data: str, output_dir: str, split_seed: int, fragment_bond: str) -> None:
+def main(
+    input_data: str,
+    import_from: str,
+    output_dir: str,
+    split_seed: int,
+    fragment_bond: str,
+) -> None:
     """Preprocess the data to generate a dataset for training transformer models.
 
     The script will automatically generate the following files in output_dir:
@@ -73,9 +88,12 @@ def main(input_data: str, output_dir: str, split_seed: int, fragment_bond: str) 
     # make sure that the required output directory exists
     output_dir_path.mkdir(parents=True, exist_ok=True)
 
-    # NB: if the format is CSV, use the following below:
-    #   rxn_import.data_format=CSV
-    #   rxn_import.input_csv_column_name=rxn_smiles_xxx
+    if import_from == "txt":
+        import_config = RxnImportConfig(data_format=InitialDataFormat.TXT)
+    else:
+        import_config = RxnImportConfig(
+            data_format=InitialDataFormat.CSV, input_csv_column_name=import_from
+        )
 
     cfg = Config(
         data=DataConfig(
@@ -84,7 +102,7 @@ def main(input_data: str, output_dir: str, split_seed: int, fragment_bond: str) 
             name=RxnPreprocessingFiles.FILENAME_ROOT,
         ),
         common=CommonConfig(fragment_bond=FragmentBond[fragment_bond]),
-        rxn_import=RxnImportConfig(data_format=InitialDataFormat.TXT),
+        rxn_import=import_config,
         standardize=StandardizeConfig(
             annotation_file_paths=[], discard_unannotated_metals=False
         ),
