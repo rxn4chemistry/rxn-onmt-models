@@ -5,7 +5,6 @@
 
 import copy
 import os
-import tempfile
 from argparse import Namespace
 from itertools import repeat
 from typing import Any, Iterable, Iterator, List, Optional
@@ -15,6 +14,7 @@ import onmt.opts as opts
 from onmt.translate.translator import build_translator
 from onmt.utils.misc import split_corpus
 from onmt.utils.parse import ArgumentParser
+from rxn.utilities.files import named_temporary_path
 
 
 @attr.s(auto_attribs=True)
@@ -58,9 +58,9 @@ class RawTranslator:
         new_opt = copy.deepcopy(self.opt)
         for key, value in opt_updated_kwargs.items():
             setattr(new_opt, key, value)
-        with tempfile.NamedTemporaryFile() as tmp_src, tempfile.NamedTemporaryFile() as tmp_output:
-            new_opt.src = tmp_src.name
-            new_opt.output = tmp_output.name
+        with named_temporary_path() as tmp_src, named_temporary_path() as tmp_output:
+            new_opt.src = tmp_src
+            new_opt.output = tmp_output
 
             # List to track which inputs were empty, for post-processing
             empty_input: List[bool] = []
