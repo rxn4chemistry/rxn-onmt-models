@@ -49,7 +49,9 @@ logger.addHandler(logging.NullHandler())
     required=True,
     help="Where to save the preprocessed OpenNMT files.",
 )
-@click.option("--model_task", type=click.Choice(["forward", "retro"]), required=True)
+@click.option(
+    "--model_task", type=click.Choice(["forward", "retro", "context"]), required=True
+)
 @click.option(
     "--truncated_valid_size",
     default=defaults.VALIDATION_TRUNCATE_SIZE,
@@ -106,18 +108,18 @@ def main(
     main_data_files = RxnPreprocessingFiles(input_dir)
     onmt_preprocessed_files = OnmtPreprocessedFiles(output_dir)
 
-    train_src: PathLike = main_data_files.get_tokenized_src_file("train", model_task)
-    train_tgt: PathLike = main_data_files.get_tokenized_tgt_file("train", model_task)
-    valid_src: PathLike = main_data_files.get_tokenized_src_file("valid", model_task)
-    valid_tgt: PathLike = main_data_files.get_tokenized_tgt_file("valid", model_task)
+    train_src: PathLike = main_data_files.get_src_file("train", model_task)
+    train_tgt: PathLike = main_data_files.get_tgt_file("train", model_task)
+    valid_src: PathLike = main_data_files.get_src_file("valid", model_task)
+    valid_tgt: PathLike = main_data_files.get_tgt_file("valid", model_task)
 
     train_srcs: List[PathLike] = [train_src]
     train_tgts: List[PathLike] = [train_tgt]
 
     for i, additional_data_path in enumerate(additional_data, 1):
         data_files = RxnPreprocessingFiles(additional_data_path)
-        train_srcs.append(data_files.get_tokenized_src_file("train", model_task))
-        train_tgts.append(data_files.get_tokenized_tgt_file("train", model_task))
+        train_srcs.append(data_files.get_src_file("train", model_task))
+        train_tgts.append(data_files.get_tgt_file("train", model_task))
 
     if truncated_valid_size != -1 and count_lines(valid_src) > truncated_valid_size:
         logger.info(

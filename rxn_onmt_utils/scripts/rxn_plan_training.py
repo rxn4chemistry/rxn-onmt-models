@@ -52,7 +52,8 @@ class TrainingPlanner:
         # All the logic runs directly in the constructor, to avoid the
         # necessity of initially setting all the values to None.
         self.model_task = click.prompt(
-            "Please enter the model task", type=click.Choice(["forward", "retro"])
+            "Please enter the model task",
+            type=click.Choice(["forward", "retro", "context"]),
         )
 
         self._query_about_finetuning()

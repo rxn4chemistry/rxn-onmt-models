@@ -283,6 +283,10 @@ class RxnPreprocessingFiles:
     def test_products(self) -> Path:
         return self.get_products_for_split("test")
 
+    def get_context_tags_for_split(self, split: str) -> Path:
+        split = self._validate_split(split)
+        return self._add_extension(f"processed.{split}.context.tagged")
+
     def get_context_src_for_split(self, split: str) -> Path:
         split = self._validate_split(split)
         return self._add_extension(f"processed.{split}.context.src")
@@ -300,7 +304,12 @@ class RxnPreprocessingFiles:
             return "test"
         raise ValueError(f'Unsupported split: "{split}"')
 
-    def get_tokenized_src_file(self, split: str, model_task: str) -> Path:
+    def get_src_file(self, split: str, model_task: str) -> Path:
+        """Get the source file for the given task.
+
+        Note: the file is tokenized for the forward and retro tasks, but not
+        for the context task.
+        """
         if model_task == "forward":
             return self.get_precursors_for_split(split)
         if model_task == "retro":
@@ -309,7 +318,12 @@ class RxnPreprocessingFiles:
             return self.get_context_src_for_split(split)
         raise ValueError(f'Unsupported model task: "{model_task}"')
 
-    def get_tokenized_tgt_file(self, split: str, model_task: str) -> Path:
+    def get_tgt_file(self, split: str, model_task: str) -> Path:
+        """Get the target file for the given task.
+
+        Note: the file is tokenized for the forward and retro tasks, but not
+        for the context task.
+        """
         if model_task == "forward":
             return self.get_products_for_split(split)
         if model_task == "retro":

@@ -102,10 +102,10 @@ def evaluate(
     logging.info(f'Copied "{last_model}" to "{last_checkpoint_filepath}"')
 
     src = load_list_from_file(
-        data_files.get_tokenized_src_file(split=evaluate_on, model_task=model_task)
+        data_files.get_src_file(split=evaluate_on, model_task=model_task)
     )
     tgt = load_list_from_file(
-        data_files.get_tokenized_tgt_file(split=evaluate_on, model_task=model_task)
+        data_files.get_tgt_file(split=evaluate_on, model_task=model_task)
     )
 
     translator = Translator.from_model_path(
