@@ -10,6 +10,8 @@ import click
 import rxn_onmt_utils.rxn_models.defaults as defaults
 from rxn_onmt_utils.rxn_models.utils import RxnCommand
 
+_CONTEXT_DATA_BATCH_SIZE = 8
+
 
 class Parameter:
     """
@@ -70,6 +72,10 @@ class TrainingPlanner:
             "Seed for data preprocessing", type=int, default=defaults.SEED
         )
 
+        # note: necessary only for "context" model type
+        self.context_data_batch_size = _CONTEXT_DATA_BATCH_SIZE
+        self._maybe_get_context_data_info()
+
         self.onmt_preprocessed = click.prompt(
             "Where to save the OpenNMT-preprocessed data", type=str
         )
@@ -81,6 +87,10 @@ class TrainingPlanner:
     def prepare_data_cmd(self) -> Iterator[str]:
         for data_txt, data_dir in zip(self.data_txts, self.data_dirs):
             yield self._prepare_data_cmd(data_txt, data_dir, self.preprocess_seed)
+
+    def prepare_context_data_cmd(self) -> Iterator[str]:
+        for data_dir in self.data_dirs:
+            yield self._prepare_context_data_cmd(data_dir)
 
     def preprocess_cmd(self) -> str:
         cmd = (
@@ -236,6 +246,16 @@ class TrainingPlanner:
             )
             self.data_weights.append(weight)
 
+    def _maybe_get_context_data_info(self) -> None:
+        if self.model_task != "context":
+            return
+
+        self.context_data_batch_size = click.prompt(
+            "Batch size for generating context prediction data",
+            type=int,
+            default=_CONTEXT_DATA_BATCH_SIZE,
+        )
+
     def _parameters_for_cmd(self, command: RxnCommand) -> str:
         """
         Get the string to append to the command for all the parameters associated
@@ -260,6 +280,12 @@ class TrainingPlanner:
         command = f"rxn-prepare-data --input_data {data_txt} --output_dir {data_dir} "
         if prepare_seed != defaults.SEED:
             command += f"--split_seed {prepare_seed} "
+        return command
+
+    def _prepare_context_data_cmd(self, data_dir: str) -> str:
+        command = f"rxn-create-context-dataset --data_dir {data_dir} "
+        if self.context_data_batch_size != _CONTEXT_DATA_BATCH_SIZE:
+            command += f"--batch_size {self.context_data_batch_size} "
         return command
 
     def _data_weights(self) -> str:
@@ -293,6 +319,13 @@ def main() -> None:
     for prepare_cmd in tp.prepare_data_cmd():
         print(prepare_cmd)
     print()
+    if tp.model_task == "context":
+        print(
+            "# 1b) Prepare context prediction data (requires rxn-context-prediction package)"
+        )
+        for prepare_context_cmd in tp.prepare_context_data_cmd():
+            print(prepare_context_cmd)
+        print()
     print(f"# 2) Preprocess the data with OpenNMT\n{tp.preprocess_cmd()}\n")
     print(f"# 3) Train the model\n{tp.train_or_finetune_cmd()}\n")
     print(f"# 4) If necessary: continue training\n{tp.continue_training_cmd()}")
