@@ -4,11 +4,10 @@
 # (C) Copyright IBM Corp. 2020
 # ALL RIGHTS RESERVED
 import logging
-import subprocess
 from typing import Tuple
 
 import click
-from rxn.utilities.logging import setup_console_logger
+from rxn.utilities.logging import setup_console_and_file_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.model_introspection import (
@@ -19,6 +18,7 @@ from rxn_onmt_utils.model_resize import ModelResizer
 from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.rxn_models.onmt_train_command import OnmtTrainCommand
 from rxn_onmt_utils.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
+from rxn_onmt_utils.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -69,13 +69,17 @@ def main(
 ) -> None:
     """Finetune an OpenNMT model."""
 
-    setup_console_logger()
+    # Set up paths
+    model_files = ModelFiles(model_output_dir)
+    onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
+
+    # Set up the logs
+    log_file = model_files.model_dir / log_file_name_from_time("rxn-onmt-finetune")
+    setup_console_and_file_logger(log_file)
+
     logger.info(
         f"Fine-tune RXN-OpenNMT model with rxn-onmt-utils, version {__version__}."
     )
-
-    model_files = ModelFiles(model_output_dir)
-    onmt_preprocessed_files = OnmtPreprocessedFiles(preprocess_dir)
 
     if not model_vocab_is_compatible(train_from, onmt_preprocessed_files.vocab_file):
         # Extend the vocabulary of the base model based on the training data for
@@ -118,13 +122,11 @@ def main(
 
     # Write config file
     command_and_args = train_cmd.save_to_config_cmd(config_file)
-    logger.info(f'Running command: {" ".join(command_and_args)}')
-    _ = subprocess.run(command_and_args, check=True)
+    run_command(command_and_args)
 
     # Actual training config file
     command_and_args = train_cmd.execute_from_config_cmd(config_file)
-    logger.info(f'Running command: {" ".join(command_and_args)}')
-    _ = subprocess.run(command_and_args, check=True)
+    run_command(command_and_args)
 
     logger.info(
         f'Fine-tuning successful. Models saved under "{str(model_files.model_dir)}".'

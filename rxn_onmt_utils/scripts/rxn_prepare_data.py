@@ -18,11 +18,12 @@ from rxn.reaction_preprocessing.config import (
     StandardizeConfig,
 )
 from rxn.reaction_preprocessing.main import preprocess_data
-from rxn.utilities.logging import setup_console_logger
+from rxn.utilities.logging import setup_console_and_file_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults
 from rxn_onmt_utils.rxn_models.utils import RxnPreprocessingFiles
+from rxn_onmt_utils.utils import log_file_name_from_time
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -76,10 +77,6 @@ def main(
         data.processed.test.precursors_tokens
         data.processed.test.products_tokens
     """
-    setup_console_logger()
-    logger.info(
-        f"Prepare reaction data for training with rxn-onmt-utils, version {__version__}."
-    )
 
     # Running the command below fails if the paths are relative -> make them absolute
     input_data_path = Path(input_data).resolve()
@@ -87,6 +84,14 @@ def main(
 
     # make sure that the required output directory exists
     output_dir_path.mkdir(parents=True, exist_ok=True)
+
+    # Set up the logs
+    log_file = output_dir_path / log_file_name_from_time("rxn-prepare-data")
+    setup_console_and_file_logger(log_file)
+
+    logger.info(
+        f"Prepare reaction data for training with rxn-onmt-utils, version {__version__}."
+    )
 
     if import_from == "txt":
         import_config = RxnImportConfig(data_format=InitialDataFormat.TXT)

@@ -5,7 +5,6 @@
 # ALL RIGHTS RESERVED
 import logging
 import random
-import subprocess
 from typing import List, Optional, Tuple
 
 import click
@@ -15,7 +14,7 @@ from rxn.utilities.files import (
     dump_list_to_file,
     load_list_from_file,
 )
-from rxn.utilities.logging import setup_console_logger
+from rxn.utilities.logging import setup_console_and_file_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults
@@ -25,6 +24,7 @@ from rxn_onmt_utils.rxn_models.utils import (
     RxnPreprocessingFiles,
     preprocessed_id_names,
 )
+from rxn_onmt_utils.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -97,16 +97,23 @@ def main(
         preprocessed.vocab.pt
         ... (and additional indices for train and valid if the dataset is large)
 
-    Preprocessing data for multi-task training is also supported, if at least one
+    Preprocessing data for multitask training is also supported, if at least one
     `additional_data` parameter is given.
     """
-    setup_console_logger()
+
+    # Set up the paths
+    main_data_files = RxnPreprocessingFiles(input_dir)
+    onmt_preprocessed_files = OnmtPreprocessedFiles(output_dir)
+
+    # Set up the logs
+    log_file = onmt_preprocessed_files.preprocessed_dir / log_file_name_from_time(
+        "rxn-onmt-preprocess"
+    )
+    setup_console_and_file_logger(log_file)
+
     logger.info(
         f"Preprocess data for OpenNMT with rxn-onmt-utils, version {__version__}."
     )
-
-    main_data_files = RxnPreprocessingFiles(input_dir)
-    onmt_preprocessed_files = OnmtPreprocessedFiles(output_dir)
 
     train_src: PathLike = main_data_files.get_src_file("train", model_task)
     train_tgt: PathLike = main_data_files.get_tgt_file("train", model_task)
@@ -177,14 +184,7 @@ def main(
         train_ids = preprocessed_id_names(len(additional_data))
         command_and_args.extend(["-train_ids", *train_ids])
 
-    logger.info(f'Running command: {" ".join(command_and_args)}')
-    try:
-        output = subprocess.check_output(command_and_args)
-    except subprocess.CalledProcessError as e:
-        logger.exception("Error during OpenNMT preprocessing")
-        raise SystemExit("Error during OpenNMT preprocessing") from e
-
-    logger.info(f'Command ran successfully. Output:\n{output.decode("UTF-8")}')
+    run_command(command_and_args)
 
 
 if __name__ == "__main__":
