@@ -295,6 +295,11 @@ class RxnPreprocessingFiles:
         split = self._validate_split(split)
         return self._add_extension(f"processed.{split}.context.tgt")
 
+    @staticmethod
+    def augmented(data_path: Path) -> Path:
+        """Get the path for the augmented version of a data file."""
+        return data_path.with_name(data_path.name + ".augmented")
+
     def _validate_split(self, split: str) -> str:
         if split == "train":
             return "train"

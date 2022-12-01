@@ -3,9 +3,10 @@
 # IBM Research Zurich Licensed Internal Code
 # (C) Copyright IBM Corp. 2020
 # ALL RIGHTS RESERVED
-from typing import Iterator, List, Union
+from typing import Iterator, List, Optional, Union
 
 import click
+from attr import define
 
 import rxn_onmt_utils.rxn_models.defaults as defaults
 from rxn_onmt_utils.rxn_models.utils import RxnCommand
@@ -44,6 +45,24 @@ class Parameter:
         self.optional = optional
 
 
+@define
+class ContextOptions:
+    tagging_batch_size: int
+
+
+@define
+class AugmentOptions:
+    number_augmentations: int
+
+
+@define
+class DatasetOptions:
+    txt_path: str
+    processed_path: str
+    weight: int
+    augment: Optional[AugmentOptions]
+
+
 class TrainingPlanner:
     """
     Class that will take the user through the values needed for training models,
@@ -61,20 +80,14 @@ class TrainingPlanner:
         self._query_about_finetuning()
 
         self.on_gpu = click.confirm("GPU available?", default=True)
-        self.is_multi_task = click.confirm(
-            "Do you want to train on multiple data sets (multi-task)?", default=False
-        )
 
-        self._get_main_dataset()
-        self._maybe_get_additional_dataset_info()
+        self.datasets = self._get_datasets()
 
         self.preprocess_seed = click.prompt(
             "Seed for data preprocessing", type=int, default=defaults.SEED
         )
 
-        # note: necessary only for "context" model type
-        self.context_data_batch_size = _CONTEXT_DATA_BATCH_SIZE
-        self._maybe_get_context_data_info()
+        self.context_options = self._maybe_get_context_options()
 
         self.onmt_preprocessed = click.prompt(
             "Where to save the OpenNMT-preprocessed data", type=str
@@ -85,23 +98,28 @@ class TrainingPlanner:
         self._query_parameters()
 
     def prepare_data_cmd(self) -> Iterator[str]:
-        for data_txt, data_dir in zip(self.data_txts, self.data_dirs):
-            yield self._prepare_data_cmd(data_txt, data_dir, self.preprocess_seed)
+        for dataset in self.datasets:
+            yield self._prepare_data_cmd(dataset, self.preprocess_seed)
 
     def prepare_context_data_cmd(self) -> Iterator[str]:
-        for data_dir in self.data_dirs:
-            yield self._prepare_context_data_cmd(data_dir)
+        for dataset in self.datasets:
+            yield self._prepare_context_data_cmd(dataset.processed_path)
+
+    def augment_data_cmd(self) -> Iterator[str]:
+        for dataset in self.datasets:
+            cmd = self._augment_cmd(dataset)
+            if cmd is not None:
+                yield cmd
 
     def preprocess_cmd(self) -> str:
         cmd = (
             "rxn-onmt-preprocess "
-            f"--input_dir {self.main_data_dir} "
+            f"--input_dir {self.datasets[0].processed_path} "
             f"--output_dir {self.onmt_preprocessed} "
             f"--model_task {self.model_task} "
         )
-        if self.is_multi_task:
-            for data_dir in self.data_dirs[1:]:
-                cmd += f"--additional_data {data_dir} "
+        for dataset in self.datasets[1:]:
+            cmd += f"--additional_data {dataset.processed_path} "
         return cmd
 
     def train_or_finetune_cmd(self) -> str:
@@ -154,17 +172,6 @@ class TrainingPlanner:
         else:
             self.needed_commands = [RxnCommand.T, RxnCommand.C]
             self.train_from = None
-
-    def _get_main_dataset(self) -> None:
-        self.main_data_txt = click.prompt("Path to the main data set (TXT)", type=str)
-        self.main_data_dir = click.prompt(
-            "Where to save the main processed data set", type=str
-        )
-
-        # Get all the paths to data
-        self.data_txts = [self.main_data_txt]
-        self.data_dirs = [self.main_data_dir]
-        self.data_weights: List[int] = []
 
     def _initialize_parameters(self) -> None:
         self.parameters = [
@@ -219,42 +226,63 @@ class TrainingPlanner:
             value = click.prompt(p.query, type=p.type, default=p.default)
             self.param_values[p.key] = value
 
-    def _maybe_get_additional_dataset_info(self) -> None:
+    def _get_datasets(self) -> List[DatasetOptions]:
         """
-        Get the information on additional datasets from the user, if there
-        are multiple data sources.
+        Get the information on datasets from the user.
         """
-        if not self.is_multi_task:
-            return
+        datasets = []
 
-        number_additional_datasets = click.prompt(
-            "Number of additional datasets", type=click.IntRange(min=1)
+        number_datasets = click.prompt(
+            "Number of datasets (more than one means multitask learning)",
+            type=click.IntRange(min=1),
+            default=1,
         )
-        for i in range(number_additional_datasets):
-            data_txt = click.prompt(
-                f"Path to the additional data set (TXT) no {i + 1}", type=str
-            )
+        for i in range(number_datasets):
+            data_txt = click.prompt(f"Path to the data set (TXT) no {i + 1}", type=str)
             data_dir = click.prompt(
                 f"Where to save the processed data set no {i + 1}", type=str
             )
-            self.data_txts.append(data_txt)
-            self.data_dirs.append(data_dir)
-        for data_txt in self.data_txts:
-            weight = click.prompt(
-                f'Training weight for data set in "{data_txt}"',
-                type=click.IntRange(min=1),
+
+            # weight does not need to be queried if there's only one dataset
+            if number_datasets == 1:
+                weight = 1
+            else:
+                weight = click.prompt(
+                    f"Training weight for data set no {i + 1}",
+                    type=click.IntRange(min=1),
+                )
+            datasets.append(
+                DatasetOptions(
+                    txt_path=data_txt,
+                    processed_path=data_dir,
+                    weight=weight,
+                    augment=self._maybe_get_augment_options(i + 1),
+                )
             )
-            self.data_weights.append(weight)
 
-    def _maybe_get_context_data_info(self) -> None:
+        return datasets
+
+    def _maybe_get_context_options(self) -> Optional[ContextOptions]:
         if self.model_task != "context":
-            return
+            return None
 
-        self.context_data_batch_size = click.prompt(
+        tagging_batch_size = click.prompt(
             "Batch size for generating context prediction data",
             type=int,
             default=_CONTEXT_DATA_BATCH_SIZE,
         )
+        return ContextOptions(tagging_batch_size=tagging_batch_size)
+
+    def _maybe_get_augment_options(self, dataset_no: int) -> Optional[AugmentOptions]:
+        augment = click.confirm(
+            f"Would you like to augment the data set {dataset_no}?", default=False
+        )
+        if not augment:
+            return None
+        n_augmentations = click.prompt(
+            "Number of augmentations per sample", type=click.IntRange(min=1)
+        )
+        return AugmentOptions(number_augmentations=n_augmentations)
 
     def _parameters_for_cmd(self, command: RxnCommand) -> str:
         """
@@ -276,23 +304,37 @@ class TrainingPlanner:
         return to_add
 
     @staticmethod
-    def _prepare_data_cmd(data_txt: str, data_dir: str, prepare_seed: int) -> str:
-        command = f"rxn-prepare-data --input_data {data_txt} --output_dir {data_dir} "
+    def _prepare_data_cmd(dataset: DatasetOptions, prepare_seed: int) -> str:
+        command = (
+            f"rxn-prepare-data --input_data {dataset.txt_path} "
+            f"--output_dir {dataset.processed_path} "
+        )
         if prepare_seed != defaults.SEED:
             command += f"--split_seed {prepare_seed} "
         return command
 
+    def _augment_cmd(self, dataset: DatasetOptions) -> Optional[str]:
+        if dataset.augment is None:
+            return None
+        return (
+            f"rxn-onmt-augment --data_dir {dataset.processed_path} --model_task "
+            f"{self.model_task} -n {dataset.augment.number_augmentations}"
+        )
+
     def _prepare_context_data_cmd(self, data_dir: str) -> str:
+        if self.context_options is None:
+            raise RuntimeError("Context options not defined.")
+
         command = f"rxn-create-context-dataset --data_dir {data_dir} "
-        if self.context_data_batch_size != _CONTEXT_DATA_BATCH_SIZE:
-            command += f"--batch_size {self.context_data_batch_size} "
+        if self.context_options.tagging_batch_size != _CONTEXT_DATA_BATCH_SIZE:
+            command += f"--batch_size {self.context_options.tagging_batch_size} "
         return command
 
     def _data_weights(self) -> str:
         data_weights = ""
-        if self.is_multi_task:
-            for weight in self.data_weights:
-                data_weights += f"--data_weights {weight} "
+        if len(self.datasets) > 1:
+            for dataset in self.datasets:
+                data_weights += f"--data_weights {dataset.weight} "
         return data_weights
 
     def _gpu(self) -> str:
@@ -325,6 +367,11 @@ def main() -> None:
         )
         for prepare_context_cmd in tp.prepare_context_data_cmd():
             print(prepare_context_cmd)
+        print()
+    if any(dataset.augment is not None for dataset in tp.datasets):
+        print("# 1c) Augment the data")
+        for augment_cmd in tp.augment_data_cmd():
+            print(augment_cmd)
         print()
     print(f"# 2) Preprocess the data with OpenNMT\n{tp.preprocess_cmd()}\n")
     print(f"# 3) Train the model\n{tp.train_or_finetune_cmd()}\n")

@@ -5,6 +5,7 @@
 # ALL RIGHTS RESERVED
 import logging
 import random
+from pathlib import Path
 from typing import List, Optional, Tuple
 
 import click
@@ -28,6 +29,33 @@ from rxn_onmt_utils.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+
+def determine_train_dataset(
+    data: RxnPreprocessingFiles, model_task: str
+) -> Tuple[Path, Path]:
+    """
+    Get the paths to the src and tgt dataset, trying to get the augmented
+    one if it exists.
+
+    Args:
+        data: info about training files.
+        model_task: model task.
+
+    Returns:
+        Tuple for the src and tgt files (the augmented ones if possible).
+    """
+    src = data.get_src_file("train", model_task)
+    tgt = data.get_tgt_file("train", model_task)
+
+    augmented_src = data.augmented(src)
+    augmented_tgt = data.augmented(tgt)
+    if augmented_src.exists() and augmented_tgt.exists():
+        logger.info(f'Found augmented train split in "{data.processed_data_dir}"')
+        src = augmented_src
+        tgt = augmented_tgt
+
+    return src, tgt
 
 
 @click.command()
@@ -115,8 +143,7 @@ def main(
         f"Preprocess data for OpenNMT with rxn-onmt-utils, version {__version__}."
     )
 
-    train_src: PathLike = main_data_files.get_src_file("train", model_task)
-    train_tgt: PathLike = main_data_files.get_tgt_file("train", model_task)
+    train_src, train_tgt = determine_train_dataset(main_data_files, model_task)
     valid_src: PathLike = main_data_files.get_src_file("valid", model_task)
     valid_tgt: PathLike = main_data_files.get_tgt_file("valid", model_task)
 
@@ -125,8 +152,9 @@ def main(
 
     for i, additional_data_path in enumerate(additional_data, 1):
         data_files = RxnPreprocessingFiles(additional_data_path)
-        train_srcs.append(data_files.get_src_file("train", model_task))
-        train_tgts.append(data_files.get_tgt_file("train", model_task))
+        src, tgt = determine_train_dataset(data_files, model_task)
+        train_srcs.append(src)
+        train_tgts.append(tgt)
 
     if truncated_valid_size != -1 and count_lines(valid_src) > truncated_valid_size:
         logger.info(
