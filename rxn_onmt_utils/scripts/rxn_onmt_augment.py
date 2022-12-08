@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Tuple
 
 import click
+from rxn.utilities.files import stable_shuffle
 from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils.rxn_models.augmentation import augment_translation_dataset
@@ -44,6 +45,11 @@ logger.addHandler(logging.NullHandler())
     help="Whether to keep the original sample along the augmented ones.",
 )
 @click.option(
+    "--shuffle/--no_shuffle",
+    default=True,
+    help="Whether to shuffle the augmented files.",
+)
+@click.option(
     "--seed",
     default=42,
     help="Random seed.",
@@ -54,6 +60,7 @@ def main(
     splits: Tuple[str, ...],
     n_augmentations: int,
     keep_original: bool,
+    shuffle: bool,
     seed: int,
 ) -> None:
     """
@@ -92,6 +99,14 @@ def main(
             n_augmentations=n_augmentations,
             keep_original=keep_original,
         )
+
+        if shuffle:
+            logger.info(
+                f'Shuffling the src "{src_augmented}" and tgt "{tgt_augmented}"'
+            )
+            # Note: the seed must be identical for both shuffles!
+            stable_shuffle(src_augmented, src_augmented, seed)
+            stable_shuffle(tgt_augmented, tgt_augmented, seed)
 
 
 if __name__ == "__main__":
