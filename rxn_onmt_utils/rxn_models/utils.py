@@ -108,6 +108,22 @@ class ForwardFiles(MetricsFiles):
         )
 
 
+class ContextFiles(MetricsFiles):
+    """
+    Class holding the locations of the files to write to or to read from for
+    the evaluation of context metrics.
+    """
+
+    def __init__(self, directory: PathLike):
+        super().__init__(directory=directory)
+        self.gt_src = self.directory / "gt_src.txt"
+        self.gt_tgt = self.directory / "gt_tgt.txt"
+        self.predicted_context = self.directory / "predicted_context.txt"
+        self.predicted_context_canonical = (
+            self.directory / "predicted_context_canonical.txt"
+        )
+
+
 def preprocessed_id_names(n_additional_sets: int) -> List[str]:
     """Get the names of the ids for the datasets used in multi-task training
     with OpenNMT.

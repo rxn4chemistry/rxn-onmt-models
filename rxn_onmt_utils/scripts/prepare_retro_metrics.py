@@ -26,6 +26,7 @@ from rxn_onmt_utils.rxn_models.utils import (
     raise_if_identical_path,
 )
 from rxn_onmt_utils.scripts.canonicalize_file import canonicalize_file
+from rxn_onmt_utils.utils import ensure_directory_exists_and_is_empty
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -53,18 +54,36 @@ def create_rxn_from_files(
 @click.option(
     "--precursors_file",
     required=True,
+    type=click.Path(exists=True, path_type=Path),
     help="File containing the precursors of a test set",
 )
 @click.option(
-    "--products_file", required=True, help="File containing the products of a test set"
+    "--products_file",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="File containing the products of a test set",
 )
-@click.option("--output_dir", required=True, help="Where to save all the files")
 @click.option(
-    "--retro_model", required=True, help="Path to the single-step retrosynthesis model"
+    "--output_dir",
+    required=True,
+    type=click.Path(path_type=Path),
+    help="Where to save all the files",
 )
-@click.option("--forward_model", required=True, help="Path to the forward model")
+@click.option(
+    "--retro_model",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the single-step retrosynthesis model",
+)
+@click.option(
+    "--forward_model",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the forward model",
+)
 @click.option(
     "--classification_model",
+    type=click.Path(exists=True, path_type=Path),
     required=False,
     default=None,
     help="Path to the classification model",
@@ -87,12 +106,12 @@ def create_rxn_from_files(
     help="The number of tokens used in the trainings",
 )
 def main(
-    precursors_file: str,
-    products_file: str,
-    output_dir: str,
-    retro_model: str,
-    forward_model: str,
-    classification_model: Optional[str],
+    precursors_file: Path,
+    products_file: Path,
+    output_dir: Path,
+    retro_model: Path,
+    forward_model: Path,
+    classification_model: Optional[Path],
     batch_size: int,
     n_best: int,
     gpu: bool,
@@ -103,15 +122,8 @@ def main(
     """Starting from the ground truth files and two models (retro, forward),
     generate the translation files needed for the metrics, and calculate the default metrics."""
 
-    output_path = Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
-    output_path_contains_files = any(output_path.iterdir())
-    if output_path_contains_files:
-        raise RuntimeError(
-            f'The output directory "{output_path}" is required to be empty.'
-        )
-
-    retro_files = RetroFiles(output_path)
+    ensure_directory_exists_and_is_empty(output_dir)
+    retro_files = RetroFiles(output_dir)
 
     setup_console_and_file_logger(retro_files.log_file)
 

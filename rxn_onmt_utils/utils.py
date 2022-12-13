@@ -1,6 +1,7 @@
 import datetime
 import logging
 import subprocess
+from pathlib import Path
 from typing import IO, List, Optional, cast
 
 logger = logging.getLogger(__name__)
@@ -59,3 +60,10 @@ def run_command(command_and_args: List[str]) -> None:
         )
         logger.error(msg)
         raise RuntimeError(msg)
+
+
+def ensure_directory_exists_and_is_empty(directory: Path) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    directory_contains_files = any(directory.iterdir())
+    if directory_contains_files:
+        raise RuntimeError(f'The directory "{directory}" is required to be empty.')
