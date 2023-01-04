@@ -1,9 +1,10 @@
-import tempfile
-from pathlib import Path
-
 import pytest
 from rxn.chemutils.tokenization import TokenizationError
-from rxn.utilities.files import dump_list_to_file, load_list_from_file
+from rxn.utilities.files import (
+    dump_list_to_file,
+    load_list_from_file,
+    named_temporary_path,
+)
 
 from rxn_onmt_utils.rxn_models.tokenize_file import (
     classification_file_is_tokenized,
@@ -19,85 +20,82 @@ from rxn_onmt_utils.rxn_models.tokenize_file import (
 
 
 def test_file_is_tokenized():
-    # to test file_is_tokenized(), we create a few temporary files in a directory
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
+    # Basic tokenized example
+    with named_temporary_path() as path:
+        dump_list_to_file(["C C O >> C C O", "C C . C"], path)
+        assert file_is_tokenized(path)
 
-        # Basic tokenized example
-        dump_list_to_file(["C C O >> C C O", "C C . C"], temporary_path / "a.txt")
-        assert file_is_tokenized(temporary_path / "a.txt")
+    # Basic non-tokenized example
+    with named_temporary_path() as path:
+        dump_list_to_file(["CCO>>CCO", "CC.C"], path)
+        assert not file_is_tokenized(path)
 
-        # Basic non-tokenized example
-        dump_list_to_file(["CCO>>CCO", "CC.C"], temporary_path / "b.txt")
-        assert not file_is_tokenized(temporary_path / "b.txt")
+    # Only checks the first line - returns True even if the second line is not tokenized
+    with named_temporary_path() as path:
+        dump_list_to_file(["C C O >> C C O", "CC.C"], path)
+        assert file_is_tokenized(path)
 
-        # Only checks the first line - returns True even if the second line is not tokenized
-        dump_list_to_file(["C C O >> C C O", "CC.C"], temporary_path / "c.txt")
-        assert file_is_tokenized(temporary_path / "c.txt")
-
-        # empty file
-        dump_list_to_file([], temporary_path / "d.txt")
+    # empty file
+    with named_temporary_path() as path:
+        dump_list_to_file([], path)
         with pytest.raises(RuntimeError):
-            _ = file_is_tokenized(temporary_path / "d.txt")
+            _ = file_is_tokenized(path)
 
-        # Invalid SMILES
-        dump_list_to_file(["I N V A L I D", "CC.C"], temporary_path / "e.txt")
+    # Invalid SMILES
+    with named_temporary_path() as path:
+        dump_list_to_file(["I N V A L I D", "CC.C"], path)
         with pytest.raises(TokenizationError):
-            _ = file_is_tokenized(temporary_path / "e.txt")
+            _ = file_is_tokenized(path)
 
-        # Empty first line - needs to check the second line!
-        dump_list_to_file(["", "C C O >> C C O"], temporary_path / "f.txt")
-        assert file_is_tokenized(temporary_path / "f.txt")
-        dump_list_to_file(["", "CCO>>CCO"], temporary_path / "g.txt")
-        assert not file_is_tokenized(temporary_path / "g.txt")
+    # Empty first line - needs to check the second line!
+    with named_temporary_path() as path:
+        dump_list_to_file(["", "C C O >> C C O"], path)
+        assert file_is_tokenized(path)
+    with named_temporary_path() as path:
+        dump_list_to_file(["", "CCO>>CCO"], path)
+        assert not file_is_tokenized(path)
 
-        # First line has one single token - needs to check the second line!
-        dump_list_to_file([">>", "C C O >> C C O"], temporary_path / "h.txt")
-        assert file_is_tokenized(temporary_path / "h.txt")
-        dump_list_to_file([">>", "CCO>>CCO"], temporary_path / "i.txt")
-        assert not file_is_tokenized(temporary_path / "i.txt")
+    # First line has one single token - needs to check the second line!
+    with named_temporary_path() as path:
+        dump_list_to_file([">>", "C C O >> C C O"], path)
+        assert file_is_tokenized(path)
+    with named_temporary_path() as path:
+        dump_list_to_file([">>", "CCO>>CCO"], path)
+        assert not file_is_tokenized(path)
 
 
 def test_tokenize_file():
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
-
+    with named_temporary_path() as f_in, named_temporary_path() as f_out:
         # Original content
         original = ["CCO>>CCO", "CC.C", "INVALID", "C(NCC)[S]OC"]
-        dump_list_to_file(original, temporary_path / "a.txt")
+        dump_list_to_file(original, f_in)
 
         # Expected (tokenized) content
         placeholder = "ERROR"
         tokenized = ["C C O >> C C O", "C C . C", placeholder, "C ( N C C ) [S] O C"]
 
-        tokenize_file(
-            temporary_path / "a.txt",
-            temporary_path / "b.txt",
-            invalid_placeholder=placeholder,
-        )
+        tokenize_file(f_in, f_out, invalid_placeholder=placeholder)
 
-        assert load_list_from_file(temporary_path / "b.txt") == tokenized
+        assert load_list_from_file(f_out) == tokenized
 
 
 def test_detokenize_file():
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
-
+    with named_temporary_path() as f_in, named_temporary_path() as f_out:
         # Original (tokenized) content
         original = ["C C O >> C C O", "C C . C", "C ( N C C ) [S] O C"]
-        dump_list_to_file(original, temporary_path / "a.txt")
+        dump_list_to_file(original, f_in)
 
         # Expected (detokenized) content
         detokenized = ["CCO>>CCO", "CC.C", "C(NCC)[S]OC"]
 
-        detokenize_file(temporary_path / "a.txt", temporary_path / "b.txt")
+        detokenize_file(f_in, f_out)
 
-        assert load_list_from_file(temporary_path / "b.txt") == detokenized
+        assert load_list_from_file(f_out) == detokenized
 
 
 def test_ensure_tokenized_file():
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
+    with named_temporary_path() as temporary_path:
+        temporary_path.mkdir()
 
         # prepare filenames
         postfix = ".tknz"
@@ -171,56 +169,51 @@ def test_classification_string_is_tokenized():
 
 
 def test_classification_file_is_tokenized():
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
+    # Basic tokenized example
+    with named_temporary_path() as path:
+        dump_list_to_file(["1 1.2 1.2.3", "0"], path)
+        assert classification_file_is_tokenized(path)
 
-        # Basic tokenized example
-        dump_list_to_file(["1 1.2 1.2.3", "0"], temporary_path / "a.txt")
-        assert classification_file_is_tokenized(temporary_path / "a.txt")
+    # Basic non-tokenized example
+    with named_temporary_path() as path:
+        dump_list_to_file(["1.2.3", "0"], path)
+        assert not classification_file_is_tokenized(path)
 
-        # Basic non-tokenized example
-        dump_list_to_file(["1.2.3", "0"], temporary_path / "b.txt")
-        assert not classification_file_is_tokenized(temporary_path / "b.txt")
+    # Only checks the first line - returns True even if the second line is not tokenized
+    with named_temporary_path() as path:
+        dump_list_to_file(["1 1.2 1.2.3", "1.2.3"], path)
+        assert classification_file_is_tokenized(path)
 
-        # Only checks the first line - returns True even if the second line is not tokenized
-        dump_list_to_file(["1 1.2 1.2.3", "1.2.3"], temporary_path / "c.txt")
-        assert classification_file_is_tokenized(temporary_path / "c.txt")
-
-        # empty file
-        dump_list_to_file([], temporary_path / "d.txt")
+    # empty file
+    with named_temporary_path() as path:
+        dump_list_to_file([], path)
         with pytest.raises(RuntimeError):
-            _ = classification_file_is_tokenized(temporary_path / "d.txt")
+            _ = classification_file_is_tokenized(path)
 
-        # Invalid
-        dump_list_to_file(["1 1.2", "1 1.2 1.2.3"], temporary_path / "e.txt")
+    # Invalid
+    with named_temporary_path() as path:
+        dump_list_to_file(["1 1.2", "1 1.2 1.2.3"], path)
         with pytest.raises(ValueError):
-            _ = classification_file_is_tokenized(temporary_path / "e.txt")
+            _ = classification_file_is_tokenized(path)
 
 
 def test_tokenize_classification_file():
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
-
-        # Basic tokenized example
-        dump_list_to_file(["1.2.3", "0", "2.11.4", "11.0.23"], temporary_path / "a.txt")
-        tokenize_classification_file(
-            temporary_path / "a.txt", temporary_path / "a.txt.tokenized"
-        )
-        assert load_list_from_file(temporary_path / "a.txt.tokenized") == [
+    # Basic tokenized example
+    with named_temporary_path() as f_in, named_temporary_path() as f_out:
+        dump_list_to_file(["1.2.3", "0", "2.11.4", "11.0.23"], f_in)
+        tokenize_classification_file(f_in, f_out)
+        assert load_list_from_file(f_out) == [
             "1 1.2 1.2.3",
             "0",
             "2 2.11 2.11.4",
             "11 11.0 11.0.23",
         ]
 
-        # Invalid classes present
-        dump_list_to_file(
-            ["1.2.3.5", "0", "2.11.4", "11.0.23"], temporary_path / "b.txt"
-        )
-        tokenize_classification_file(
-            temporary_path / "b.txt", temporary_path / "b.txt.tokenized"
-        )
-        assert load_list_from_file(temporary_path / "b.txt.tokenized") == [
+    # Invalid classes present
+    with named_temporary_path() as f_in, named_temporary_path() as f_out:
+        dump_list_to_file(["1.2.3.5", "0", "2.11.4", "11.0.23"], f_in)
+        tokenize_classification_file(f_in, f_out)
+        assert load_list_from_file(f_out) == [
             "",
             "0",
             "2 2.11 2.11.4",

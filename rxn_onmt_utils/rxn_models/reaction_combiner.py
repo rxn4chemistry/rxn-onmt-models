@@ -9,6 +9,8 @@ from rxn.chemutils.reaction_smiles import (
 )
 from rxn.chemutils.tokenization import detokenize_smiles
 
+from rxn_onmt_utils.utils import get_multipliers
+
 
 class ReactionCombiner:
     """
@@ -96,14 +98,13 @@ class ReactionCombiner:
         a = len(precursors)
         b = len(products)
 
-        if a == b:
-            return 1, 1
-        if a > b and a % b == 0:
-            return 1, a // b
-        if b > a and b % a == 0:
-            return b // a, 1
+        m_a, m_b = get_multipliers(a, b)
 
-        raise ValueError(
-            "The number of precursor sets and the number of products "
-            f"are not an exact multiple of each other ({a} and {b})"
-        )
+        # Fail if one is not exactly a multiple of the other
+        if 1 not in {m_a, m_b}:
+            raise ValueError(
+                "The number of precursor sets and the number of products "
+                f"are not an exact multiple of each other ({a} and {b})"
+            )
+
+        return m_a, m_b

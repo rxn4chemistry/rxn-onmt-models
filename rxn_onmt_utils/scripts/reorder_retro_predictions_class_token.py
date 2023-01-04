@@ -6,7 +6,7 @@ import click
 from rxn.utilities.containers import chunker
 from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
-from rxn_onmt_utils.rxn_models.metrics import get_multiplier
+from rxn_onmt_utils.rxn_models.metrics import get_sequence_multiplier
 from rxn_onmt_utils.rxn_models.utils import RetroFiles
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,9 @@ def reorder_retro_predictions_class_token(
     classes_predictions = load_list_from_file(classes_predictions_file)
 
     # Get the exact multiplier
-    multiplier = get_multiplier(ground_truth=ground_truth, predictions=predictions)
+    multiplier = get_sequence_multiplier(
+        ground_truth=ground_truth, predictions=predictions
+    )
 
     if multiplier % n_class_tokens != 0:
         raise ValueError(

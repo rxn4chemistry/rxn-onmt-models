@@ -3,6 +3,8 @@ from typing import Dict, List, Sequence, Tuple, TypeVar
 import numpy as np
 from rxn.utilities.containers import chunker
 
+from rxn_onmt_utils.utils import get_multiplier
+
 T = TypeVar("T")
 
 
@@ -13,12 +15,14 @@ def top_n_accuracy(
     Compute the top-n accuracy values.
 
     Raises:
-        ValueError: if the list sizes are incompatible, forwarded from get_multiplier().
+        ValueError: if the list sizes are incompatible, forwarded from get_sequence_multiplier().
 
     Returns:
         Dictionary of top-n accuracy values.
     """
-    multiplier = get_multiplier(ground_truth=ground_truth, predictions=predictions)
+    multiplier = get_sequence_multiplier(
+        ground_truth=ground_truth, predictions=predictions
+    )
 
     # we will count, for each "n", how many predictions are correct
     correct_for_topn: List[int] = [0 for _ in range(multiplier)]
@@ -41,14 +45,16 @@ def round_trip_accuracy(
     Compute the round-trip accuracy values, split by n-th predictions.
 
     Raises:
-        ValueError: if the list sizes are incompatible, forwarded from get_multiplier().
+        ValueError: if the list sizes are incompatible, forwarded from get_sequence_multiplier().
 
     Returns:
         Tuple of Dictionaries of round-trip accuracy "n" values and standard deviation (std_dev) "n" values.
         Here the standard deviation is the measure of how much the average round-trip accuracy can change from
         one sample to the other.
     """
-    multiplier = get_multiplier(ground_truth=ground_truth, predictions=predictions)
+    multiplier = get_sequence_multiplier(
+        ground_truth=ground_truth, predictions=predictions
+    )
 
     # we will get, for each prediction of each "n", how many predictions among the "n" are correct
     correct_for_n: List[List[int]] = [[] for _ in range(multiplier)]
@@ -73,12 +79,14 @@ def coverage(ground_truth: Sequence[T], predictions: Sequence[T]) -> Dict[int, f
     Compute the coverage values, split by n-th predictions.
 
     Raises:
-        ValueError: if the list sizes are incompatible, forwarded from get_multiplier().
+        ValueError: if the list sizes are incompatible, forwarded from get_sequence_multiplier().
 
     Returns:
         Dictionary of coverage "n" values.
     """
-    multiplier = get_multiplier(ground_truth=ground_truth, predictions=predictions)
+    multiplier = get_sequence_multiplier(
+        ground_truth=ground_truth, predictions=predictions
+    )
 
     # we will count, for each "n", if there is at list one correct prediction
     one_correct_for_n: List[int] = [0 for _ in range(multiplier)]
@@ -107,14 +115,16 @@ def class_diversity(
     Compute the class diversity values, split by n-th predictions.
 
     Raises:
-        ValueError: if the list sizes are incompatible, forwarded from get_multiplier().
+        ValueError: if the list sizes are incompatible, forwarded from get_sequence_multiplier().
 
     Returns:
         Tuple of Dictionaries of class diversity "n" values and standard deviation (std) "n" values.
         Here the standard deviation is the measure of how much the average class diversity can change from
         one sample to the other.
     """
-    multiplier = get_multiplier(ground_truth=ground_truth, predictions=predictions)
+    multiplier = get_sequence_multiplier(
+        ground_truth=ground_truth, predictions=predictions
+    )
 
     # we will count how many unique superclasses are present
     predicted_superclasses = [
@@ -144,27 +154,15 @@ def class_diversity(
     return classdiversity, std_dev
 
 
-def get_multiplier(ground_truth: Sequence[T], predictions: Sequence[T]) -> int:
+def get_sequence_multiplier(ground_truth: Sequence[T], predictions: Sequence[T]) -> int:
     """
     Get the multiplier for the number of predictions by ground truth sample.
 
     Raises:
-        ValueError: if the lists have inadequate sizes
+        ValueError: if the lists have inadequate sizes (possibly forwarded
+            from get_multiplier).
     """
     n_gt = len(ground_truth)
     n_pred = len(predictions)
 
-    if n_gt < 1 or n_pred < 1:
-        raise ValueError(
-            f"Inadequate number of predictions ({n_pred}) and/or ground truth samples ({n_gt})"
-        )
-
-    multiplier = n_pred // n_gt
-
-    if n_pred != multiplier * n_gt:
-        raise ValueError(
-            f"The number of predictions ({n_pred}) is not an exact "
-            f"multiple of the number of ground truth samples ({n_gt})"
-        )
-
-    return multiplier
+    return get_multiplier(n_gt, n_pred)

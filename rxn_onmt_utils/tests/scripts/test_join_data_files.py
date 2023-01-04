@@ -1,17 +1,17 @@
 import os.path
-import tempfile
-from pathlib import Path
 
-from rxn.utilities.files import dump_list_to_file, load_list_from_file
+from rxn.utilities.files import (
+    dump_list_to_file,
+    load_list_from_file,
+    named_temporary_path,
+)
 
 from rxn_onmt_utils.scripts.join_data_files import join_data_files
 
 
 def test_join_data_files():
     # Creation of a temporary directory to dump output files
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
-
+    with named_temporary_path() as temporary_path:
         chunk_dir_0 = temporary_path / "splitted_data" / "chunk_0"
         chunk_dir_0.mkdir(parents=True, exist_ok=True)
         chunk_dir_1 = temporary_path / "splitted_data" / "chunk_1"
@@ -52,9 +52,7 @@ def test_join_data_files():
 
 def test_join_data_files_skipped(caplog):
     # Creation of a temporary directory to dump output files
-    with tempfile.TemporaryDirectory() as temporary_dir:
-        temporary_path = Path(temporary_dir)
-
+    with named_temporary_path() as temporary_path:
         chunk_dir_0 = temporary_path / "splitted_data" / "chunk_0"
         chunk_dir_0.mkdir(parents=True, exist_ok=True)
         chunk_dir_1 = temporary_path / "splitted_data" / "chunk_1"

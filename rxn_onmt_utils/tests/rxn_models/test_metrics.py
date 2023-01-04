@@ -4,34 +4,33 @@ import pytest
 from rxn_onmt_utils.rxn_models.metrics import (
     class_diversity,
     coverage,
-    get_multiplier,
+    get_sequence_multiplier,
     round_trip_accuracy,
     top_n_accuracy,
 )
 
 
-def test_get_multiplier():
-    assert get_multiplier([1, 2, 3], [1, 2, 3]) == 1
-    assert get_multiplier([1, 2, 3], [1, 1, 2, 2, 3, 3]) == 2
+def test_get_sequence_multiplier():
+    assert get_sequence_multiplier([1, 2, 3], [1, 2, 3]) == 1
+    assert get_sequence_multiplier([1, 2, 3], [1, 1, 2, 2, 3, 3]) == 2
     assert (
-        get_multiplier(
-            ["a", "b", "c"],
-            ["a", "aa", "aaa", "b", "bb", "bbb", "c", "cc", "ccc"],
+        get_sequence_multiplier(
+            ["a", "b", "c"], ["a", "aa", "aaa", "b", "bb", "bbb", "c", "cc", "ccc"]
         )
         == 3
     )
 
     # raises if not an exact multiple
     with pytest.raises(ValueError):
-        _ = get_multiplier([1, 2], [1, 2, 3])
+        _ = get_sequence_multiplier([1, 2], [1, 2, 3])
     with pytest.raises(ValueError):
-        _ = get_multiplier([1, 2, 3], [1, 2])
+        _ = get_sequence_multiplier([1, 2, 3], [1, 2])
 
     # raises if one of the lists is empty
     with pytest.raises(ValueError):
-        _ = get_multiplier([], [1, 2, 3])
+        _ = get_sequence_multiplier([], [1, 2, 3])
     with pytest.raises(ValueError):
-        _ = get_multiplier([1, 2, 3], [])
+        _ = get_sequence_multiplier([1, 2, 3], [])
 
 
 def test_top_n_accuracy():
