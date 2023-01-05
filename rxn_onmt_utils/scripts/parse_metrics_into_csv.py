@@ -26,9 +26,9 @@ def main(csv: str, directories: Tuple[str, ...]) -> None:
     """Parse the metrics from several directories and collect them into a CSV.
 
     Usage examples:
-        - python parse_metrics_into_csv.py --csv metrics.csv dir1 dir2 dir3
-        - python parse_metrics_into_csv.py --csv metrics.csv dir* other_dir
-        - python parse_metrics_into_csv.py --csv metrics.csv *
+        - rxn-parse-metrics-into-csv --csv metrics.csv dir1 dir2 dir3
+        - rxn-parse-metrics-into-csv --csv metrics.csv dir* other_dir
+        - rxn-parse-metrics-into-csv --csv metrics.csv *
     """
     setup_console_logger()
 
