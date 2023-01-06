@@ -43,7 +43,7 @@ logger.addHandler(logging.NullHandler())
     "--n_best", default=1, type=int, help="Number of retro predictions to make (top-N)"
 )
 @click.option(
-    "--beam_size", default=10, type=int, help="Beam size for retro (> n_best)."
+    "--beam_size", default=10, type=int, help="Beam size (used in the beam search)."
 )
 @click.option("--no_gpu", is_flag=True, help="Run the training on CPU (slow!)")
 def main(

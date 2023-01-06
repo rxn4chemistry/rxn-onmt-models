@@ -47,6 +47,12 @@ def translate(
         logger.warning(
             "GPU option not set. Only CPUs will be used. The translation may be slow!"
         )
+    if beam_size < n_best:
+        logger.warning(
+            f"The beam size ({beam_size}) is lower than the number of required "
+            f"predictions ({n_best}). While this works, consider increasing the "
+            f"beam size for better results."
+        )
 
     if as_external_command:
         fn = translate_as_external_command
