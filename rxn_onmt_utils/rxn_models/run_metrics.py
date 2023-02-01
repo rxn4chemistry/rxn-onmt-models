@@ -96,4 +96,5 @@ def run_model_for_metrics(
         files.predicted,
         files.predicted_canonical,
         invalid_placeholder="",
+        sort_molecules=True,
     )
