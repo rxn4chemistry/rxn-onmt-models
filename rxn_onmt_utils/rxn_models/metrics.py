@@ -1,3 +1,7 @@
+"""
+Definition of the different metrics.
+"""
+
 from typing import Dict, List, Sequence, Tuple, TypeVar
 
 import numpy as np

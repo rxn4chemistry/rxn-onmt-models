@@ -3,10 +3,11 @@ from typing import Any, Dict, Iterable
 from rxn.utilities.files import PathLike, iterate_lines_from_file
 
 from .metrics import top_n_accuracy
-from .utils import ForwardFiles
+from .metrics_calculator import MetricsCalculator
+from .metrics_files import ForwardFiles, MetricsFiles
 
 
-class ForwardMetrics:
+class ForwardMetrics(MetricsCalculator):
     """
     Class to compute common metrics for forward models, starting from files
     containing the ground truth and predictions.
@@ -26,10 +27,12 @@ class ForwardMetrics:
         return {"accuracy": topn}
 
     @classmethod
-    def from_forward_files(cls, forward_files: ForwardFiles) -> "ForwardMetrics":
+    def from_metrics_files(cls, metrics_files: MetricsFiles) -> "ForwardMetrics":
+        if not isinstance(metrics_files, ForwardFiles):
+            raise ValueError("Invalid type provided")
         return cls.from_raw_files(
-            gt_products_file=forward_files.gt_products,
-            predicted_products_file=forward_files.predicted_products_canonical,
+            gt_products_file=metrics_files.gt_tgt,
+            predicted_products_file=metrics_files.predicted_canonical,
         )
 
     @classmethod

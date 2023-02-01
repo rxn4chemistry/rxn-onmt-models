@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 
 from rxn.utilities.files import PathLike, is_path_exists_or_creatable
@@ -6,11 +5,8 @@ from rxn.utilities.files import PathLike, is_path_exists_or_creatable
 from .tokenize_file import detokenize_file, file_is_tokenized, tokenize_file
 from .translate import translate
 
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
-
-def forward_or_retro_translation(
+def rxn_translation(
     src_file: PathLike,
     tgt_file: Optional[PathLike],
     pred_file: PathLike,

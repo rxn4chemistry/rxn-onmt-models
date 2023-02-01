@@ -19,7 +19,6 @@ logger.addHandler(logging.NullHandler())
 def ensure_data_dimension(
     txt_files: Iterable[PathLike], output_dir: PathLike, max_dimension: int
 ) -> None:
-
     # Check the lengths of the files and ensure they are all the same
     file_length = [count_lines(txt_file) for txt_file in txt_files]
     if len(set(file_length)) != 1:

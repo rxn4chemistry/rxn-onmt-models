@@ -1,4 +1,3 @@
-import json
 import logging
 from pathlib import Path
 from typing import Optional, Union
@@ -15,13 +14,11 @@ from rxn.utilities.logging import setup_console_and_file_logger
 from rxn_onmt_utils.rxn_models.classification_translation import (
     classification_translation,
 )
-from rxn_onmt_utils.rxn_models.forward_or_retro_translation import (
-    forward_or_retro_translation,
-)
-from rxn_onmt_utils.rxn_models.retro_metrics import RetroMetrics
+from rxn_onmt_utils.rxn_models.forward_or_retro_translation import rxn_translation
+from rxn_onmt_utils.rxn_models.metrics_files import RetroFiles
+from rxn_onmt_utils.rxn_models.run_metrics import evaluate_metrics
 from rxn_onmt_utils.rxn_models.tokenize_file import copy_as_detokenized
 from rxn_onmt_utils.rxn_models.utils import (
-    RetroFiles,
     convert_class_token_idx_for_tranlation_models,
     raise_if_identical_path,
 )
@@ -120,7 +117,8 @@ def main(
     class_tokens: Optional[int],
 ) -> None:
     """Starting from the ground truth files and two models (retro, forward),
-    generate the translation files needed for the metrics, and calculate the default metrics."""
+    generate the translation files needed for the metrics, and calculate the default metrics.
+    """
 
     ensure_directory_exists_and_is_empty(output_dir)
     retro_files = RetroFiles(output_dir)
@@ -141,18 +139,22 @@ def main(
         dump_list_to_file(class_token_products, retro_files.class_token_products)
         dump_list_to_file(class_token_precursors, retro_files.class_token_precursors)
 
-    copy_as_detokenized(products_file, retro_files.gt_products)
-    copy_as_detokenized(precursors_file, retro_files.gt_precursors)
+    copy_as_detokenized(products_file, retro_files.gt_src)
+    copy_as_detokenized(precursors_file, retro_files.gt_tgt)
 
     # retro
-    forward_or_retro_translation(
-        src_file=retro_files.gt_products
-        if class_tokens is None
-        else retro_files.class_token_products,
-        tgt_file=retro_files.gt_precursors
-        if class_tokens is None
-        else retro_files.class_token_precursors,
-        pred_file=retro_files.predicted_precursors,
+    rxn_translation(
+        src_file=(
+            retro_files.gt_src
+            if class_tokens is None
+            else retro_files.class_token_products
+        ),
+        tgt_file=(
+            retro_files.gt_tgt
+            if class_tokens is None
+            else retro_files.class_token_precursors
+        ),
+        pred_file=retro_files.predicted,
         model=retro_model,
         n_best=n_best,
         beam_size=beam_size,
@@ -161,15 +163,15 @@ def main(
     )
 
     canonicalize_file(
-        retro_files.predicted_precursors,
-        retro_files.predicted_precursors_canonical,
+        retro_files.predicted,
+        retro_files.predicted_canonical,
         invalid_placeholder="",
         sort_molecules=True,
     )
 
     # Forward
-    forward_or_retro_translation(
-        src_file=retro_files.predicted_precursors_canonical,
+    rxn_translation(
+        src_file=retro_files.predicted_canonical,
         tgt_file=None,
         pred_file=retro_files.predicted_products,
         model=forward_model,
@@ -187,7 +189,7 @@ def main(
 
     if classification_model:
         create_rxn_from_files(
-            retro_files.predicted_precursors_canonical,
+            retro_files.predicted_canonical,
             retro_files.predicted_products_canonical,
             retro_files.predicted_rxn_canonical,
         )
@@ -205,14 +207,7 @@ def main(
         )
 
     if not no_metrics:
-        logger.info("Computing the retro metrics...")
-        metrics = RetroMetrics.from_retro_files(retro_files)
-        metrics_dict = metrics.get_metrics()
-        with open(retro_files.metrics_file, "wt") as f:
-            json.dump(metrics_dict, f, indent=2)
-        logger.info(
-            f'Computing the retro metrics... Saved to "{retro_files.metrics_file}".'
-        )
+        evaluate_metrics("retro", output_dir)
 
 
 if __name__ == "__main__":

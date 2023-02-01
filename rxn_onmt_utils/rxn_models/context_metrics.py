@@ -3,10 +3,11 @@ from typing import Any, Dict, Iterable
 from rxn.utilities.files import PathLike, iterate_lines_from_file
 
 from .metrics import top_n_accuracy
-from .utils import ContextFiles
+from .metrics_calculator import MetricsCalculator
+from .metrics_files import ContextFiles, MetricsFiles
 
 
-class ContextMetrics:
+class ContextMetrics(MetricsCalculator):
     """
     Class to compute common metrics for context prediction models, starting from
     files containing the ground truth and predictions.
@@ -26,10 +27,12 @@ class ContextMetrics:
         return {"accuracy": topn}
 
     @classmethod
-    def from_context_files(cls, context_files: ContextFiles) -> "ContextMetrics":
+    def from_metrics_files(cls, metrics_files: MetricsFiles) -> "ContextMetrics":
+        if not isinstance(metrics_files, ContextFiles):
+            raise ValueError("Invalid type provided")
         return cls.from_raw_files(
-            gt_tgt_file=context_files.gt_tgt,
-            predicted_context_file=context_files.predicted_context_canonical,
+            gt_tgt_file=metrics_files.gt_tgt,
+            predicted_context_file=metrics_files.predicted_canonical,
         )
 
     @classmethod

@@ -6,9 +6,7 @@ import click
 from rxn.utilities.logging import setup_console_logger
 
 from rxn_onmt_utils import __version__
-from rxn_onmt_utils.rxn_models.forward_or_retro_translation import (
-    forward_or_retro_translation,
-)
+from rxn_onmt_utils.rxn_models.forward_or_retro_translation import rxn_translation
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -66,7 +64,7 @@ def main(
     )
     logger.info(f"rxn-onmt-utils version: {__version__}. ")
 
-    forward_or_retro_translation(
+    rxn_translation(
         src_file=src_file,
         tgt_file=tgt_file,
         pred_file=pred_file,

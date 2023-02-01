@@ -7,7 +7,7 @@ from rxn.utilities.containers import chunker
 from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
 from rxn_onmt_utils.rxn_models.metrics import get_sequence_multiplier
-from rxn_onmt_utils.rxn_models.utils import RetroFiles
+from rxn_onmt_utils.rxn_models.metrics_files import RetroFiles
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -91,22 +91,22 @@ def reorder_retro_predictions_class_token(
 
     dump_list_to_file(
         (pred for pred, _, _, _ in predictions_and_confidences_reordered),
-        str(predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION,
+        RetroFiles.reordered(predictions_file),
     )
     dump_list_to_file(
         (conf for _, conf, _, _ in predictions_and_confidences_reordered),
-        str(confidences_file) + RetroFiles.REORDERED_FILE_EXTENSION,
+        RetroFiles.reordered(confidences_file),
     )
     dump_list_to_file(
         (fwd_pred for _, _, fwd_pred, _ in predictions_and_confidences_reordered),
-        str(fwd_predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION,
+        RetroFiles.reordered(fwd_predictions_file),
     )
     dump_list_to_file(
         (
             classes_pred
             for _, _, _, classes_pred in predictions_and_confidences_reordered
         ),
-        str(classes_predictions_file) + RetroFiles.REORDERED_FILE_EXTENSION,
+        RetroFiles.reordered(classes_predictions_file),
     )
 
 

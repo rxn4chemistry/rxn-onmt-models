@@ -65,38 +65,56 @@ def test_top_n_accuracy():
 
 def test_round_trip_accuracy():
     # a few examples for top-1
-    assert round_trip_accuracy(["A", "B", "C"], ["A", "B", "C"],) == (
+    assert round_trip_accuracy(
+        ["A", "B", "C"],
+        ["A", "B", "C"],
+    ) == (
         {1: 1.0},
         {1: 0.0},  # std
     )
-    assert round_trip_accuracy(["A", "B", "C"], ["A", "0", "C"],) == (
+    assert round_trip_accuracy(
+        ["A", "B", "C"],
+        ["A", "0", "C"],
+    ) == (
         {1: 2 / 3},
         {1: np.std([1.0, 0.0, 1.0])},  # std
     )
 
     # a few examples for top-2
-    assert round_trip_accuracy(["A", "B", "C"], ["A", "A", "B", "B", "C", "0"],) == (
+    assert round_trip_accuracy(
+        ["A", "B", "C"],
+        ["A", "A", "B", "B", "C", "0"],
+    ) == (
         {
             1: 1.0,
             2: 5 / 6,
         },
         {1: np.std([1.0, 1.0, 1.0]), 2: np.std([1.0, 1.0, 0.5])},
     )
-    assert round_trip_accuracy(["A", "B", "C"], ["A", "0", "B", "0", "C", "0"],) == (
+    assert round_trip_accuracy(
+        ["A", "B", "C"],
+        ["A", "0", "B", "0", "C", "0"],
+    ) == (
         {
             1: 1.0,
             2: 0.5,
         },
         {1: np.std([1.0, 1.0, 1.0]), 2: np.std([0.5, 0.5, 0.5])},
     )
-    assert round_trip_accuracy(["A", "B", "C"], ["0", "A", "0", "B", "0", "C"],) == (
+    assert round_trip_accuracy(
+        ["A", "B", "C"],
+        ["0", "A", "0", "B", "0", "C"],
+    ) == (
         {
             1: 0.0,
             2: 0.5,
         },
         {1: np.std([0.0, 0.0, 0.0]), 2: np.std([0.5, 0.5, 0.5])},
     )
-    assert round_trip_accuracy(["A", "B", "C"], ["0", "1", "0", "B", "C", "0"],) == (
+    assert round_trip_accuracy(
+        ["A", "B", "C"],
+        ["0", "1", "0", "B", "C", "0"],
+    ) == (
         {
             1: 1 / 3,
             2: 1 / 3,

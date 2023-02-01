@@ -144,7 +144,6 @@ def main(csv: str, model_task: str, directories: Tuple[str, ...]) -> None:
             }
 
             for split in splits:
-
                 path = get_data_file_path(
                     src_or_tgt=src_or_tgt,
                     data_files=data_files,

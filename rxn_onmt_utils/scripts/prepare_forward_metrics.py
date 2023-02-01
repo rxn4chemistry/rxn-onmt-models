@@ -1,21 +1,11 @@
-import json
-import logging
 from pathlib import Path
 
 import click
-from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn_onmt_utils.rxn_models.forward_metrics import ForwardMetrics
-from rxn_onmt_utils.rxn_models.forward_or_retro_translation import (
-    forward_or_retro_translation,
+from rxn_onmt_utils.rxn_models.run_metrics import (
+    evaluate_metrics,
+    run_model_for_metrics,
 )
-from rxn_onmt_utils.rxn_models.tokenize_file import copy_as_detokenized
-from rxn_onmt_utils.rxn_models.utils import ForwardFiles
-from rxn_onmt_utils.scripts.canonicalize_file import canonicalize_file
-from rxn_onmt_utils.utils import ensure_directory_exists_and_is_empty
-
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings={"show_default": True})
@@ -64,41 +54,21 @@ def main(
     """Starting from the ground truth files and forward model, generate the
     translation files needed for the metrics, and calculate the default metrics."""
 
-    ensure_directory_exists_and_is_empty(output_dir)
-    forward_files = ForwardFiles(output_dir)
-
-    setup_console_and_file_logger(forward_files.log_file)
-
-    copy_as_detokenized(products_file, forward_files.gt_products)
-    copy_as_detokenized(precursors_file, forward_files.gt_precursors)
-
-    # Forward
-    forward_or_retro_translation(
-        src_file=forward_files.gt_precursors,
-        tgt_file=forward_files.gt_products,
-        pred_file=forward_files.predicted_products,
-        model=forward_model,
+    run_model_for_metrics(
+        task="forward",
+        model_path=forward_model,
+        src_file=precursors_file,
+        tgt_file=products_file,
+        output_dir=output_dir,
         n_best=n_best,
         beam_size=10,
         batch_size=batch_size,
         gpu=gpu,
-    )
-
-    canonicalize_file(
-        forward_files.predicted_products,
-        forward_files.predicted_products_canonical,
-        invalid_placeholder="",
+        initialize_logger=True,
     )
 
     if not no_metrics:
-        logger.info("Computing the forward metrics...")
-        metrics = ForwardMetrics.from_forward_files(forward_files)
-        metrics_dict = metrics.get_metrics()
-        with open(forward_files.metrics_file, "wt") as f:
-            json.dump(metrics_dict, f, indent=2)
-        logger.info(
-            f'Computing the forward metrics... Saved to "{forward_files.metrics_file}".'
-        )
+        evaluate_metrics("forward", output_dir)
 
 
 if __name__ == "__main__":

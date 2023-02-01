@@ -4,10 +4,11 @@ from typing import Any, Dict, Iterable, Optional
 from rxn.utilities.files import PathLike, iterate_lines_from_file
 
 from .metrics import class_diversity, coverage, round_trip_accuracy, top_n_accuracy
-from .utils import RetroFiles
+from .metrics_calculator import MetricsCalculator
+from .metrics_files import MetricsFiles, RetroFiles
 
 
-class RetroMetrics:
+class RetroMetrics(MetricsCalculator):
     """
     Class to compute common metrics for retro models, starting from files
     containing the ground truth and predictions.
@@ -60,26 +61,34 @@ class RetroMetrics:
         }
 
     @classmethod
-    def from_retro_files(
-        cls, retro_files: RetroFiles, reordered: bool = False
-    ) -> "RetroMetrics":
+    def from_metrics_files(cls, metrics_files: MetricsFiles) -> "RetroMetrics":
+        if not isinstance(metrics_files, RetroFiles):
+            raise ValueError("Invalid type provided")
+
+        # Whether to use the reordered files - for class token
+        # To determine whether True or False, we check if the reordered files exist
+        reordered = RetroFiles.reordered(metrics_files.predicted_canonical).exists()
+
         return cls.from_raw_files(
-            gt_precursors_file=retro_files.gt_precursors,
-            gt_products_file=retro_files.gt_products,
-            predicted_precursors_file=retro_files.predicted_precursors_canonical
-            if not reordered
-            else str(retro_files.predicted_precursors_canonical)
-            + RetroFiles.REORDERED_FILE_EXTENSION,
-            predicted_products_file=retro_files.predicted_products_canonical
-            if not reordered
-            else str(retro_files.predicted_products_canonical)
-            + RetroFiles.REORDERED_FILE_EXTENSION,
-            predicted_classes_file=None
-            if not os.path.exists(retro_files.predicted_classes)
-            else retro_files.predicted_classes
-            if not reordered
-            else str(retro_files.predicted_classes)
-            + RetroFiles.REORDERED_FILE_EXTENSION,
+            gt_precursors_file=metrics_files.gt_tgt,
+            gt_products_file=metrics_files.gt_src,
+            predicted_precursors_file=(
+                metrics_files.predicted_canonical
+                if not reordered
+                else RetroFiles.reordered(metrics_files.predicted_canonical)
+            ),
+            predicted_products_file=(
+                metrics_files.predicted_products_canonical
+                if not reordered
+                else RetroFiles.reordered(metrics_files.predicted_products_canonical)
+            ),
+            predicted_classes_file=(
+                None
+                if not os.path.exists(metrics_files.predicted_classes)
+                else metrics_files.predicted_classes
+                if not reordered
+                else RetroFiles.reordered(metrics_files.predicted_classes)
+            ),
         )
 
     @classmethod

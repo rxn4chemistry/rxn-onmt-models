@@ -86,5 +86,4 @@ class PredictionCollapser:
     def collapse_predictions(
         self, predictions: Iterable[Prediction]
     ) -> Iterator[Prediction]:
-
         yield from self.collapser.collapse(predictions)

@@ -3,7 +3,7 @@ from pathlib import Path
 
 from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
-from rxn_onmt_utils.rxn_models.utils import RetroFiles
+from rxn_onmt_utils.rxn_models.metrics_files import RetroFiles
 from rxn_onmt_utils.scripts.reorder_retro_predictions_class_token import (
     reorder_retro_predictions_class_token,
 )
@@ -46,20 +46,15 @@ def test_reorder_retro_files():
             classes_predictions_file=temporary_path / "class_pred.txt",
             n_class_tokens=2,
         )
-        print(
-            load_list_from_file(
-                temporary_path / f"pred.txt{RetroFiles.REORDERED_FILE_EXTENSION}"
-            )
-        )
         assert load_list_from_file(
-            temporary_path / f"pred.txt{RetroFiles.REORDERED_FILE_EXTENSION}"
+            RetroFiles.reordered(temporary_path / "pred.txt")
         ) == ["5", "1", "2", "6", "3", "7", "8", "4"]
         assert load_list_from_file(
-            temporary_path / f"conf.txt{RetroFiles.REORDERED_FILE_EXTENSION}"
+            RetroFiles.reordered(temporary_path / "conf.txt")
         ) == ["-1.1", "-4.3", "-5.9", "-6.9", "-6.0", "-7.0", "-9.4", "-12.0"]
         assert load_list_from_file(
-            temporary_path / f"fwd_pred.txt{RetroFiles.REORDERED_FILE_EXTENSION}"
+            RetroFiles.reordered(temporary_path / "fwd_pred.txt")
         ) == ["55", "11", "22", "66", "33", "77", "88", "44"]
         assert load_list_from_file(
-            temporary_path / f"class_pred.txt{RetroFiles.REORDERED_FILE_EXTENSION}"
+            RetroFiles.reordered(temporary_path / "class_pred.txt")
         ) == ["5.5", "1.1", "2.2", "6.6", "3.3", "7.7", "8.8", "4.4"]

@@ -1,21 +1,11 @@
-import json
-import logging
 from pathlib import Path
 
 import click
-from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn_onmt_utils.rxn_models.context_metrics import ContextMetrics
-from rxn_onmt_utils.rxn_models.forward_or_retro_translation import (
-    forward_or_retro_translation,
+from rxn_onmt_utils.rxn_models.run_metrics import (
+    evaluate_metrics,
+    run_model_for_metrics,
 )
-from rxn_onmt_utils.rxn_models.tokenize_file import copy_as_detokenized
-from rxn_onmt_utils.rxn_models.utils import ContextFiles
-from rxn_onmt_utils.scripts.canonicalize_file import canonicalize_file
-from rxn_onmt_utils.utils import ensure_directory_exists_and_is_empty
-
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 @click.command(context_settings={"show_default": True})
@@ -64,41 +54,21 @@ def main(
     """Starting from the ground truth files and context model, generate the
     translation files needed for the metrics, and calculate the default metrics."""
 
-    ensure_directory_exists_and_is_empty(output_dir)
-    context_files = ContextFiles(output_dir)
-
-    setup_console_and_file_logger(context_files.log_file)
-
-    copy_as_detokenized(src_file, context_files.gt_src)
-    copy_as_detokenized(tgt_file, context_files.gt_tgt)
-
-    # context prediction
-    forward_or_retro_translation(
-        src_file=context_files.gt_src,
-        tgt_file=context_files.gt_tgt,
-        pred_file=context_files.predicted_context,
-        model=context_model,
+    run_model_for_metrics(
+        task="context",
+        model_path=context_model,
+        src_file=src_file,
+        tgt_file=tgt_file,
+        output_dir=output_dir,
         n_best=n_best,
         beam_size=10,
         batch_size=batch_size,
         gpu=gpu,
-    )
-
-    canonicalize_file(
-        context_files.predicted_context,
-        context_files.predicted_context_canonical,
-        invalid_placeholder="",
+        initialize_logger=True,
     )
 
     if not no_metrics:
-        logger.info("Computing the context metrics...")
-        metrics = ContextMetrics.from_context_files(context_files)
-        metrics_dict = metrics.get_metrics()
-        with open(context_files.metrics_file, "wt") as f:
-            json.dump(metrics_dict, f, indent=2)
-        logger.info(
-            f'Computing the context metrics... Saved to "{context_files.metrics_file}".'
-        )
+        evaluate_metrics("context", output_dir)
 
 
 if __name__ == "__main__":
