@@ -9,12 +9,11 @@ from typing import Dict, Type
 from rxn.utilities.files import PathLike
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn_onmt_utils.rxn_models.forward_or_retro_translation import rxn_translation
-
 from ..scripts.canonicalize_file import canonicalize_file
 from ..utils import ensure_directory_exists_and_is_empty
 from .context_metrics import ContextMetrics
 from .forward_metrics import ForwardMetrics
+from .forward_or_retro_translation import rxn_translation
 from .metrics_calculator import MetricsCalculator
 from .metrics_files import ContextFiles, ForwardFiles, MetricsFiles, RetroFiles
 from .retro_metrics import RetroMetrics
