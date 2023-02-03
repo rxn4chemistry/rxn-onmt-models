@@ -38,7 +38,7 @@ logger.addHandler(logging.NullHandler())
 )
 @click.option("--batch_size", default=64, type=int, help="Batch size")
 @click.option(
-    "--n_best", default=1, type=int, help="Number of retro predictions to make (top-N)"
+    "--n_best", default=1, type=int, help="Number of predictions to make (top-N)"
 )
 @click.option(
     "--beam_size", default=10, type=int, help="Beam size (used in the beam search)."
