@@ -43,7 +43,7 @@ logger.addHandler(logging.NullHandler())
 @click.option(
     "--beam_size", default=10, type=int, help="Beam size (used in the beam search)."
 )
-@click.option("--no_gpu", is_flag=True, help="Run the training on CPU (slow!)")
+@click.option("--no_gpu", is_flag=True, help="Run the translation on CPU (slow!)")
 def main(
     model: Path,
     src_file: Path,
