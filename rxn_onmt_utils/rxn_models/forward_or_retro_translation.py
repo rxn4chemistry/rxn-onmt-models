@@ -1,8 +1,8 @@
 from typing import Optional
 
+from rxn.chemutils.tokenization import detokenize_file, file_is_tokenized, tokenize_file
 from rxn.utilities.files import PathLike, is_path_exists_or_creatable
 
-from .tokenize_file import detokenize_file, file_is_tokenized, tokenize_file
 from .translate import translate
 
 
@@ -46,7 +46,7 @@ def rxn_translation(
         tokenized_src = src_file
     else:
         tokenized_src = str(src_file) + ".tokenized"
-        tokenize_file(src_file, tokenized_src, invalid_placeholder="")
+        tokenize_file(src_file, tokenized_src, fallback_value="")
 
     # tgt
     if tgt_file is None:
@@ -55,7 +55,7 @@ def rxn_translation(
         tokenized_tgt = tgt_file
     else:
         tokenized_tgt = str(tgt_file) + ".tokenized"
-        tokenize_file(tgt_file, tokenized_tgt, invalid_placeholder="")
+        tokenize_file(tgt_file, tokenized_tgt, fallback_value="")
 
     tokenized_pred = str(pred_file) + ".tokenized"
 

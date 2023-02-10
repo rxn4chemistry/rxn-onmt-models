@@ -1,29 +1,6 @@
 from pathlib import Path
 
-import pytest
-from rxn.chemutils.tokenization import TokenizationError
-
-from rxn_onmt_utils.rxn_models.utils import (
-    ModelFiles,
-    UnclearWhetherTokenized,
-    string_is_tokenized,
-)
-
-
-def test_string_is_tokenized():
-    assert string_is_tokenized("C C O . [Na+]")
-    assert string_is_tokenized("C C O . [Na+] >> C ( O ) Cl")
-    assert not string_is_tokenized("C C O . [Na+] >> C (O) Cl")
-    assert not string_is_tokenized("CCO")
-
-    # Special cases - empty strings and strings with single tokens
-    for string in ["", "C", ">>", "[Na]"]:
-        with pytest.raises(UnclearWhetherTokenized):
-            _ = string_is_tokenized(string)
-
-    # Tokenization errors are being propagated
-    with pytest.raises(TokenizationError):
-        _ = string_is_tokenized("I N V A L I D")
+from rxn_onmt_utils.rxn_models.utils import ModelFiles
 
 
 def test_get_model_checkpoint_step():

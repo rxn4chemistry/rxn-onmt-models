@@ -5,10 +5,8 @@ from pathlib import Path
 from typing import List, Tuple
 
 import click
-from rxn.utilities.files import PathLike
+from rxn.utilities.files import PathLike, raise_if_paths_are_identical
 from rxn.utilities.logging import setup_console_logger
-
-from rxn_onmt_utils.rxn_models.utils import raise_if_identical_path
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -32,7 +30,7 @@ def join_data_files(input_dir: PathLike, output_dir: PathLike) -> None:
     """
     Joining files with `shutil`, reference: https://stackoverflow.com/a/27077437
     """
-    raise_if_identical_path(input_dir, output_dir)
+    raise_if_paths_are_identical(input_dir, output_dir)
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 

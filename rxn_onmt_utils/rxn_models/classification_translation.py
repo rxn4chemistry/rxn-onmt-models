@@ -2,14 +2,13 @@ import logging
 from pathlib import Path
 from typing import Optional, Union
 
+from rxn.chemutils.tokenization import file_is_tokenized, tokenize_file
 from rxn.utilities.files import is_path_exists_or_creatable
 
 from .tokenize_file import (
     classification_file_is_tokenized,
     detokenize_classification_file,
-    file_is_tokenized,
     tokenize_classification_file,
-    tokenize_file,
 )
 from .translate import translate
 
@@ -55,7 +54,7 @@ def classification_translation(
         tokenized_src = src_file
     else:
         tokenized_src = str(src_file) + ".tokenized"
-        tokenize_file(src_file, tokenized_src, invalid_placeholder="")
+        tokenize_file(src_file, tokenized_src, fallback_value="")
 
     # tgt
     if tgt_file is None:

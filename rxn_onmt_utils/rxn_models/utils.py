@@ -1,56 +1,18 @@
 import logging
-import os
 import re
 from enum import Flag
 from itertools import count
 from pathlib import Path
 from typing import List, Optional
 
-from rxn.chemutils.tokenization import detokenize_smiles, to_tokens
 from rxn.utilities.files import PathLike
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-class UnclearWhetherTokenized(ValueError):
-    """Exception raised when unclear if something was tokenized or not."""
-
-    def __init__(self, string: str):
-        super().__init__(f'Cannot determine if "{string}" is tokenized.')
-
-
 def convert_class_token_idx_for_tranlation_models(class_token_idx: int) -> str:
     return f"[{class_token_idx}]"
-
-
-def raise_if_identical_path(input_path: PathLike, output_path: PathLike) -> None:
-    """
-    Raise an exception if input and output paths point to the same file.
-    """
-    if os.path.realpath(input_path) == os.path.realpath(output_path):
-        raise ValueError(
-            f'The output path, "{output_path}", must be '
-            f'different from the input path, "{input_path}".'
-        )
-
-
-def string_is_tokenized(smiles_line: str) -> bool:
-    """
-    Whether a string is a tokenized SMILES or not.
-
-    Args:
-        smiles_line: string to inspect
-
-    Raises:
-        ValueError: if not possible to determine whether tokenized or not
-        TokenizationError: propagated directly from tokenize_smiles()
-    """
-    detokenized = detokenize_smiles(smiles_line)
-    tokens = to_tokens(detokenized)
-    if len(tokens) < 2:
-        raise UnclearWhetherTokenized(smiles_line)
-    return " ".join(tokens) == smiles_line
 
 
 def preprocessed_id_names(n_additional_sets: int) -> List[str]:

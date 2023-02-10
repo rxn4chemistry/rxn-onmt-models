@@ -4,8 +4,7 @@ from typing import Iterator, List, Optional
 from attr import define
 from rxn.utilities.containers import chunker
 from rxn.utilities.files import PathLike, count_lines, iterate_lines_from_file
-
-from rxn_onmt_utils.utils import get_multiplier
+from rxn.utilities.misc import get_multiplier
 
 
 @define(frozen=True)

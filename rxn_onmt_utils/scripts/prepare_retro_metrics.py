@@ -3,11 +3,14 @@ from pathlib import Path
 from typing import Optional, Union
 
 import click
-from rxn.chemutils.tokenization import detokenize_smiles
+from rxn.chemutils.miscellaneous import canonicalize_file
+from rxn.chemutils.tokenization import copy_as_detokenized, detokenize_smiles
 from rxn.utilities.files import (
     dump_list_to_file,
+    ensure_directory_exists_and_is_empty,
     iterate_lines_from_file,
     load_list_from_file,
+    raise_if_paths_are_identical,
 )
 from rxn.utilities.logging import setup_console_and_file_logger
 
@@ -17,13 +20,9 @@ from rxn_onmt_utils.rxn_models.classification_translation import (
 from rxn_onmt_utils.rxn_models.forward_or_retro_translation import rxn_translation
 from rxn_onmt_utils.rxn_models.metrics_files import RetroFiles
 from rxn_onmt_utils.rxn_models.run_metrics import evaluate_metrics
-from rxn_onmt_utils.rxn_models.tokenize_file import copy_as_detokenized
 from rxn_onmt_utils.rxn_models.utils import (
     convert_class_token_idx_for_tranlation_models,
-    raise_if_identical_path,
 )
-from rxn_onmt_utils.scripts.canonicalize_file import canonicalize_file
-from rxn_onmt_utils.utils import ensure_directory_exists_and_is_empty
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -34,8 +33,8 @@ def create_rxn_from_files(
     input_file_products: Union[str, Path],
     output_file: Union[str, Path],
 ) -> None:
-    raise_if_identical_path(input_file_precursors, output_file)
-    raise_if_identical_path(input_file_products, output_file)
+    raise_if_paths_are_identical(input_file_precursors, output_file)
+    raise_if_paths_are_identical(input_file_products, output_file)
     logger.info(
         f'Combining files "{input_file_precursors}" and "{input_file_products}" -> "{output_file}".'
     )
@@ -165,7 +164,7 @@ def main(
     canonicalize_file(
         retro_files.predicted,
         retro_files.predicted_canonical,
-        invalid_placeholder="",
+        fallback_value="",
         sort_molecules=True,
     )
 
@@ -184,7 +183,7 @@ def main(
     canonicalize_file(
         retro_files.predicted_products,
         retro_files.predicted_products_canonical,
-        invalid_placeholder="",
+        fallback_value="",
     )
 
     if classification_model:

@@ -1,5 +1,4 @@
 import pytest
-from rxn.chemutils.tokenization import TokenizationError
 from rxn.utilities.files import (
     dump_list_to_file,
     load_list_from_file,
@@ -10,122 +9,9 @@ from rxn_onmt_utils.rxn_models.tokenize_file import (
     classification_file_is_tokenized,
     classification_string_is_tokenized,
     detokenize_class,
-    detokenize_file,
-    ensure_tokenized_file,
-    file_is_tokenized,
     tokenize_class,
     tokenize_classification_file,
-    tokenize_file,
 )
-
-
-def test_file_is_tokenized():
-    # Basic tokenized example
-    with named_temporary_path() as path:
-        dump_list_to_file(["C C O >> C C O", "C C . C"], path)
-        assert file_is_tokenized(path)
-
-    # Basic non-tokenized example
-    with named_temporary_path() as path:
-        dump_list_to_file(["CCO>>CCO", "CC.C"], path)
-        assert not file_is_tokenized(path)
-
-    # Only checks the first line - returns True even if the second line is not tokenized
-    with named_temporary_path() as path:
-        dump_list_to_file(["C C O >> C C O", "CC.C"], path)
-        assert file_is_tokenized(path)
-
-    # empty file
-    with named_temporary_path() as path:
-        dump_list_to_file([], path)
-        with pytest.raises(RuntimeError):
-            _ = file_is_tokenized(path)
-
-    # Invalid SMILES
-    with named_temporary_path() as path:
-        dump_list_to_file(["I N V A L I D", "CC.C"], path)
-        with pytest.raises(TokenizationError):
-            _ = file_is_tokenized(path)
-
-    # Empty first line - needs to check the second line!
-    with named_temporary_path() as path:
-        dump_list_to_file(["", "C C O >> C C O"], path)
-        assert file_is_tokenized(path)
-    with named_temporary_path() as path:
-        dump_list_to_file(["", "CCO>>CCO"], path)
-        assert not file_is_tokenized(path)
-
-    # First line has one single token - needs to check the second line!
-    with named_temporary_path() as path:
-        dump_list_to_file([">>", "C C O >> C C O"], path)
-        assert file_is_tokenized(path)
-    with named_temporary_path() as path:
-        dump_list_to_file([">>", "CCO>>CCO"], path)
-        assert not file_is_tokenized(path)
-
-
-def test_tokenize_file():
-    with named_temporary_path() as f_in, named_temporary_path() as f_out:
-        # Original content
-        original = ["CCO>>CCO", "CC.C", "INVALID", "C(NCC)[S]OC"]
-        dump_list_to_file(original, f_in)
-
-        # Expected (tokenized) content
-        placeholder = "ERROR"
-        tokenized = ["C C O >> C C O", "C C . C", placeholder, "C ( N C C ) [S] O C"]
-
-        tokenize_file(f_in, f_out, invalid_placeholder=placeholder)
-
-        assert load_list_from_file(f_out) == tokenized
-
-
-def test_detokenize_file():
-    with named_temporary_path() as f_in, named_temporary_path() as f_out:
-        # Original (tokenized) content
-        original = ["C C O >> C C O", "C C . C", "C ( N C C ) [S] O C"]
-        dump_list_to_file(original, f_in)
-
-        # Expected (detokenized) content
-        detokenized = ["CCO>>CCO", "CC.C", "C(NCC)[S]OC"]
-
-        detokenize_file(f_in, f_out)
-
-        assert load_list_from_file(f_out) == detokenized
-
-
-def test_ensure_tokenized_file():
-    with named_temporary_path() as temporary_path:
-        temporary_path.mkdir()
-
-        # prepare filenames
-        postfix = ".tknz"
-        already_tokenized_file = str(temporary_path / "a.txt")
-        not_tokenized_file = str(temporary_path / "b.txt")
-        updated_tokenized_file = str(temporary_path / "b.txt") + postfix
-
-        # contents (original and expected)
-        placeholder = "error"
-        tokenized = ["C C O >> C C O", "C C . C", "C ( N C C ) [S] O"]
-        not_tokenized = ["CCO>>CCO", "CC.C", "INVALID", "C(N)[S]O"]
-        after_tokenization = ["C C O >> C C O", "C C . C", placeholder, "C ( N ) [S] O"]
-
-        # Put into files
-        dump_list_to_file(tokenized, already_tokenized_file)
-        dump_list_to_file(not_tokenized, not_tokenized_file)
-
-        # ensure for already tokenized - the original unchanged file can be used
-        result = ensure_tokenized_file(
-            already_tokenized_file, postfix=postfix, invalid_placeholder=placeholder
-        )
-        assert result == already_tokenized_file
-        assert load_list_from_file(result) == tokenized
-
-        # ensure for non-tokenized - a new file was created with tokenized strings
-        result = ensure_tokenized_file(
-            not_tokenized_file, postfix=postfix, invalid_placeholder=placeholder
-        )
-        assert result == updated_tokenized_file
-        assert load_list_from_file(updated_tokenized_file) == after_tokenization
 
 
 def test_tokenize_class():

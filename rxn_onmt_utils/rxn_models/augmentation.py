@@ -8,11 +8,16 @@ from typing import Callable, List, Optional
 
 from rxn.chemutils.smiles_augmenter import SmilesAugmenter
 from rxn.chemutils.smiles_randomization import randomize_smiles_rotated
-from rxn.chemutils.tokenization import detokenize_smiles, tokenize_smiles
-from rxn.utilities.files import dump_list_to_file, iterate_lines_from_file
-
-from .tokenize_file import file_is_tokenized
-from .utils import raise_if_identical_path
+from rxn.chemutils.tokenization import (
+    detokenize_smiles,
+    file_is_tokenized,
+    tokenize_smiles,
+)
+from rxn.utilities.files import (
+    dump_list_to_file,
+    iterate_lines_from_file,
+    raise_if_paths_are_identical,
+)
 
 
 def augment_translation_dataset(
@@ -85,7 +90,7 @@ def augment_src(
         keep_original: whether to keep the original sample in the output.
         augmenter: augmenter instance.
     """
-    raise_if_identical_path(src_in, src_out)
+    raise_if_paths_are_identical(src_in, src_out)
 
     augment = _augment_callback(
         augmenter,
@@ -118,7 +123,7 @@ def augment_tgt(
         n_augmentations: number of augmentations per input line.
         keep_original: whether to keep the original sample in the output.
     """
-    raise_if_identical_path(tgt_in, tgt_out)
+    raise_if_paths_are_identical(tgt_in, tgt_out)
 
     if keep_original:
         # If we want to keep the original, we will need one more copy.

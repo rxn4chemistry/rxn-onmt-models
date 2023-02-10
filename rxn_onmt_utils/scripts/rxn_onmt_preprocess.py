@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import List, Optional, Tuple
 
 import click
+from rxn.chemutils.tokenization import ensure_tokenized_file
 from rxn.utilities.files import (
     PathLike,
     count_lines,
@@ -19,7 +20,6 @@ from rxn.utilities.logging import setup_console_and_file_logger
 
 from rxn_onmt_utils import __version__
 from rxn_onmt_utils.rxn_models import defaults
-from rxn_onmt_utils.rxn_models.tokenize_file import ensure_tokenized_file
 from rxn_onmt_utils.rxn_models.utils import (
     OnmtPreprocessedFiles,
     RxnPreprocessingFiles,

@@ -6,8 +6,7 @@ from typing import Dict, List, Sequence, Tuple, TypeVar
 
 import numpy as np
 from rxn.utilities.containers import chunker
-
-from rxn_onmt_utils.utils import get_multiplier
+from rxn.utilities.misc import get_multiplier
 
 T = TypeVar("T")
 

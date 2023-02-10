@@ -7,11 +7,10 @@ import numpy as np
 import pandas as pd
 from attr import define
 from rxn.chemutils.miscellaneous import get_individual_compounds
-from rxn.chemutils.tokenization import detokenize_smiles, to_tokens
+from rxn.chemutils.tokenization import detokenize_smiles, file_is_tokenized, to_tokens
 from rxn.utilities.files import iterate_lines_from_file
 from rxn.utilities.logging import setup_console_logger
 
-from rxn_onmt_utils.rxn_models.tokenize_file import file_is_tokenized
 from rxn_onmt_utils.rxn_models.utils import RxnPreprocessingFiles
 
 logger = logging.getLogger(__name__)
