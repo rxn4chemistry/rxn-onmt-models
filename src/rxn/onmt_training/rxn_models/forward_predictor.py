@@ -8,8 +8,8 @@ from rxn.chemutils.multicomponent_smiles import (
     multicomponent_smiles_to_list,
 )
 from rxn.chemutils.tokenization import detokenize_smiles, tokenize_smiles
+from rxn.onmt_utils.translator import Translator
 
-from ..translator import Translator
 from .prediction_collapser import PredictionCollapser
 
 # Aliases, for ease of use. Note that after processing, we consider

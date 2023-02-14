@@ -4,7 +4,10 @@ from typing import Iterable, Iterator, Optional
 import pytest
 from rxn.utilities.files import dump_list_to_file, named_temporary_path
 
-from rxn.onmt_training.rxn_models.prediction_utils import MultiPrediction, load_predictions
+from rxn.onmt_training.rxn_models.prediction_utils import (
+    MultiPrediction,
+    load_predictions,
+)
 
 
 class PredFiles:

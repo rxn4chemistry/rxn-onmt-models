@@ -7,14 +7,14 @@ import logging
 from typing import Optional, Tuple
 
 import click
-from rxn.utilities.logging import setup_console_and_file_logger
-
-from rxn.onmt_training import __version__
-from rxn.onmt_training.model_introspection import (
+from rxn.onmt_utils.model_introspection import (
     get_model_dropout,
     get_model_seed,
     model_vocab_is_compatible,
 )
+from rxn.utilities.logging import setup_console_and_file_logger
+
+from rxn.onmt_training import __version__
 from rxn.onmt_training.rxn_models import defaults
 from rxn.onmt_training.rxn_models.onmt_train_command import OnmtTrainCommand
 from rxn.onmt_training.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
