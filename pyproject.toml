@@ -4,9 +4,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.mypy]
 check_untyped_defs = true
-exclude = [
-    "deprecated"
-]
 
 [[tool.mypy.overrides]]
 module = [
@@ -14,7 +11,6 @@ module = [
     "numpy.*",
     "pandas.*",
     "pytest.*",
-    "rdkit.*",
 ]
 ignore_missing_imports = true
 
