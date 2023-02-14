@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from rxn.utilities.files import PathLike, iterate_lines_from_file
 
-from rxn.onmt_utils.translator import Translator
+from rxn.onmt_training.translator import Translator
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

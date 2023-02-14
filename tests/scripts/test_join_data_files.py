@@ -6,7 +6,7 @@ from rxn.utilities.files import (
     named_temporary_path,
 )
 
-from rxn.onmt_utils.scripts.join_data_files import join_data_files
+from rxn.onmt_training.scripts.join_data_files import join_data_files
 
 
 def test_join_data_files():

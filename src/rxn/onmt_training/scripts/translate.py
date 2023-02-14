@@ -8,8 +8,8 @@ from typing import Tuple
 
 import click
 
-from rxn.onmt_utils.torch_utils import set_num_threads
-from rxn.onmt_utils.translator import Translator
+from rxn.onmt_training.torch_utils import set_num_threads
+from rxn.onmt_training.translator import Translator
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

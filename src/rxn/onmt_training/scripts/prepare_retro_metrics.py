@@ -14,13 +14,13 @@ from rxn.utilities.files import (
 )
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_utils.rxn_models.classification_translation import (
+from rxn.onmt_training.rxn_models.classification_translation import (
     classification_translation,
 )
-from rxn.onmt_utils.rxn_models.forward_or_retro_translation import rxn_translation
-from rxn.onmt_utils.rxn_models.metrics_files import RetroFiles
-from rxn.onmt_utils.rxn_models.run_metrics import evaluate_metrics
-from rxn.onmt_utils.rxn_models.utils import (
+from rxn.onmt_training.rxn_models.forward_or_retro_translation import rxn_translation
+from rxn.onmt_training.rxn_models.metrics_files import RetroFiles
+from rxn.onmt_training.rxn_models.run_metrics import evaluate_metrics
+from rxn.onmt_training.rxn_models.utils import (
     convert_class_token_idx_for_tranlation_models,
 )
 

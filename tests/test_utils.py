@@ -1,6 +1,6 @@
 from freezegun import freeze_time
 
-from rxn.onmt_utils.utils import log_file_name_from_time
+from rxn.onmt_training.utils import log_file_name_from_time
 
 
 @freeze_time("2018-03-23 15:54:22")

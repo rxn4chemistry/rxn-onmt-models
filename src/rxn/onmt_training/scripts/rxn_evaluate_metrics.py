@@ -1,7 +1,7 @@
 import click
 from rxn.utilities.logging import setup_console_logger
 
-from rxn.onmt_utils.rxn_models.run_metrics import evaluate_metrics
+from rxn.onmt_training.rxn_models.run_metrics import evaluate_metrics
 
 
 @click.command(context_settings={"show_default": True})

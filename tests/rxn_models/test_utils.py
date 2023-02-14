@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from rxn.onmt_utils.rxn_models.utils import ModelFiles
+from rxn.onmt_training.rxn_models.utils import ModelFiles
 
 
 def test_get_model_checkpoint_step():

@@ -8,8 +8,8 @@ from typing import Iterator, List, Optional, Union
 import click
 from attr import define
 
-import rxn.onmt_utils.rxn_models.defaults as defaults
-from rxn.onmt_utils.rxn_models.utils import RxnCommand
+import rxn.onmt_training.rxn_models.defaults as defaults
+from rxn.onmt_training.rxn_models.utils import RxnCommand
 
 _CONTEXT_DATA_BATCH_SIZE = 8
 

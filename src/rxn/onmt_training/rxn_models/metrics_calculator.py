@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Type, TypeVar
 
-from rxn.onmt_utils.rxn_models.metrics_files import MetricsFiles
+from rxn.onmt_training.rxn_models.metrics_files import MetricsFiles
 
 CalculatorT = TypeVar("CalculatorT", bound="MetricsCalculator")
 

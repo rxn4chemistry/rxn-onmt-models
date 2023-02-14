@@ -2,7 +2,7 @@ from typing import Any, List, Tuple
 
 from rxn.utilities.files import PathLike
 
-from rxn.onmt_utils.rxn_models.utils import RxnCommand, preprocessed_id_names
+from rxn.onmt_training.rxn_models.utils import RxnCommand, preprocessed_id_names
 
 
 class Arg:

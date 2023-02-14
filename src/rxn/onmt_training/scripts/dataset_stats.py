@@ -11,7 +11,7 @@ from rxn.chemutils.tokenization import detokenize_smiles, file_is_tokenized, to_
 from rxn.utilities.files import iterate_lines_from_file
 from rxn.utilities.logging import setup_console_logger
 
-from rxn.onmt_utils.rxn_models.utils import RxnPreprocessingFiles
+from rxn.onmt_training.rxn_models.utils import RxnPreprocessingFiles
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

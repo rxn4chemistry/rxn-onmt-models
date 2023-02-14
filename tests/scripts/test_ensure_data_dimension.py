@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
-from rxn.onmt_utils.scripts.ensure_data_dimension import ensure_data_dimension
+from rxn.onmt_training.scripts.ensure_data_dimension import ensure_data_dimension
 
 
 def test_ensure_data_dimension():

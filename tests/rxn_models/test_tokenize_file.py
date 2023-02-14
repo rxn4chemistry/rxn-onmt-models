@@ -5,7 +5,7 @@ from rxn.utilities.files import (
     named_temporary_path,
 )
 
-from rxn.onmt_utils.rxn_models.tokenize_file import (
+from rxn.onmt_training.rxn_models.tokenize_file import (
     classification_file_is_tokenized,
     classification_string_is_tokenized,
     detokenize_class,

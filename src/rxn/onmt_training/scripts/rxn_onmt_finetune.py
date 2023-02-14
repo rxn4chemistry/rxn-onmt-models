@@ -9,16 +9,16 @@ from typing import Tuple
 import click
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_utils import __version__
-from rxn.onmt_utils.model_introspection import (
+from rxn.onmt_training import __version__
+from rxn.onmt_training.model_introspection import (
     get_model_rnn_size,
     model_vocab_is_compatible,
 )
-from rxn.onmt_utils.model_resize import ModelResizer
-from rxn.onmt_utils.rxn_models import defaults
-from rxn.onmt_utils.rxn_models.onmt_train_command import OnmtTrainCommand
-from rxn.onmt_utils.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
-from rxn.onmt_utils.utils import log_file_name_from_time, run_command
+from rxn.onmt_training.model_resize import ModelResizer
+from rxn.onmt_training.rxn_models import defaults
+from rxn.onmt_training.rxn_models.onmt_train_command import OnmtTrainCommand
+from rxn.onmt_training.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
+from rxn.onmt_training.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

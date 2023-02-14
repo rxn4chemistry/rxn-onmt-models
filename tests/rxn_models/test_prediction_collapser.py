@@ -1,4 +1,4 @@
-from rxn.onmt_utils.rxn_models.prediction_collapser import PredictionCollapser
+from rxn.onmt_training.rxn_models.prediction_collapser import PredictionCollapser
 
 
 def test_canonical_collapsing():

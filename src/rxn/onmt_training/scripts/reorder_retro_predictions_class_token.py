@@ -6,8 +6,8 @@ import click
 from rxn.utilities.containers import chunker
 from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
-from rxn.onmt_utils.rxn_models.metrics import get_sequence_multiplier
-from rxn.onmt_utils.rxn_models.metrics_files import RetroFiles
+from rxn.onmt_training.rxn_models.metrics import get_sequence_multiplier
+from rxn.onmt_training.rxn_models.metrics_files import RetroFiles
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

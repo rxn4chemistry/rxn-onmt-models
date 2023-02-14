@@ -7,9 +7,9 @@ from rxn.chemutils.multicomponent_smiles import multicomponent_smiles_to_list
 from rxn.utilities.files import iterate_lines_from_file
 from rxn.utilities.logging import setup_console_logger
 
-from rxn.onmt_utils import __version__
-from rxn.onmt_utils.rxn_models.forward_predictor import ForwardPredictor
-from rxn.onmt_utils.translator import Translator
+from rxn.onmt_training import __version__
+from rxn.onmt_training.rxn_models.forward_predictor import ForwardPredictor
+from rxn.onmt_training.translator import Translator
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

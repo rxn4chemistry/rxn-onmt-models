@@ -3,8 +3,8 @@ from pathlib import Path
 
 from rxn.utilities.files import dump_list_to_file, load_list_from_file
 
-from rxn.onmt_utils.rxn_models.metrics_files import RetroFiles
-from rxn.onmt_utils.scripts.reorder_retro_predictions_class_token import (
+from rxn.onmt_training.rxn_models.metrics_files import RetroFiles
+from rxn.onmt_training.scripts.reorder_retro_predictions_class_token import (
     reorder_retro_predictions_class_token,
 )
 

@@ -7,7 +7,7 @@ import logging
 
 import click
 
-from rxn.onmt_utils.model_resize import ModelResizer
+from rxn.onmt_training.model_resize import ModelResizer
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

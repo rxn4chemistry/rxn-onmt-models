@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from rxn.onmt_utils.rxn_models.metrics import (
+from rxn.onmt_training.rxn_models.metrics import (
     class_diversity,
     coverage,
     get_sequence_multiplier,
