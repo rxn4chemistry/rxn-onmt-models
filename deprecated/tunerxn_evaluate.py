@@ -18,8 +18,8 @@ from rxn.chemutils.tokenization import detokenize_smiles
 from rxn.utilities.files import is_path_creatable, load_list_from_file
 from rxn.utilities.logging import setup_console_logger
 
-from rxn_onmt_utils.rxn_models.utils import ModelFiles, RxnPreprocessingFiles
-from rxn_onmt_utils.translator import Translator
+from rxn.onmt_utils.rxn_models.utils import ModelFiles, RxnPreprocessingFiles
+from rxn.onmt_utils.translator import Translator
 
 
 def _standardized(multi_smiles: str) -> ReactionEquation:

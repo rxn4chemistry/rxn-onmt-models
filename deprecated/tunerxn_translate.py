@@ -8,11 +8,11 @@ from typing import Optional
 
 import click
 
-from rxn_onmt_utils.from_tunerxn.translate_onmt import translate_onmt
-from rxn_onmt_utils.from_tunerxn.translate_postprocess import translate_postprocess
-from rxn_onmt_utils.from_tunerxn.translate_preprocess import translate_preprocess
-from rxn_onmt_utils.from_tunerxn.translate_standardize import translate_standardize
-from rxn_onmt_utils.from_tunerxn.translate_tokenize import translate_tokenize
+from rxn.onmt_utils.from_tunerxn.translate_onmt import translate_onmt
+from rxn.onmt_utils.from_tunerxn.translate_postprocess import translate_postprocess
+from rxn.onmt_utils.from_tunerxn.translate_preprocess import translate_preprocess
+from rxn.onmt_utils.from_tunerxn.translate_standardize import translate_standardize
+from rxn.onmt_utils.from_tunerxn.translate_tokenize import translate_tokenize
 
 
 @click.command()

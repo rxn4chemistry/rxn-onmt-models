@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from rxn.utilities.files import load_list_from_file
 
-from rxn_onmt_utils.translator import Translator
+from rxn.onmt_utils.translator import Translator
 
 
 def translate_onmt(
