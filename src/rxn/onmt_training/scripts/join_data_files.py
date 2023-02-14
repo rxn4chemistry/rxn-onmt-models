@@ -61,7 +61,7 @@ def join_data_files(input_dir: PathLike, output_dir: PathLike) -> None:
     help="Folder containing different subfolders with the data chunks.",
 )
 @click.option("--output_dir", required=True, help="Where to save all the files.")
-def main(input_dir: str, output_dir: str):
+def main(input_dir: str, output_dir: str) -> None:
     """
     Joins files which were before splitted with the script ensure_data_dimension.py
     """

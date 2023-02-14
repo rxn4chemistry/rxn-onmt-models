@@ -14,7 +14,7 @@ from rxn.onmt_training.rxn_models.tokenize_file import (
 )
 
 
-def test_tokenize_class():
+def test_tokenize_class() -> None:
     assert tokenize_class("1.2.3") == "1 1.2 1.2.3"
     assert tokenize_class("0") == "0"
 
@@ -27,7 +27,7 @@ def test_tokenize_class():
         _ = tokenize_class("1~2~3")
 
 
-def test_detokenize_class():
+def test_detokenize_class() -> None:
     assert detokenize_class("1 1.2 1.2.3") == "1.2.3"
     assert detokenize_class("0") == "0"
 
@@ -42,7 +42,7 @@ def test_detokenize_class():
         _ = detokenize_class("1 1.2 1.2.3 1.2.3.4")
 
 
-def test_classification_string_is_tokenized():
+def test_classification_string_is_tokenized() -> None:
     assert classification_string_is_tokenized("1 1.2 1.2.3")
     assert not classification_string_is_tokenized("1.2.3")
 
@@ -54,7 +54,7 @@ def test_classification_string_is_tokenized():
         _ = classification_string_is_tokenized("1 1.2")
 
 
-def test_classification_file_is_tokenized():
+def test_classification_file_is_tokenized() -> None:
     # Basic tokenized example
     with named_temporary_path() as path:
         dump_list_to_file(["1 1.2 1.2.3", "0"], path)
@@ -83,7 +83,7 @@ def test_classification_file_is_tokenized():
             _ = classification_file_is_tokenized(path)
 
 
-def test_tokenize_classification_file():
+def test_tokenize_classification_file() -> None:
     # Basic tokenized example
     with named_temporary_path() as f_in, named_temporary_path() as f_out:
         dump_list_to_file(["1.2.3", "0", "2.11.4", "11.0.23"], f_in)

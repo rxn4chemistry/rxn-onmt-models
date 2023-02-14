@@ -6,7 +6,7 @@ from rxn.onmt_training.rxn_models.context_metrics import (
 )
 
 
-def test_identical_fraction():
+def test_identical_fraction() -> None:
     # Full match
     assert identical_fraction("C.O>>", "C.O>>") == 1.0
     assert identical_fraction("C.O>>N", "C.O>>N") == 1.0
@@ -27,13 +27,13 @@ def test_identical_fraction():
     assert identical_fraction(">>", ">>") == 1.0
 
 
-def test_identical_fraction_invalid_input():
+def test_identical_fraction_invalid_input() -> None:
     # Not a reaction SMILES
     assert identical_fraction("C.O", "C.O") == 0.0
     assert identical_fraction("C.O>>", "") == 0.0
 
 
-def test_fraction_of_identical_compounds():
+def test_fraction_of_identical_compounds() -> None:
     # a few examples for top-1
     assert fraction_of_identical_compounds(
         ["A.B>>", "B.C>>", "E"],

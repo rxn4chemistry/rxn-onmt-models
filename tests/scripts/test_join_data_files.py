@@ -1,5 +1,6 @@
 import os.path
 
+import pytest
 from rxn.utilities.files import (
     dump_list_to_file,
     load_list_from_file,
@@ -9,7 +10,7 @@ from rxn.utilities.files import (
 from rxn.onmt_training.scripts.join_data_files import join_data_files
 
 
-def test_join_data_files():
+def test_join_data_files() -> None:
     # Creation of a temporary directory to dump output files
     with named_temporary_path() as temporary_path:
         chunk_dir_0 = temporary_path / "splitted_data" / "chunk_0"
@@ -50,7 +51,7 @@ def test_join_data_files():
         ]
 
 
-def test_join_data_files_skipped(caplog):
+def test_join_data_files_skipped(caplog: pytest.LogCaptureFixture) -> None:
     # Creation of a temporary directory to dump output files
     with named_temporary_path() as temporary_path:
         chunk_dir_0 = temporary_path / "splitted_data" / "chunk_0"

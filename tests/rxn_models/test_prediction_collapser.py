@@ -1,7 +1,7 @@
 from rxn.onmt_training.rxn_models.prediction_collapser import PredictionCollapser
 
 
-def test_canonical_collapsing():
+def test_canonical_collapsing() -> None:
     pc = PredictionCollapser(False)
 
     raw_predictions = [
@@ -24,7 +24,7 @@ def test_canonical_collapsing():
     assert list(pc.collapse_predictions(raw_predictions)) == expected
 
 
-def test_hypervalent_smiles():
+def test_hypervalent_smiles() -> None:
     # Default canonicalization doesn't work on these, but the collapser accepts them
     pc = PredictionCollapser(False)
 
@@ -40,7 +40,7 @@ def test_hypervalent_smiles():
     assert list(pc.collapse_predictions(raw_predictions)) == expected
 
 
-def test_invalid_smiles_are_not_removed():
+def test_invalid_smiles_are_not_removed() -> None:
     pc = PredictionCollapser(False)
 
     # No change happens here, invalid SMILES are just kept
@@ -53,7 +53,7 @@ def test_invalid_smiles_are_not_removed():
     assert list(pc.collapse_predictions(raw_predictions)) == raw_predictions
 
 
-def test_collapse_inchi():
+def test_collapse_inchi() -> None:
     # The two following compounds are identical when including the extended InChI,
     # check, but now when canonicalizing them:
     # C1C(=O)CC(=O)CC1
@@ -94,7 +94,7 @@ def test_collapse_inchi():
     )
 
 
-def test_on_multicomponent_smiles():
+def test_on_multicomponent_smiles() -> None:
     pc = PredictionCollapser(True)
 
     # Both first predictions should be merged - because of canonicalization
@@ -111,7 +111,7 @@ def test_on_multicomponent_smiles():
     assert list(pc.collapse_predictions(raw_predictions)) == expected
 
 
-def test_on_reaction_smiles():
+def test_on_reaction_smiles() -> None:
     pc = PredictionCollapser(True)
 
     # Both first predictions should be merged - because of canonicalization

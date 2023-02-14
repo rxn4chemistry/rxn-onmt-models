@@ -63,7 +63,7 @@ def ensure_data_dimension(
     type=int,
     help="Maximum file length allowed without splitting",
 )
-def main(txt_files: Tuple[str, ...], output_dir: str, max_dimension: int):
+def main(txt_files: Tuple[str, ...], output_dir: str, max_dimension: int) -> None:
     """
     Script to split too big files in subchunks . Useful for class token translations.
     Takes as input an arbitrary number of files. Files are saved under output_dir/chunk_i

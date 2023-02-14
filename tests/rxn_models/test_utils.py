@@ -3,7 +3,7 @@ from pathlib import Path
 from rxn.onmt_training.rxn_models.utils import ModelFiles
 
 
-def test_get_model_checkpoint_step():
+def test_get_model_checkpoint_step() -> None:
     # Example not fitting the schema
     assert ModelFiles._get_checkpoint_step(Path("dummy")) is None
     assert ModelFiles._get_checkpoint_step(Path("/some/path/dummy")) is None

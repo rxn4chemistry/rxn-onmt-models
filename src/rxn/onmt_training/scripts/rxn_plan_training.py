@@ -69,7 +69,7 @@ class TrainingPlanner:
     in an interactive manner.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # All the logic runs directly in the constructor, to avoid the
         # necessity of initially setting all the values to None.
         self.model_task = click.prompt(
@@ -213,7 +213,7 @@ class TrainingPlanner:
             Parameter("seed", "Random seed for training", defaults.SEED, RxnCommand.TF),
         ]
 
-    def _query_parameters(self):
+    def _query_parameters(self) -> None:
         """
         Query the user about the values of all necessary parameters.
         """

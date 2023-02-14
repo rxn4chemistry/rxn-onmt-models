@@ -9,7 +9,7 @@ from rxn.onmt_training.scripts.reorder_retro_predictions_class_token import (
 )
 
 
-def test_reorder_retro_files():
+def test_reorder_retro_files() -> None:
     # Creation of a temporary directory to dump output files
     with tempfile.TemporaryDirectory() as temporary_dir:
         """

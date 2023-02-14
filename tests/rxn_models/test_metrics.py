@@ -10,7 +10,7 @@ from rxn.onmt_training.rxn_models.metrics import (
 )
 
 
-def test_get_sequence_multiplier():
+def test_get_sequence_multiplier() -> None:
     assert get_sequence_multiplier([1, 2, 3], [1, 2, 3]) == 1
     assert get_sequence_multiplier([1, 2, 3], [1, 1, 2, 2, 3, 3]) == 2
     assert (
@@ -33,7 +33,7 @@ def test_get_sequence_multiplier():
         _ = get_sequence_multiplier([1, 2, 3], [])
 
 
-def test_top_n_accuracy():
+def test_top_n_accuracy() -> None:
     # a few examples for top-1
     assert top_n_accuracy(
         ["A", "B", "C"],
@@ -63,7 +63,7 @@ def test_top_n_accuracy():
         _ = top_n_accuracy([1, 2], [1, 2, 3])
 
 
-def test_round_trip_accuracy():
+def test_round_trip_accuracy() -> None:
     # a few examples for top-1
     assert round_trip_accuracy(
         ["A", "B", "C"],
@@ -127,7 +127,7 @@ def test_round_trip_accuracy():
         _ = round_trip_accuracy([1, 2], [1, 2, 3])
 
 
-def test_class_diversity():
+def test_class_diversity() -> None:
     # a few examples for top-1
     assert class_diversity(
         ["A", "B", "C"], ["A", "B", "C"], ["1.1.1", "2.2.2", "3.3.3"]
@@ -206,7 +206,7 @@ def test_class_diversity():
         _ = class_diversity(["A", "B"], ["A", "B", "C"], ["1.1.1", "1.1.1", "2.2.2"])
 
 
-def test_coverage():
+def test_coverage() -> None:
     # a few examples for top-1
     assert coverage(
         ["A", "B", "C"],
