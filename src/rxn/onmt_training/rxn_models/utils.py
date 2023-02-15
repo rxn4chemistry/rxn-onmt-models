@@ -11,10 +11,6 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def convert_class_token_idx_for_tranlation_models(class_token_idx: int) -> str:
-    return f"[{class_token_idx}]"
-
-
 def preprocessed_id_names(n_additional_sets: int) -> List[str]:
     """Get the names of the ids for the datasets used in multi-task training
     with OpenNMT.
