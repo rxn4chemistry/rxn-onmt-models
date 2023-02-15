@@ -59,3 +59,13 @@ def run_command(command_and_args: List[str]) -> None:
         )
         logger.error(msg)
         raise RuntimeError(msg)
+
+
+def preprocessed_id_names(n_additional_sets: int) -> List[str]:
+    """Get the names of the ids for the datasets used in multi-task training
+    with OpenNMT.
+
+    Args:
+        n_additional_sets: how many sets there are in addition to the main set.
+    """
+    return ["main_set"] + [f"additional_set_{i+1}" for i in range(n_additional_sets)]

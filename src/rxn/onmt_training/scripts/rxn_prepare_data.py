@@ -20,9 +20,8 @@ from rxn.reaction_preprocessing.config import (
 from rxn.reaction_preprocessing.main import preprocess_data
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_training import __version__
-from rxn.onmt_training.rxn_models import defaults
-from rxn.onmt_training.rxn_models.utils import RxnPreprocessingFiles
+from rxn.onmt_training import __version__, defaults
+from rxn.onmt_training.training_files import RxnPreprocessingFiles
 from rxn.onmt_training.utils import log_file_name_from_time
 
 logger = logging.getLogger(__name__)
@@ -90,7 +89,7 @@ def main(
     setup_console_and_file_logger(log_file)
 
     logger.info(
-        f"Prepare reaction data for training with rxn-onmt-utils, version {__version__}."
+        f"Prepare reaction data for training with rxn-onmt-training, version {__version__}."
     )
 
     if import_from == "txt":

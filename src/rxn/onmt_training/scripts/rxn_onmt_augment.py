@@ -7,8 +7,8 @@ import click
 from rxn.utilities.files import stable_shuffle
 from rxn.utilities.logging import setup_console_logger
 
-from rxn.onmt_training.rxn_models.augmentation import augment_translation_dataset
-from rxn.onmt_training.rxn_models.utils import RxnPreprocessingFiles
+from rxn.onmt_training.augmentation import augment_translation_dataset
+from rxn.onmt_training.training_files import RxnPreprocessingFiles
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

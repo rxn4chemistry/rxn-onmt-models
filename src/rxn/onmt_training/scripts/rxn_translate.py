@@ -6,7 +6,7 @@ import click
 from rxn.utilities.logging import setup_console_logger
 
 from rxn.onmt_training import __version__
-from rxn.onmt_training.rxn_models.forward_or_retro_translation import rxn_translation
+from rxn.onmt_training.translation import rxn_translation
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

@@ -6,7 +6,7 @@ from rxn.utilities.files import (
     named_temporary_path,
 )
 
-from rxn.onmt_training.rxn_models.augmentation import augment_translation_dataset
+from rxn.onmt_training.augmentation import augment_translation_dataset
 
 
 def test_augment_partial_reactions() -> None:

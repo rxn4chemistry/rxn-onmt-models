@@ -1,24 +1,13 @@
 import logging
 import re
-from enum import Flag
 from itertools import count
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 from rxn.utilities.files import PathLike
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
-
-
-def preprocessed_id_names(n_additional_sets: int) -> List[str]:
-    """Get the names of the ids for the datasets used in multi-task training
-    with OpenNMT.
-
-    Args:
-        n_additional_sets: how many sets there are in addition to the main set.
-    """
-    return ["main_set"] + [f"additional_set_{i+1}" for i in range(n_additional_sets)]
 
 
 class ModelFiles:
@@ -239,21 +228,3 @@ class RxnPreprocessingFiles:
         if model_task == "context":
             return self.get_context_tgt_for_split(split)
         raise ValueError(f'Unsupported model task: "{model_task}"')
-
-
-class RxnCommand(Flag):
-    """
-    Flag indicating which command(s) the parameters relate to.
-
-    TC, TF, TCF are the combinations of the three base flags.
-    This enum allows for easily checking which commands some parameters relate
-    to (see Parameter and TrainingPlanner classes).
-    """
-
-    T = 1  # Train
-    C = 2  # Continue training
-    F = 4  # Fine-tune
-    TC = 3
-    TF = 5
-    CF = 6
-    TCF = 7

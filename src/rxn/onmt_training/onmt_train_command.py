@@ -1,8 +1,27 @@
+from enum import Flag
 from typing import Any, List, Tuple
 
 from rxn.utilities.files import PathLike
 
-from rxn.onmt_training.rxn_models.utils import RxnCommand, preprocessed_id_names
+from .utils import preprocessed_id_names
+
+
+class RxnCommand(Flag):
+    """
+    Flag indicating which command(s) the parameters relate to.
+
+    TC, TF, TCF are the combinations of the three base flags.
+    This enum allows for easily checking which commands some parameters relate
+    to (see Parameter and TrainingPlanner classes).
+    """
+
+    T = 1  # Train
+    C = 2  # Continue training
+    F = 4  # Fine-tune
+    TC = 3
+    TF = 5
+    CF = 6
+    TCF = 7
 
 
 class Arg:

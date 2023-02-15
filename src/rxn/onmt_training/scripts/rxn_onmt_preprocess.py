@@ -18,14 +18,16 @@ from rxn.utilities.files import (
 )
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_training import __version__
-from rxn.onmt_training.rxn_models import defaults
-from rxn.onmt_training.rxn_models.utils import (
+from rxn.onmt_training import __version__, defaults
+from rxn.onmt_training.training_files import (
     OnmtPreprocessedFiles,
     RxnPreprocessingFiles,
-    preprocessed_id_names,
 )
-from rxn.onmt_training.utils import log_file_name_from_time, run_command
+from rxn.onmt_training.utils import (
+    log_file_name_from_time,
+    preprocessed_id_names,
+    run_command,
+)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -140,7 +142,7 @@ def main(
     setup_console_and_file_logger(log_file)
 
     logger.info(
-        f"Preprocess data for OpenNMT with rxn-onmt-utils, version {__version__}."
+        f"Preprocess data for OpenNMT with rxn-onmt-training, version {__version__}."
     )
 
     train_src, train_tgt = determine_train_dataset(main_data_files, model_task)

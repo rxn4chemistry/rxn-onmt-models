@@ -9,10 +9,9 @@ from typing import Tuple
 import click
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_training import __version__
-from rxn.onmt_training.rxn_models import defaults
-from rxn.onmt_training.rxn_models.onmt_train_command import OnmtTrainCommand
-from rxn.onmt_training.rxn_models.utils import ModelFiles, OnmtPreprocessedFiles
+from rxn.onmt_training import __version__, defaults
+from rxn.onmt_training.onmt_train_command import OnmtTrainCommand
+from rxn.onmt_training.training_files import ModelFiles, OnmtPreprocessedFiles
 from rxn.onmt_training.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
@@ -79,7 +78,9 @@ def main(
     log_file = model_files.model_dir / log_file_name_from_time("rxn-onmt-train")
     setup_console_and_file_logger(log_file)
 
-    logger.info(f"Train RXN-OpenNMT model with rxn-onmt-utils, version {__version__}.")
+    logger.info(
+        f"Train RXN-OpenNMT model with rxn-onmt-training, version {__version__}."
+    )
 
     config_file = model_files.next_config_file()
 
