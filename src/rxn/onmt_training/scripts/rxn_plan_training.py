@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# LICENSED INTERNAL CODE. PROPERTY OF IBM.
-# IBM Research Zurich Licensed Internal Code
-# (C) Copyright IBM Corp. 2020
-# ALL RIGHTS RESERVED
 from typing import Iterator, List, Optional, Union
 
 import click
