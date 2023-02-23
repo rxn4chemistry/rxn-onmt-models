@@ -12,10 +12,10 @@ from rxn.onmt_utils.model_introspection import (
     get_model_seed,
     model_vocab_is_compatible,
 )
+from rxn.onmt_utils.train_command import OnmtTrainCommand
 from rxn.utilities.logging import setup_console_and_file_logger
 
 from rxn.onmt_training import __version__, defaults
-from rxn.onmt_training.onmt_train_command import OnmtTrainCommand
 from rxn.onmt_training.training_files import ModelFiles, OnmtPreprocessedFiles
 from rxn.onmt_training.utils import log_file_name_from_time, run_command
 

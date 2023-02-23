@@ -10,6 +10,7 @@ from typing import List, Optional, Tuple
 
 import click
 from rxn.chemutils.tokenization import ensure_tokenized_file
+from rxn.onmt_utils.train_command import preprocessed_id_names
 from rxn.utilities.files import (
     PathLike,
     count_lines,
@@ -23,11 +24,7 @@ from rxn.onmt_training.training_files import (
     OnmtPreprocessedFiles,
     RxnPreprocessingFiles,
 )
-from rxn.onmt_training.utils import (
-    log_file_name_from_time,
-    preprocessed_id_names,
-    run_command,
-)
+from rxn.onmt_training.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
