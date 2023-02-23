@@ -1,7 +1,7 @@
 from typing import Optional
 
 from rxn.chemutils.tokenization import detokenize_file, file_is_tokenized, tokenize_file
-from rxn.onmt_utils.translate import translate
+from rxn.onmt_utils import translate
 from rxn.utilities.files import PathLike, is_path_exists_or_creatable
 
 

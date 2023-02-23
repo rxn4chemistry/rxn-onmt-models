@@ -4,7 +4,7 @@ from pathlib import Path
 
 import click
 from rxn.chemutils.multicomponent_smiles import multicomponent_smiles_to_list
-from rxn.onmt_utils.translator import Translator
+from rxn.onmt_utils import Translator
 from rxn.utilities.files import iterate_lines_from_file
 from rxn.utilities.logging import setup_console_logger
 
