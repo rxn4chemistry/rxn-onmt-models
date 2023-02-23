@@ -8,8 +8,8 @@ from rxn.onmt_utils import Translator
 from rxn.utilities.files import iterate_lines_from_file
 from rxn.utilities.logging import setup_console_logger
 
-from rxn.onmt_training import __version__
-from rxn.onmt_training.forward_predictor import ForwardPredictor
+from rxn.onmt_models import __version__
+from rxn.onmt_models.forward_predictor import ForwardPredictor
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

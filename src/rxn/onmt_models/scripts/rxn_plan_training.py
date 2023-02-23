@@ -4,7 +4,7 @@ import click
 from attr import define
 from rxn.onmt_utils.train_command import RxnCommand
 
-import rxn.onmt_training.defaults as defaults
+import rxn.onmt_models.defaults as defaults
 
 _CONTEXT_DATA_BATCH_SIZE = 8
 

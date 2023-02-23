@@ -14,12 +14,9 @@ from rxn.utilities.files import (
 )
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_training import __version__, defaults
-from rxn.onmt_training.training_files import (
-    OnmtPreprocessedFiles,
-    RxnPreprocessingFiles,
-)
-from rxn.onmt_training.utils import log_file_name_from_time, run_command
+from rxn.onmt_models import __version__, defaults
+from rxn.onmt_models.training_files import OnmtPreprocessedFiles, RxnPreprocessingFiles
+from rxn.onmt_models.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

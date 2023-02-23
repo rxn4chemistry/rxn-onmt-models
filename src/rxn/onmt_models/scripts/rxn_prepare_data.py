@@ -15,9 +15,9 @@ from rxn.reaction_preprocessing.config import (
 from rxn.reaction_preprocessing.main import preprocess_data
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_training import __version__, defaults
-from rxn.onmt_training.training_files import RxnPreprocessingFiles
-from rxn.onmt_training.utils import log_file_name_from_time
+from rxn.onmt_models import __version__, defaults
+from rxn.onmt_models.training_files import RxnPreprocessingFiles
+from rxn.onmt_models.utils import log_file_name_from_time
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

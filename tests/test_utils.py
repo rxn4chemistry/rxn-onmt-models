@@ -2,8 +2,8 @@ from pathlib import Path
 
 from freezegun import freeze_time
 
-from rxn.onmt_training.training_files import ModelFiles
-from rxn.onmt_training.utils import log_file_name_from_time
+from rxn.onmt_models.training_files import ModelFiles
+from rxn.onmt_models.utils import log_file_name_from_time
 
 
 def test_get_model_checkpoint_step() -> None:
