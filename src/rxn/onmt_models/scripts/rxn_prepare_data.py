@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 import click
+from rxn.onmt_utils import __version__ as onmt_utils_version
 from rxn.reaction_preprocessing.config import (
     CommonConfig,
     Config,
@@ -15,7 +16,8 @@ from rxn.reaction_preprocessing.config import (
 from rxn.reaction_preprocessing.main import preprocess_data
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_models import __version__, defaults
+from rxn.onmt_models import __version__ as onmt_models_version
+from rxn.onmt_models import defaults
 from rxn.onmt_models.training_files import RxnPreprocessingFiles
 from rxn.onmt_models.utils import log_file_name_from_time
 
@@ -83,9 +85,9 @@ def main(
     log_file = output_dir_path / log_file_name_from_time("rxn-prepare-data")
     setup_console_and_file_logger(log_file)
 
-    logger.info(
-        f"Prepare reaction data for training with rxn-onmt-training, version {__version__}."
-    )
+    logger.info("Prepare reaction data for training with rxn-onmt-models.")
+    logger.info(f"rxn-onmt-utils version: {onmt_utils_version}. ")
+    logger.info(f"rxn-onmt-models version: {onmt_models_version}. ")
 
     if import_from == "txt":
         import_config = RxnImportConfig(data_format=InitialDataFormat.TXT)

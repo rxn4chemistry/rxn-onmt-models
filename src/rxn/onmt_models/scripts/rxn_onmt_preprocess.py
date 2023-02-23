@@ -5,6 +5,7 @@ from typing import List, Optional, Tuple
 
 import click
 from rxn.chemutils.tokenization import ensure_tokenized_file
+from rxn.onmt_utils import __version__ as onmt_utils_version
 from rxn.onmt_utils.train_command import preprocessed_id_names
 from rxn.utilities.files import (
     PathLike,
@@ -14,7 +15,8 @@ from rxn.utilities.files import (
 )
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_models import __version__, defaults
+from rxn.onmt_models import __version__ as onmt_models_version
+from rxn.onmt_models import defaults
 from rxn.onmt_models.training_files import OnmtPreprocessedFiles, RxnPreprocessingFiles
 from rxn.onmt_models.utils import log_file_name_from_time, run_command
 
@@ -130,9 +132,9 @@ def main(
     )
     setup_console_and_file_logger(log_file)
 
-    logger.info(
-        f"Preprocess data for OpenNMT with rxn-onmt-training, version {__version__}."
-    )
+    logger.info("Preprocess data for RXN-OpenNMT models.")
+    logger.info(f"rxn-onmt-utils version: {onmt_utils_version}. ")
+    logger.info(f"rxn-onmt-models version: {onmt_models_version}. ")
 
     train_src, train_tgt = determine_train_dataset(main_data_files, model_task)
     valid_src: PathLike = main_data_files.get_src_file("valid", model_task)

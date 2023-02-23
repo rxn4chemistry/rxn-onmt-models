@@ -2,6 +2,7 @@ import logging
 from typing import Optional, Tuple
 
 import click
+from rxn.onmt_utils import __version__ as onmt_utils_version
 from rxn.onmt_utils.model_introspection import (
     get_model_dropout,
     get_model_seed,
@@ -10,7 +11,8 @@ from rxn.onmt_utils.model_introspection import (
 from rxn.onmt_utils.train_command import OnmtTrainCommand
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_models import __version__, defaults
+from rxn.onmt_models import __version__ as onmt_models_version
+from rxn.onmt_models import defaults
 from rxn.onmt_models.training_files import ModelFiles, OnmtPreprocessedFiles
 from rxn.onmt_models.utils import log_file_name_from_time, run_command
 
@@ -74,10 +76,9 @@ def main(
     )
     setup_console_and_file_logger(log_file)
 
-    logger.info(
-        "Continue training of RXN-OpenNMT model with rxn-onmt-training, "
-        f"version {__version__}."
-    )
+    logger.info("Continue training of RXN model.")
+    logger.info(f"rxn-onmt-utils version: {onmt_utils_version}. ")
+    logger.info(f"rxn-onmt-models version: {onmt_models_version}. ")
 
     if train_from is None:
         train_from = str(model_files.get_last_checkpoint())

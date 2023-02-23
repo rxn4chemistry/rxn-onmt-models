@@ -3,9 +3,10 @@ from pathlib import Path
 from typing import Optional
 
 import click
+from rxn.onmt_utils import __version__ as onmt_utils_version
 from rxn.utilities.logging import setup_console_logger
 
-from rxn.onmt_models import __version__
+from rxn.onmt_models import __version__ as onmt_models_version
 from rxn.onmt_models.translation import rxn_translation
 
 logger = logging.getLogger(__name__)
@@ -62,7 +63,8 @@ def main(
         f'RXN translation "{src_file}" -> "{pred_file}" with model "{model}". '
         "Note: there is no post-processing of the predictions."
     )
-    logger.info(f"rxn-onmt-utils version: {__version__}. ")
+    logger.info(f"rxn-onmt-utils version: {onmt_utils_version}. ")
+    logger.info(f"rxn-onmt-models version: {onmt_models_version}. ")
 
     rxn_translation(
         src_file=src_file,

@@ -2,6 +2,7 @@ import logging
 from typing import Tuple
 
 import click
+from rxn.onmt_utils import __version__ as onmt_utils_version
 from rxn.onmt_utils.model_introspection import (
     get_model_rnn_size,
     model_vocab_is_compatible,
@@ -10,7 +11,8 @@ from rxn.onmt_utils.model_resize import ModelResizer
 from rxn.onmt_utils.train_command import OnmtTrainCommand
 from rxn.utilities.logging import setup_console_and_file_logger
 
-from rxn.onmt_models import __version__, defaults
+from rxn.onmt_models import __version__ as onmt_models_version
+from rxn.onmt_models import defaults
 from rxn.onmt_models.training_files import ModelFiles, OnmtPreprocessedFiles
 from rxn.onmt_models.utils import log_file_name_from_time, run_command
 
@@ -71,9 +73,9 @@ def main(
     log_file = model_files.model_dir / log_file_name_from_time("rxn-onmt-finetune")
     setup_console_and_file_logger(log_file)
 
-    logger.info(
-        f"Fine-tune RXN-OpenNMT model with rxn-onmt-training, version {__version__}."
-    )
+    logger.info("Fine-tuning RXN model.")
+    logger.info(f"rxn-onmt-utils version: {onmt_utils_version}. ")
+    logger.info(f"rxn-onmt-models version: {onmt_models_version}. ")
 
     if not model_vocab_is_compatible(train_from, onmt_preprocessed_files.vocab_file):
         # Extend the vocabulary of the base model based on the training data for
