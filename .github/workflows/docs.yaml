@@ -17,7 +17,7 @@ jobs:
       with:
         python-version: 3.8
     - name: Install package dependencies
-      run: pip install -e .
+      run: pip install -e .[rdkit]
     - name: Install sphinx dependencies
       run: pip install -r docs/requirements.txt
     - name: Make docs
