@@ -1,0 +1,6 @@
+rxn.onmt\_models.utils.log\_file\_name\_from\_time
+==================================================
+
+.. currentmodule:: rxn.onmt_models.utils
+
+.. autofunction:: log_file_name_from_time

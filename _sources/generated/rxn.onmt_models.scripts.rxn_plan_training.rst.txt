@@ -1,0 +1,35 @@
+rxn.onmt\_models.scripts.rxn\_plan\_training
+============================================
+
+.. automodule:: rxn.onmt_models.scripts.rxn_plan_training
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AugmentOptions
+      ContextOptions
+      DatasetOptions
+      Parameter
+      TrainingPlanner
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,32 @@
+rxn.onmt\_models.prediction\_collapser
+======================================
+
+.. automodule:: rxn.onmt_models.prediction_collapser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseCollapser
+      PredictionCollapser
+   
+   
+
+   
+   
+   
+
+
+

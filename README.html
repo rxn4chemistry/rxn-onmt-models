@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RXN package for OpenNMT-based models &mdash; RXN OpenNMT models 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="RXN OpenNMT models" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> RXN OpenNMT models
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">README</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-guide">Installation guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#training-models">Training models.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-easy-way">The easy way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-complicated-way">The complicated way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-task-training">Multi-task training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#continuing-the-training">Continuing the training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fine-tuning">Fine-tuning</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">RXN OpenNMT models</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>RXN package for OpenNMT-based models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rxn-package-for-opennmt-based-models">
+<h1>RXN package for OpenNMT-based models<a class="headerlink" href="#rxn-package-for-opennmt-based-models" title="Permalink to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/rxn4chemistry/rxn-onmt-models/actions"><img alt="Actions tests" src="https://github.com/rxn4chemistry/rxn-onmt-models/actions/workflows/tests.yaml/badge.svg" /></a></p>
+<p>This repository contains a Python package and associated scripts for training reaction models based on the OpenNMT library.
+The repository is built on top of other RXN packages; see our other repositories <a class="reference external" href="https://github.com/rxn4chemistry/rxn-utilities"><code class="docutils literal notranslate"><span class="pre">rxn-utilities</span></code></a>, <a class="reference external" href="https://github.com/rxn4chemistry/rxn-chemutils"><code class="docutils literal notranslate"><span class="pre">rxn-chemutils</span></code></a>, and <a class="reference external" href="https://github.com/rxn4chemistry/rxn-onmt-utils"><code class="docutils literal notranslate"><span class="pre">rxn-onmt-utils</span></code></a>.</p>
+<p>For the evaluation of trained models, see the <a class="reference external" href="https://github.com/rxn4chemistry/rxn-metrics"><code class="docutils literal notranslate"><span class="pre">rxn-metrics</span></code></a> repository.</p>
+<p>The documentation can be found <a class="reference external" href="https://rxn4chemistry.github.io/rxn-onmt-models/">here</a>.</p>
+<p>This repository was produced through a collaborative project involving IBM Research Europe and Syngenta.</p>
+<section id="system-requirements">
+<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this heading"></a></h2>
+<p>This package is supported on all operating systems.
+It has been tested on the following systems:</p>
+<ul class="simple">
+<li><p>macOS: Big Sur (11.1)</p></li>
+<li><p>Linux: Ubuntu 18.04.4</p></li>
+</ul>
+<p>A Python version of 3.6, 3.7, or 3.8 is recommended.
+Python versions 3.9 and above are not expected to work due to compatibility with the selected version of OpenNMT.</p>
+</section>
+<section id="installation-guide">
+<h2>Installation guide<a class="headerlink" href="#installation-guide" title="Permalink to this heading"></a></h2>
+<p>The package can be installed from Pypi:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>rxn-onmt-models<span class="o">[</span>rdkit<span class="o">]</span>
+</pre></div>
+</div>
+<p>You can leave out <code class="docutils literal notranslate"><span class="pre">[rdkit]</span></code> if RDKit is already available in your environment.</p>
+<p>For local development, the package can be installed with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,rdkit]&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="training-models">
+<h2>Training models.<a class="headerlink" href="#training-models" title="Permalink to this heading"></a></h2>
+<p>Example of usage for training RXN models</p>
+<section id="the-easy-way">
+<h3>The easy way<a class="headerlink" href="#the-easy-way" title="Permalink to this heading"></a></h3>
+<p>Simply execute the interactive program <code class="docutils literal notranslate"><span class="pre">rxn-plan-training</span></code> in your terminal and follow the instructions.</p>
+</section>
+<section id="the-complicated-way">
+<h3>The complicated way<a class="headerlink" href="#the-complicated-way" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple" start="0">
+<li><p>Optional: set shell variables, to be used in the commands later on.</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">MODEL_TASK</span><span class="o">=</span><span class="s2">&quot;forward&quot;</span>
+
+<span class="c1"># Existing TXT files</span>
+<span class="nv">DATA_1</span><span class="o">=</span><span class="s2">&quot;/path/to/data_1.txt&quot;</span>
+<span class="nv">DATA_2</span><span class="o">=</span><span class="s2">&quot;/path/to/data_2.txt&quot;</span>
+<span class="nv">DATA_3</span><span class="o">=</span><span class="s2">&quot;/path/to/data_3.txt&quot;</span>
+
+<span class="c1"># Where to put the processed data</span>
+<span class="nv">DATA_DIR_1</span><span class="o">=</span><span class="s2">&quot;/path/to/processed_data_1&quot;</span>
+<span class="nv">DATA_DIR_2</span><span class="o">=</span><span class="s2">&quot;/path/to/processed_data_2&quot;</span>
+<span class="nv">DATA_DIR_3</span><span class="o">=</span><span class="s2">&quot;/path/to/processed_data_3&quot;</span>
+
+<span class="c1"># Where to save the ONMT-preprocessed data</span>
+<span class="nv">PREPROCESSED</span><span class="o">=</span><span class="s2">&quot;/path/to/onmt-preprocessed&quot;</span>
+
+<span class="c1"># Where to save the models</span>
+<span class="nv">MODELS</span><span class="o">=</span><span class="s2">&quot;/path/to/models&quot;</span>
+<span class="nv">MODELS_FINETUNED</span><span class="o">=</span><span class="s2">&quot;/path/to/models_finetuned&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Prepare the data (standardization, filtering, etc.)</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rxn-prepare-data<span class="w"> </span>--input_data<span class="w"> </span><span class="nv">$DATA_1</span><span class="w"> </span>--output_dir<span class="w"> </span><span class="nv">$DATA_DIR_1</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Preprocess the data with OpenNMT</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rxn-onmt-preprocess<span class="w"> </span>--input_dir<span class="w"> </span><span class="nv">$DATA_DIR_1</span><span class="w"> </span>--output_dir<span class="w"> </span><span class="nv">$PREPROCESSED</span><span class="w"> </span>--model_task<span class="w"> </span><span class="nv">$MODEL_TASK</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Train the model (here with small parameter values, to make it fast on CPU for testing).</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rxn-onmt-train<span class="w"> </span>--model_output_dir<span class="w"> </span><span class="nv">$MODELS</span><span class="w"> </span>--preprocess_dir<span class="w"> </span><span class="nv">$PREPROCESSED_SINGLE</span><span class="w"> </span>--train_num_steps<span class="w"> </span><span class="m">10</span><span class="w"> </span>--batch_size<span class="w"> </span><span class="m">4</span><span class="w"> </span>--heads<span class="w"> </span><span class="m">2</span><span class="w"> </span>--layers<span class="w"> </span><span class="m">2</span><span class="w"> </span>--transformer_ff<span class="w"> </span><span class="m">512</span><span class="w"> </span>--no_gpu
+</pre></div>
+</div>
+</section>
+<section id="multi-task-training">
+<h3>Multi-task training<a class="headerlink" href="#multi-task-training" title="Permalink to this heading"></a></h3>
+<p>For multi-task training, the process is similar.
+We need to prepare also the second data set; in addition, the OpenNMT preprocessing and training take additional arguments.
+To sum up:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rxn-prepare-data<span class="w"> </span>--input_data<span class="w"> </span><span class="nv">$DATA_1</span><span class="w"> </span>--output_dir<span class="w"> </span><span class="nv">$DATA_DIR_1</span>
+rxn-prepare-data<span class="w"> </span>--input_data<span class="w"> </span><span class="nv">$DATA_2</span><span class="w"> </span>--output_dir<span class="w"> </span><span class="nv">$DATA_DIR_2</span>
+rxn-prepare-data<span class="w"> </span>--input_data<span class="w"> </span><span class="nv">$DATA_2</span><span class="w"> </span>--output_dir<span class="w"> </span><span class="nv">$DATA_DIR_3</span>
+rxn-onmt-preprocess<span class="w"> </span>--input_dir<span class="w"> </span><span class="nv">$DATA_DIR_1</span><span class="w"> </span>--output_dir<span class="w"> </span><span class="nv">$PREPROCESSED</span><span class="w"> </span>--model_task<span class="w"> </span><span class="nv">$MODEL_TASK</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--additional_data<span class="w"> </span><span class="nv">$DATA_DIR_2</span><span class="w"> </span>--additional_data<span class="w"> </span><span class="nv">$DATA_DIR_3</span>
+rxn-onmt-train<span class="w"> </span>--model_output_dir<span class="w"> </span><span class="nv">$MODELS</span><span class="w"> </span>--preprocess_dir<span class="w"> </span><span class="nv">$PREPROCESSED</span><span class="w"> </span>--train_num_steps<span class="w"> </span><span class="m">30</span><span class="w"> </span>--batch_size<span class="w"> </span><span class="m">4</span><span class="w"> </span>--heads<span class="w"> </span><span class="m">2</span><span class="w"> </span>--layers<span class="w"> </span><span class="m">2</span><span class="w"> </span>--transformer_ff<span class="w"> </span><span class="m">256</span><span class="w"> </span>--no_gpu<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data_weights<span class="w"> </span><span class="m">1</span><span class="w"> </span>--data_weights<span class="w"> </span><span class="m">3</span><span class="w"> </span>--data_weights<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="continuing-the-training">
+<h3>Continuing the training<a class="headerlink" href="#continuing-the-training" title="Permalink to this heading"></a></h3>
+<p>Continuing training is possible (for both single-task and multi-task); it needs fewer parameters:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rxn-onmt-continue-training<span class="w"> </span>--model_output_dir<span class="w"> </span><span class="nv">$MODELS</span><span class="w"> </span>--preprocess_dir<span class="w"> </span><span class="nv">$PREPROCESSED</span><span class="w"> </span>--train_num_steps<span class="w"> </span><span class="m">30</span><span class="w"> </span>--batch_size<span class="w"> </span><span class="m">4</span><span class="w"> </span>--no_gpu<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data_weights<span class="w"> </span><span class="m">1</span><span class="w"> </span>--data_weights<span class="w"> </span><span class="m">3</span><span class="w"> </span>--data_weights<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="fine-tuning">
+<h3>Fine-tuning<a class="headerlink" href="#fine-tuning" title="Permalink to this heading"></a></h3>
+<p>Fine-tuning is in principle similar to continuing the training.
+The main differences are the potential occurrence of new tokens, as well as the optimizer being reset.
+There is a dedicated command for fine-tuning. For example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rxn-onmt-finetune<span class="w"> </span>--model_output_dir<span class="w"> </span><span class="nv">$MODELS_FINETUNED</span><span class="w"> </span>--preprocess_dir<span class="w"> </span><span class="nv">$PREPROCESSED</span><span class="w"> </span>--train_num_steps<span class="w"> </span><span class="m">20</span><span class="w"> </span>--batch_size<span class="w"> </span><span class="m">4</span><span class="w"> </span>--no_gpu<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--train_from<span class="w"> </span><span class="nv">$MODELS</span>/model_step_30.pt
+</pre></div>
+</div>
+<p>The syntax is very similar to <code class="docutils literal notranslate"><span class="pre">rxn-onmt-train</span></code> and <code class="docutils literal notranslate"><span class="pre">rxn-onmt-continue-training</span></code>.
+This is compatible both with single-task and multi-task.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="RXN OpenNMT models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright IBM RXN team 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

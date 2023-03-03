@@ -1,0 +1,36 @@
+rxn.onmt\_models.training\_files.ModelFiles
+===========================================
+
+.. currentmodule:: rxn.onmt_models.training_files
+
+.. autoclass:: ModelFiles
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ModelFiles.__init__
+      ~ModelFiles.get_last_checkpoint
+      ~ModelFiles.next_config_file
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ModelFiles.MODEL_PREFIX
+      ~ModelFiles.MODEL_STEP_PATTERN
+      ~ModelFiles.ONMT_CONFIG_FILE
+      ~ModelFiles.model_prefix
+   
+   

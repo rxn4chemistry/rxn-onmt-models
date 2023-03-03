@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rxn.onmt_models.prediction_collapser &mdash; RXN OpenNMT models 0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> RXN OpenNMT models
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Python API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">RXN OpenNMT models</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rxn.onmt_models.prediction_collapser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rxn.onmt_models.prediction_collapser</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">DefaultDict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">rxn.chemutils.conversion</span> <span class="kn">import</span> <span class="n">canonicalize_smiles</span><span class="p">,</span> <span class="n">smiles_to_inchi</span>
+<span class="kn">from</span> <span class="nn">rxn.chemutils.miscellaneous</span> <span class="kn">import</span> <span class="n">apply_to_any_smiles</span><span class="p">,</span> <span class="n">sort_any</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>
+
+
+<span class="c1"># We handle predictions as tuples of SMILES strings and associated confidences</span>
+<span class="n">Prediction</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="BaseCollapser"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.prediction_collapser.BaseCollapser.html#rxn.onmt_models.prediction_collapser.BaseCollapser">[docs]</a><span class="k">class</span> <span class="nc">BaseCollapser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper class for collapsing things.</span>
+
+<span class="sd">    Having this base collapser can be useful for extending things in the future, if we</span>
+<span class="sd">    want to make this class more general than just working with tuples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseCollapser.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.prediction_collapser.BaseCollapser.html#rxn.onmt_models.prediction_collapser.BaseCollapser.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collapsing_fns</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collapsing_fns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">collapsing_fns</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">collapse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Prediction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Prediction</span><span class="p">]:</span>
+        <span class="c1"># Convert to a list, as we will need to iterate two times over it</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+
+        <span class="n">collapsed_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">collapsed_confidence</span><span class="p">:</span> <span class="n">DefaultDict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">smiles</span><span class="p">,</span> <span class="n">confidence</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">:</span>
+            <span class="n">collapsed_smiles</span> <span class="o">=</span> <span class="n">sort_any</span><span class="p">(</span><span class="n">smiles</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">collapsing_fns</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">collapsed_smiles</span> <span class="o">=</span> <span class="n">apply_to_any_smiles</span><span class="p">(</span><span class="n">collapsed_smiles</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot collapse SMILES &quot;</span><span class="si">{</span><span class="n">smiles</span><span class="si">}</span><span class="s1">&quot;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">collapsed_mapping</span><span class="p">[</span><span class="n">smiles</span><span class="p">]</span> <span class="o">=</span> <span class="n">collapsed_smiles</span>
+            <span class="n">collapsed_confidence</span><span class="p">[</span><span class="n">collapsed_smiles</span><span class="p">]</span> <span class="o">+=</span> <span class="n">confidence</span>
+
+        <span class="n">consumed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">smiles</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">:</span>
+            <span class="n">collapsed_smiles</span> <span class="o">=</span> <span class="n">collapsed_mapping</span><span class="p">[</span><span class="n">smiles</span><span class="p">]</span>
+
+            <span class="c1"># Check if the collapsed representation has already been seen</span>
+            <span class="k">if</span> <span class="n">collapsed_smiles</span> <span class="ow">in</span> <span class="n">consumed</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">consumed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">collapsed_smiles</span><span class="p">)</span>
+
+            <span class="k">yield</span> <span class="n">smiles</span><span class="p">,</span> <span class="n">collapsed_confidence</span><span class="p">[</span><span class="n">collapsed_smiles</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PredictionCollapser"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.prediction_collapser.PredictionCollapser.html#rxn.onmt_models.prediction_collapser.PredictionCollapser">[docs]</a><span class="k">class</span> <span class="nc">PredictionCollapser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Collapse the predictions of an RXN-onmt model based on canonical representations</span>
+<span class="sd">    of the predictions.</span>
+
+<span class="sd">    This is useful to remove predictions that are different in the raw string,</span>
+<span class="sd">    but correspond to identical compounds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PredictionCollapser.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.prediction_collapser.PredictionCollapser.html#rxn.onmt_models.prediction_collapser.PredictionCollapser.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collapse_inchi</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            collapse_inchi: whether to do the collapsing based on the InChI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collapser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instantiate_base_collapser</span><span class="p">(</span><span class="n">collapse_inchi</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_instantiate_base_collapser</span><span class="p">(</span><span class="n">collapse_inchi</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseCollapser</span><span class="p">:</span>
+        <span class="n">canonicalize</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">canonicalize_smiles</span><span class="p">,</span> <span class="n">check_valence</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">collapsing_fns</span> <span class="o">=</span> <span class="p">[</span><span class="n">canonicalize</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">collapse_inchi</span><span class="p">:</span>
+            <span class="n">to_inchi</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">smiles_to_inchi</span><span class="p">,</span> <span class="n">extended_tautomer_check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">collapsing_fns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to_inchi</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">BaseCollapser</span><span class="p">(</span><span class="n">collapsing_fns</span><span class="o">=</span><span class="n">collapsing_fns</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">collapse_predictions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Prediction</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Prediction</span><span class="p">]:</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">collapser</span><span class="o">.</span><span class="n">collapse</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright IBM RXN team 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

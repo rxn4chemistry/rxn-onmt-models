@@ -1,0 +1,51 @@
+rxn.onmt\_models.training\_files.RxnPreprocessingFiles
+======================================================
+
+.. currentmodule:: rxn.onmt_models.training_files
+
+.. autoclass:: RxnPreprocessingFiles
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RxnPreprocessingFiles.__init__
+      ~RxnPreprocessingFiles.augmented
+      ~RxnPreprocessingFiles.get_context_src_for_split
+      ~RxnPreprocessingFiles.get_context_tags_for_split
+      ~RxnPreprocessingFiles.get_context_tgt_for_split
+      ~RxnPreprocessingFiles.get_precursors_for_split
+      ~RxnPreprocessingFiles.get_processed_csv_for_split
+      ~RxnPreprocessingFiles.get_products_for_split
+      ~RxnPreprocessingFiles.get_src_file
+      ~RxnPreprocessingFiles.get_tgt_file
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RxnPreprocessingFiles.FILENAME_ROOT
+      ~RxnPreprocessingFiles.processed_csv
+      ~RxnPreprocessingFiles.processed_test_csv
+      ~RxnPreprocessingFiles.processed_train_csv
+      ~RxnPreprocessingFiles.processed_validation_csv
+      ~RxnPreprocessingFiles.standardized_csv
+      ~RxnPreprocessingFiles.test_precursors
+      ~RxnPreprocessingFiles.test_products
+      ~RxnPreprocessingFiles.train_precursors
+      ~RxnPreprocessingFiles.train_products
+      ~RxnPreprocessingFiles.validation_precursors
+      ~RxnPreprocessingFiles.validation_products
+   
+   

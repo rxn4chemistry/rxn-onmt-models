@@ -1,0 +1,25 @@
+rxn.onmt\_models.scripts.rxn\_plan\_training.Parameter
+======================================================
+
+.. currentmodule:: rxn.onmt_models.scripts.rxn_plan_training
+
+.. autoclass:: Parameter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Parameter.__init__
+   
+   
+
+   
+   
+   

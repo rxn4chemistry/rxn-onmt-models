@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rxn.onmt_models.scripts.rxn_plan_training &mdash; RXN OpenNMT models 0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> RXN OpenNMT models
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">Python API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">RXN OpenNMT models</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>rxn.onmt_models.scripts.rxn_plan_training</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rxn.onmt_models.scripts.rxn_plan_training</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">from</span> <span class="nn">attr</span> <span class="kn">import</span> <span class="n">define</span>
+<span class="kn">from</span> <span class="nn">rxn.onmt_utils.train_command</span> <span class="kn">import</span> <span class="n">RxnCommand</span>
+
+<span class="kn">import</span> <span class="nn">rxn.onmt_models.defaults</span> <span class="k">as</span> <span class="nn">defaults</span>
+
+<span class="n">_CONTEXT_DATA_BATCH_SIZE</span> <span class="o">=</span> <span class="mi">8</span>
+
+
+<div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.Parameter.html#rxn.onmt_models.scripts.rxn_plan_training.Parameter">[docs]</a><span class="k">class</span> <span class="nc">Parameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameter to be queried to the user, if the command(s) are necessary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Parameter.__init__"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.Parameter.html#rxn.onmt_models.scripts.rxn_plan_training.Parameter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">commands</span><span class="p">:</span> <span class="n">RxnCommand</span><span class="p">,</span>
+        <span class="n">optional</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            key: parameter name as it is forwarded to the scripts. `</span>
+<span class="sd">            query: string displayed to the user when querying.</span>
+<span class="sd">            default: default value for this parameter.</span>
+<span class="sd">            commands: command(s) that this parameter is needed for.</span>
+<span class="sd">            optional: if a parameter is optional and its queried value is</span>
+<span class="sd">                equal to the default, it will not be displayed to the user in</span>
+<span class="sd">                the command(s) to execute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="n">commands</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optional</span> <span class="o">=</span> <span class="n">optional</span></div></div>
+
+
+<div class="viewcode-block" id="ContextOptions"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.ContextOptions.html#rxn.onmt_models.scripts.rxn_plan_training.ContextOptions">[docs]</a><span class="nd">@define</span>
+<span class="k">class</span> <span class="nc">ContextOptions</span><span class="p">:</span>
+    <span class="n">tagging_batch_size</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="AugmentOptions"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.AugmentOptions.html#rxn.onmt_models.scripts.rxn_plan_training.AugmentOptions">[docs]</a><span class="nd">@define</span>
+<span class="k">class</span> <span class="nc">AugmentOptions</span><span class="p">:</span>
+    <span class="n">number_augmentations</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="DatasetOptions"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.DatasetOptions.html#rxn.onmt_models.scripts.rxn_plan_training.DatasetOptions">[docs]</a><span class="nd">@define</span>
+<span class="k">class</span> <span class="nc">DatasetOptions</span><span class="p">:</span>
+    <span class="n">txt_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">processed_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">weight</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">augment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AugmentOptions</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TrainingPlanner"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.html#rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner">[docs]</a><span class="k">class</span> <span class="nc">TrainingPlanner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that will take the user through the values needed for training models,</span>
+<span class="sd">    in an interactive manner.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TrainingPlanner.__init__"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.html#rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># All the logic runs directly in the constructor, to avoid the</span>
+        <span class="c1"># necessity of initially setting all the values to None.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_task</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+            <span class="s2">&quot;Please enter the model task&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s2">&quot;forward&quot;</span><span class="p">,</span> <span class="s2">&quot;retro&quot;</span><span class="p">,</span> <span class="s2">&quot;context&quot;</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query_about_finetuning</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_gpu</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="s2">&quot;GPU available?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_datasets</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_seed</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+            <span class="s2">&quot;Seed for data preprocessing&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">defaults</span><span class="o">.</span><span class="n">SEED</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_get_context_options</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">onmt_preprocessed</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+            <span class="s2">&quot;Where to save the OpenNMT-preprocessed data&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onmt_models</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;Where to save the OpenNMT models&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_parameters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query_parameters</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">prepare_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_data_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_seed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">prepare_context_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_context_data_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">processed_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">augment_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_augment_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cmd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">cmd</span>
+
+    <span class="k">def</span> <span class="nf">preprocess_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;rxn-onmt-preprocess &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--input_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">processed_path</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--output_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_preprocessed</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--model_task </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_task</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--additional_data </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">processed_path</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">return</span> <span class="n">cmd</span>
+
+    <span class="k">def</span> <span class="nf">train_or_finetune_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">finetuning</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">finetune_cmd</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_cmd</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">train_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;rxn-onmt-train &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--model_output_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_models</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--preprocess_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_preprocessed</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters_for_cmd</span><span class="p">(</span><span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_weights</span><span class="p">()</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpu</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cmd</span>
+
+    <span class="k">def</span> <span class="nf">finetune_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;rxn-onmt-finetune &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--train_from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">train_from</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--model_output_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_models</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--preprocess_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_preprocessed</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters_for_cmd</span><span class="p">(</span><span class="n">RxnCommand</span><span class="o">.</span><span class="n">F</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_weights</span><span class="p">()</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpu</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cmd</span>
+
+    <span class="k">def</span> <span class="nf">continue_training_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;rxn-onmt-continue-training &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--model_output_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_models</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--preprocess_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_preprocessed</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters_for_cmd</span><span class="p">(</span><span class="n">RxnCommand</span><span class="o">.</span><span class="n">C</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_weights</span><span class="p">()</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpu</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cmd</span>
+
+    <span class="k">def</span> <span class="nf">_query_about_finetuning</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finetuning</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span>
+            <span class="s2">&quot;Are you fine-tuning an existing model?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">finetuning</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">needed_commands</span> <span class="o">=</span> <span class="p">[</span><span class="n">RxnCommand</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">C</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_from</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;Path to the base model&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">needed_commands</span> <span class="o">=</span> <span class="p">[</span><span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">C</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_from</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;Batch size&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TCF</span><span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span>
+                <span class="s2">&quot;train_num_steps&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Number of training steps&quot;</span><span class="p">,</span>
+                <span class="mi">100000</span><span class="p">,</span>
+                <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TCF</span><span class="p">,</span>
+                <span class="n">optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span>
+                <span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;Learning rate&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">LEARNING_RATE</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TF</span>
+            <span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;dropout&quot;</span><span class="p">,</span> <span class="s2">&quot;Dropout&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">DROPOUT</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TF</span><span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span>
+                <span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="s2">&quot;Number of transformer heads&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">HEADS</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span>
+            <span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;layers&quot;</span><span class="p">,</span> <span class="s2">&quot;Number of layers&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">LAYERS</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span><span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;rnn_size&quot;</span><span class="p">,</span> <span class="s2">&quot;RNN size&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">RNN_SIZE</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span><span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span>
+                <span class="s2">&quot;transformer_ff&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Size of hidden transformer feed-forward&quot;</span><span class="p">,</span>
+                <span class="n">defaults</span><span class="o">.</span><span class="n">TRANSFORMER_FF</span><span class="p">,</span>
+                <span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span>
+                <span class="s2">&quot;word_vec_size&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Word embedding size&quot;</span><span class="p">,</span>
+                <span class="n">defaults</span><span class="o">.</span><span class="n">WORD_VEC_SIZE</span><span class="p">,</span>
+                <span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span>
+                <span class="s2">&quot;warmup_steps&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Number of warmup steps&quot;</span><span class="p">,</span>
+                <span class="n">defaults</span><span class="o">.</span><span class="n">WARMUP_STEPS</span><span class="p">,</span>
+                <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TF</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;seed&quot;</span><span class="p">,</span> <span class="s2">&quot;Random seed for training&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">SEED</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TF</span><span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_query_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query the user about the values of all necessary parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="n">is_needed</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">cmd</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">commands</span> <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">needed_commands</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_needed</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">value</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_get_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DatasetOptions</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the information on datasets from the user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">number_datasets</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+            <span class="s2">&quot;Number of datasets (more than one means multitask learning)&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_datasets</span><span class="p">):</span>
+            <span class="n">data_txt</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Path to the data set (TXT) no </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+            <span class="n">data_dir</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Where to save the processed data set no </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span>
+            <span class="p">)</span>
+
+            <span class="c1"># weight does not need to be queried if there&#39;s only one dataset</span>
+            <span class="k">if</span> <span class="n">number_datasets</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Training weight for data set no </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="n">datasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DatasetOptions</span><span class="p">(</span>
+                    <span class="n">txt_path</span><span class="o">=</span><span class="n">data_txt</span><span class="p">,</span>
+                    <span class="n">processed_path</span><span class="o">=</span><span class="n">data_dir</span><span class="p">,</span>
+                    <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
+                    <span class="n">augment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_maybe_get_augment_options</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">datasets</span>
+
+    <span class="k">def</span> <span class="nf">_maybe_get_context_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ContextOptions</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_task</span> <span class="o">!=</span> <span class="s2">&quot;context&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">tagging_batch_size</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+            <span class="s2">&quot;Batch size for generating context prediction data&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="n">_CONTEXT_DATA_BATCH_SIZE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ContextOptions</span><span class="p">(</span><span class="n">tagging_batch_size</span><span class="o">=</span><span class="n">tagging_batch_size</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_maybe_get_augment_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AugmentOptions</span><span class="p">]:</span>
+        <span class="n">augment</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Would you like to augment the data set </span><span class="si">{</span><span class="n">dataset_no</span><span class="si">}</span><span class="s2">?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">augment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">n_augmentations</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+            <span class="s2">&quot;Number of augmentations per sample&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">AugmentOptions</span><span class="p">(</span><span class="n">number_augmentations</span><span class="o">=</span><span class="n">n_augmentations</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parameters_for_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">RxnCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the string to append to the command for all the parameters associated</span>
+<span class="sd">        with a command type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">to_add</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">command</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">commands</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">param_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">equal_to_default</span> <span class="o">=</span> <span class="n">param_value</span> <span class="o">==</span> <span class="n">p</span><span class="o">.</span><span class="n">default</span>
+
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">optional</span> <span class="ow">and</span> <span class="n">equal_to_default</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">to_add</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">param_value</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">return</span> <span class="n">to_add</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_prepare_data_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">DatasetOptions</span><span class="p">,</span> <span class="n">prepare_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;rxn-prepare-data --input_data </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">txt_path</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--output_dir </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">processed_path</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">prepare_seed</span> <span class="o">!=</span> <span class="n">defaults</span><span class="o">.</span><span class="n">SEED</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--split_seed </span><span class="si">{</span><span class="n">prepare_seed</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">return</span> <span class="n">command</span>
+
+    <span class="k">def</span> <span class="nf">_augment_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">DatasetOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">augment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;rxn-onmt-augment --data_dir </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">processed_path</span><span class="si">}</span><span class="s2"> --model_task &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_task</span><span class="si">}</span><span class="s2"> -n </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">augment</span><span class="o">.</span><span class="n">number_augmentations</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_prepare_context_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Context options not defined.&quot;</span><span class="p">)</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rxn-create-context-dataset --data_dir </span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_options</span><span class="o">.</span><span class="n">tagging_batch_size</span> <span class="o">!=</span> <span class="n">_CONTEXT_DATA_BATCH_SIZE</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--batch_size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">context_options</span><span class="o">.</span><span class="n">tagging_batch_size</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">return</span> <span class="n">command</span>
+
+    <span class="k">def</span> <span class="nf">_data_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">data_weights</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+                <span class="n">data_weights</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--data_weights </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">weight</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">return</span> <span class="n">data_weights</span>
+
+    <span class="k">def</span> <span class="nf">_gpu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_gpu</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;--no_gpu &quot;</span></div>
+
+
+<span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interactive program to plan the training of RXN OpenNMT models.</span>
+
+<span class="sd">    It will ask a user for the values needed for training, and then print all</span>
+<span class="sd">    the commands to be executed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interactive program to plan the training of RXN OpenNMT models.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NOTE: Please avoid using paths with whitespaces.&quot;</span><span class="p">)</span>
+
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">TrainingPlanner</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Here are the commands to launch a training with RXN:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# 1) Prepare the data (standardization, filtering, etc.)&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">prepare_cmd</span> <span class="ow">in</span> <span class="n">tp</span><span class="o">.</span><span class="n">prepare_data_cmd</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">prepare_cmd</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tp</span><span class="o">.</span><span class="n">model_task</span> <span class="o">==</span> <span class="s2">&quot;context&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;# 1b) Prepare context prediction data (requires rxn-context-prediction package)&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">prepare_context_cmd</span> <span class="ow">in</span> <span class="n">tp</span><span class="o">.</span><span class="n">prepare_context_data_cmd</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">prepare_context_cmd</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">augment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">tp</span><span class="o">.</span><span class="n">datasets</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# 1c) Augment the data&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">augment_cmd</span> <span class="ow">in</span> <span class="n">tp</span><span class="o">.</span><span class="n">augment_data_cmd</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">augment_cmd</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# 2) Preprocess the data with OpenNMT</span><span class="se">\n</span><span class="si">{</span><span class="n">tp</span><span class="o">.</span><span class="n">preprocess_cmd</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# 3) Train the model</span><span class="se">\n</span><span class="si">{</span><span class="n">tp</span><span class="o">.</span><span class="n">train_or_finetune_cmd</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# 4) If necessary: continue training</span><span class="se">\n</span><span class="si">{</span><span class="n">tp</span><span class="o">.</span><span class="n">continue_training_cmd</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright IBM RXN team 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

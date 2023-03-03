@@ -1,0 +1,33 @@
+rxn.onmt\_models.training\_files
+================================
+
+.. automodule:: rxn.onmt_models.training_files
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ModelFiles
+      OnmtPreprocessedFiles
+      RxnPreprocessingFiles
+   
+   
+
+   
+   
+   
+
+
+

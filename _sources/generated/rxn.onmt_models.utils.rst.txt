@@ -1,0 +1,31 @@
+rxn.onmt\_models.utils
+======================
+
+.. automodule:: rxn.onmt_models.utils
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      log_file_name_from_time
+      run_command
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

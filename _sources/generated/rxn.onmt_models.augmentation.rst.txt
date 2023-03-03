@@ -1,0 +1,32 @@
+rxn.onmt\_models.augmentation
+=============================
+
+.. automodule:: rxn.onmt_models.augmentation
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      augment_src
+      augment_tgt
+      augment_translation_dataset
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

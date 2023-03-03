@@ -1,0 +1,6 @@
+rxn.onmt\_models.prediction\_utils.load\_predictions
+====================================================
+
+.. currentmodule:: rxn.onmt_models.prediction_utils
+
+.. autofunction:: load_predictions

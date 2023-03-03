@@ -1,0 +1,6 @@
+rxn.onmt\_models.utils.run\_command
+===================================
+
+.. currentmodule:: rxn.onmt_models.utils
+
+.. autofunction:: run_command

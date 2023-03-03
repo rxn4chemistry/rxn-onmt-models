@@ -1,0 +1,6 @@
+rxn.onmt\_models.augmentation.augment\_tgt
+==========================================
+
+.. currentmodule:: rxn.onmt_models.augmentation
+
+.. autofunction:: augment_tgt

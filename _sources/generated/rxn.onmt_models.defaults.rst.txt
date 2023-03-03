@@ -1,0 +1,23 @@
+rxn.onmt\_models.defaults
+=========================
+
+.. automodule:: rxn.onmt_models.defaults
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

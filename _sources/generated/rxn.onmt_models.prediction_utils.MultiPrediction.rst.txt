@@ -1,0 +1,33 @@
+rxn.onmt\_models.prediction\_utils.MultiPrediction
+==================================================
+
+.. currentmodule:: rxn.onmt_models.prediction_utils
+
+.. autoclass:: MultiPrediction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiPrediction.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MultiPrediction.src
+      ~MultiPrediction.pred
+      ~MultiPrediction.tgt
+   
+   

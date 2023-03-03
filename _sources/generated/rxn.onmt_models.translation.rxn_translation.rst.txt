@@ -1,0 +1,6 @@
+rxn.onmt\_models.translation.rxn\_translation
+=============================================
+
+.. currentmodule:: rxn.onmt_models.translation
+
+.. autofunction:: rxn_translation

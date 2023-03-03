@@ -1,0 +1,33 @@
+rxn.onmt\_models.scripts.rxn\_plan\_training.TrainingPlanner
+============================================================
+
+.. currentmodule:: rxn.onmt_models.scripts.rxn_plan_training
+
+.. autoclass:: TrainingPlanner
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TrainingPlanner.__init__
+      ~TrainingPlanner.augment_data_cmd
+      ~TrainingPlanner.continue_training_cmd
+      ~TrainingPlanner.finetune_cmd
+      ~TrainingPlanner.prepare_context_data_cmd
+      ~TrainingPlanner.prepare_data_cmd
+      ~TrainingPlanner.preprocess_cmd
+      ~TrainingPlanner.train_cmd
+      ~TrainingPlanner.train_or_finetune_cmd
+   
+   
+
+   
+   
+   

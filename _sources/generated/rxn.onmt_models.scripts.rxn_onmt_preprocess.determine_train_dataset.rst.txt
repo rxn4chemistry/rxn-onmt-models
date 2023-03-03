@@ -1,0 +1,6 @@
+rxn.onmt\_models.scripts.rxn\_onmt\_preprocess.determine\_train\_dataset
+========================================================================
+
+.. currentmodule:: rxn.onmt_models.scripts.rxn_onmt_preprocess
+
+.. autofunction:: determine_train_dataset

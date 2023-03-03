@@ -1,0 +1,30 @@
+rxn.onmt\_models.translation
+============================
+
+.. automodule:: rxn.onmt_models.translation
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      rxn_translation
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

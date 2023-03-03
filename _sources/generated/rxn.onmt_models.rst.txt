@@ -1,0 +1,39 @@
+﻿rxn.onmt\_models
+================
+
+.. automodule:: rxn.onmt_models
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   rxn.onmt_models.augmentation
+   rxn.onmt_models.defaults
+   rxn.onmt_models.prediction_collapser
+   rxn.onmt_models.prediction_utils
+   rxn.onmt_models.scripts
+   rxn.onmt_models.training_files
+   rxn.onmt_models.translation
+   rxn.onmt_models.utils
+
