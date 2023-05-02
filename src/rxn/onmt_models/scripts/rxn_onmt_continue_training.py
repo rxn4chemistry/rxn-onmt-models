@@ -29,6 +29,12 @@ logger.addHandler(logging.NullHandler())
     help="Weights of the different data sets for training. Only needed in a multi-task setting.",
 )
 @click.option(
+    "--keep_checkpoint",
+    type=int,
+    default=defaults.KEEP_CHECKPOINT,
+    help='How many checkpoints to keep ("-1" means "keep all").',
+)
+@click.option(
     "--model_output_dir", type=str, required=True, help="Where to save the models"
 )
 @click.option("--no_gpu", is_flag=True, help="Run the training on CPU (slow!)")
@@ -54,6 +60,7 @@ logger.addHandler(logging.NullHandler())
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
+    keep_checkpoint: int,
     model_output_dir: str,
     no_gpu: bool,
     preprocess_dir: str,
@@ -96,6 +103,7 @@ def main(
     train_cmd = OnmtTrainCommand.continue_training(
         batch_size=batch_size,
         data=onmt_preprocessed_files.preprocess_prefix,
+        keep_checkpoint=keep_checkpoint,
         dropout=dropout,
         save_model=model_files.model_prefix,
         seed=seed,
