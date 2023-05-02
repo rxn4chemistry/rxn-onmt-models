@@ -5,6 +5,7 @@ Module with default values for training RXN models.
 BATCH_SIZE = 6144
 DROPOUT = 0.1
 HEADS = 8
+KEEP_CHECKPOINT = -1
 LAYERS = 4
 LEARNING_RATE = 2.0
 RNN_SIZE = 384

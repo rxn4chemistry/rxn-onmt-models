@@ -9,6 +9,7 @@ from rxn.reaction_preprocessing.config import (
     DataConfig,
     FragmentBond,
     InitialDataFormat,
+    PreprocessConfig,
     RxnImportConfig,
     SplitConfig,
     StandardizeConfig,
@@ -43,6 +44,15 @@ logger.addHandler(logging.NullHandler())
     help="Directory where to save the generated files",
 )
 @click.option(
+    "--min_reactants",
+    type=int,
+    default=2,
+    help=(
+        "Minimum number of precursors / reactants. "
+        "Reactions with fewer precursors than that will be discarded."
+    ),
+)
+@click.option(
     "--split_seed", default=defaults.SEED, help="Random seed for splitting step"
 )
 @click.option(
@@ -54,6 +64,7 @@ def main(
     input_data: str,
     import_from: str,
     output_dir: str,
+    min_reactants: int,
     split_seed: int,
     fragment_bond: str,
 ) -> None:
@@ -107,6 +118,7 @@ def main(
         standardize=StandardizeConfig(
             annotation_file_paths=[], discard_unannotated_metals=False
         ),
+        preprocess=PreprocessConfig(min_reactants=min_reactants),
         split=SplitConfig(hash_seed=split_seed),
     )
 

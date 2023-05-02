@@ -25,6 +25,12 @@ logger.addHandler(logging.NullHandler())
 )
 @click.option("--dropout", default=defaults.DROPOUT)
 @click.option("--heads", default=defaults.HEADS)
+@click.option(
+    "--keep_checkpoint",
+    type=int,
+    default=defaults.KEEP_CHECKPOINT,
+    help='How many checkpoints to keep ("-1" means "keep all").',
+)
 @click.option("--layers", default=defaults.LAYERS)
 @click.option("--learning_rate", type=float, default=defaults.LEARNING_RATE)
 @click.option(
@@ -48,6 +54,7 @@ def main(
     data_weights: Tuple[int, ...],
     dropout: float,
     heads: int,
+    keep_checkpoint: int,
     layers: int,
     learning_rate: float,
     model_output_dir: str,
@@ -86,6 +93,7 @@ def main(
         data=onmt_preprocessed_files.preprocess_prefix,
         dropout=dropout,
         heads=heads,
+        keep_checkpoint=keep_checkpoint,
         layers=layers,
         learning_rate=learning_rate,
         rnn_size=rnn_size,
