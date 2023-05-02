@@ -47,7 +47,10 @@ logger.addHandler(logging.NullHandler())
     "--min_reactants",
     type=int,
     default=2,
-    help="Minimum number of precursors / reactants",
+    help=(
+        "Minimum number of precursors / reactants. "
+        "Reactions with fewer precursors than that will be discarded."
+    ),
 )
 @click.option(
     "--split_seed", default=defaults.SEED, help="Random seed for splitting step"
