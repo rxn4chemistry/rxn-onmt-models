@@ -7,7 +7,10 @@ The repository is built on top of other RXN packages; see our other repositories
 
 For the evaluation of trained models, see the [`rxn-metrics`](https://github.com/rxn4chemistry/rxn-metrics) repository.
 
-The documentation can be found [here](https://rxn4chemistry.github.io/rxn-onmt-models/).
+Links:
+* [GitHub repository](https://github.com/rxn4chemistry/rxn-onmt-models)
+* [Documentation](https://rxn4chemistry.github.io/rxn-onmt-models/)
+* [PyPI package](https://pypi.org/project/rxn-onmt-models/)
 
 This repository was produced through a collaborative project involving IBM Research Europe and Syngenta.
 
