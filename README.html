@@ -48,6 +48,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#multi-task-training">Multi-task training</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#continuing-the-training">Continuing the training</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#fine-tuning">Fine-tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saving-space-by-stripping-the-models">Saving space by stripping the models</a></li>
 </ul>
 </li>
 </ul>
@@ -200,6 +201,15 @@ There is a dedicated command for fine-tuning. For example:</p>
 </div>
 <p>The syntax is very similar to <code class="docutils literal notranslate"><span class="pre">rxn-onmt-train</span></code> and <code class="docutils literal notranslate"><span class="pre">rxn-onmt-continue-training</span></code>.
 This is compatible both with single-task and multi-task.</p>
+</section>
+<section id="saving-space-by-stripping-the-models">
+<h3>Saving space by stripping the models<a class="headerlink" href="#saving-space-by-stripping-the-models" title="Permalink to this heading"></a></h3>
+<p>The model files can be quite large (~250 MB) for the default architecture.
+Roughly two thirds of the size is taken by the optimizer state, which is usually not needed, except maybe for the last checkpoint.
+You can strip the models with the command</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rxn-onmt-strip-checkpoints<span class="w"> </span>-m<span class="w"> </span><span class="nv">$MODELS</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>

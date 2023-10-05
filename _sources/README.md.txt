@@ -123,3 +123,13 @@ rxn-onmt-finetune --model_output_dir $MODELS_FINETUNED --preprocess_dir $PREPROC
 ```
 The syntax is very similar to `rxn-onmt-train` and `rxn-onmt-continue-training`.
 This is compatible both with single-task and multi-task.
+
+
+### Saving space by stripping the models
+
+The model files can be quite large (~250 MB) for the default architecture.
+Roughly two thirds of the size is taken by the optimizer state, which is usually not needed, except maybe for the last checkpoint.
+You can strip the models with the command
+```shell
+rxn-onmt-strip-checkpoints -m $MODELS
+```
