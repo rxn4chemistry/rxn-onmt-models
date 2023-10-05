@@ -2,7 +2,7 @@ import logging
 import re
 from itertools import count
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from rxn.utilities.files import PathLike
 
@@ -39,23 +39,30 @@ class ModelFiles:
                 return config_file
         return Path()  # Note: in order to satisfy mypy. This is never reached.
 
+    def get_checkpoints(self) -> List[Path]:
+        """Get the checkpoints contained in the directory, sorted by step number."""
+        steps_and_models = [
+            (self._get_checkpoint_step(path), path) for path in self.model_dir.iterdir()
+        ]
+        steps_and_models = [
+            (step, path) for step, path in steps_and_models if step is not None
+        ]
+
+        # Sort, from low checkpoint to high checkpoint
+        steps_and_models.sort()
+
+        return [model for _, model in steps_and_models]
+
     def get_last_checkpoint(self) -> Path:
         """Get the last checkpoint matching the naming including the step number.
 
         Raises:
             RuntimeError: no model is found in the expected directory.
         """
-        models_and_steps = [
-            (self._get_checkpoint_step(path), path) for path in self.model_dir.iterdir()
-        ]
-        models_and_steps = [
-            (step, path) for step, path in models_and_steps if step is not None
-        ]
-        if not models_and_steps:
+        models = self.get_checkpoints()
+        if not models:
             raise RuntimeError(f'No model found in "{self.model_dir}"')
-
-        # Reverse sort, get the path of the first item.
-        return sorted(models_and_steps, reverse=True)[0][1]
+        return models[-1]
 
     @staticmethod
     def _get_checkpoint_step(path: Path) -> Optional[int]:
