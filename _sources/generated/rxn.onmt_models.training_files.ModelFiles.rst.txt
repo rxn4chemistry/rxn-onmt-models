@@ -17,6 +17,7 @@ rxn.onmt\_models.training\_files.ModelFiles
    .. autosummary::
    
       ~ModelFiles.__init__
+      ~ModelFiles.get_checkpoints
       ~ModelFiles.get_last_checkpoint
       ~ModelFiles.next_config_file
    

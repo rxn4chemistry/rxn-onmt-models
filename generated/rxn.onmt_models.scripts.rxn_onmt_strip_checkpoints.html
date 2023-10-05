@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rxn.onmt_models.scripts.rxn_onmt_finetune &mdash; RXN OpenNMT models 0.1 documentation</title>
+  <title>rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints &mdash; RXN OpenNMT models 0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="rxn.onmt_models.scripts.rxn_onmt_preprocess" href="rxn.onmt_models.scripts.rxn_onmt_preprocess.html" />
-    <link rel="prev" title="rxn.onmt_models.scripts.rxn_onmt_continue_training" href="rxn.onmt_models.scripts.rxn_onmt_continue_training.html" /> 
+    <link rel="next" title="rxn.onmt_models.scripts.rxn_onmt_train" href="rxn.onmt_models.scripts.rxn_onmt_train.html" />
+    <link rel="prev" title="rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset" href="rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,9 +49,9 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rxn.onmt_models.scripts.html">rxn.onmt_models.scripts</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_onmt_augment.html">rxn.onmt_models.scripts.rxn_onmt_augment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_onmt_continue_training.html">rxn.onmt_models.scripts.rxn_onmt_continue_training</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">rxn.onmt_models.scripts.rxn_onmt_finetune</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_onmt_finetune.html">rxn.onmt_models.scripts.rxn_onmt_finetune</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_onmt_preprocess.html">rxn.onmt_models.scripts.rxn_onmt_preprocess</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints.html">rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_onmt_train.html">rxn.onmt_models.scripts.rxn_onmt_train</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_plan_training.html">rxn.onmt_models.scripts.rxn_plan_training</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rxn.onmt_models.scripts.rxn_prepare_data.html">rxn.onmt_models.scripts.rxn_prepare_data</a></li>
@@ -84,9 +84,9 @@
           <li><a href="../api.html">API</a> &raquo;</li>
           <li><a href="rxn.onmt_models.html">rxn.onmt_models</a> &raquo;</li>
           <li><a href="rxn.onmt_models.scripts.html">rxn.onmt_models.scripts</a> &raquo;</li>
-      <li>rxn.onmt_models.scripts.rxn_onmt_finetune</li>
+      <li>rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/generated/rxn.onmt_models.scripts.rxn_onmt_finetune.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -94,16 +94,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-rxn.onmt_models.scripts.rxn_onmt_finetune">
-<span id="rxn-onmt-models-scripts-rxn-onmt-finetune"></span><h1>rxn.onmt_models.scripts.rxn_onmt_finetune<a class="headerlink" href="#module-rxn.onmt_models.scripts.rxn_onmt_finetune" title="Permalink to this heading"></a></h1>
+  <section id="module-rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints">
+<span id="rxn-onmt-models-scripts-rxn-onmt-strip-checkpoints"></span><h1>rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints<a class="headerlink" href="#module-rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints" title="Permalink to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rxn.onmt_models.scripts.rxn_onmt_continue_training.html" class="btn btn-neutral float-left" title="rxn.onmt_models.scripts.rxn_onmt_continue_training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rxn.onmt_models.scripts.rxn_onmt_preprocess.html" class="btn btn-neutral float-right" title="rxn.onmt_models.scripts.rxn_onmt_preprocess" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset.html" class="btn btn-neutral float-left" title="rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rxn.onmt_models.scripts.rxn_onmt_train.html" class="btn btn-neutral float-right" title="rxn.onmt_models.scripts.rxn_onmt_train" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

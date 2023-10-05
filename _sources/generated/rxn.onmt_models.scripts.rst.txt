@@ -32,6 +32,7 @@ rxn.onmt\_models.scripts
    rxn.onmt_models.scripts.rxn_onmt_continue_training
    rxn.onmt_models.scripts.rxn_onmt_finetune
    rxn.onmt_models.scripts.rxn_onmt_preprocess
+   rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints
    rxn.onmt_models.scripts.rxn_onmt_train
    rxn.onmt_models.scripts.rxn_plan_training
    rxn.onmt_models.scripts.rxn_prepare_data

@@ -1,0 +1,23 @@
+rxn.onmt\_models.scripts.rxn\_onmt\_strip\_checkpoints
+======================================================
+
+.. automodule:: rxn.onmt_models.scripts.rxn_onmt_strip_checkpoints
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

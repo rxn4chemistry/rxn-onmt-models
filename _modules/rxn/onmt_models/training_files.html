@@ -69,7 +69,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">rxn.utilities.files</span> <span class="kn">import</span> <span class="n">PathLike</span>
 
@@ -106,23 +106,30 @@
                 <span class="k">return</span> <span class="n">config_file</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">()</span>  <span class="c1"># Note: in order to satisfy mypy. This is never reached.</span></div>
 
+<div class="viewcode-block" id="ModelFiles.get_checkpoints"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.get_checkpoints">[docs]</a>    <span class="k">def</span> <span class="nf">get_checkpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the checkpoints contained in the directory, sorted by step number.&quot;&quot;&quot;</span>
+        <span class="n">steps_and_models</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_checkpoint_step</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="n">steps_and_models</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">steps_and_models</span> <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Sort, from low checkpoint to high checkpoint</span>
+        <span class="n">steps_and_models</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">model</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">steps_and_models</span><span class="p">]</span></div>
+
 <div class="viewcode-block" id="ModelFiles.get_last_checkpoint"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.get_last_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">get_last_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the last checkpoint matching the naming including the step number.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RuntimeError: no model is found in the expected directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">models_and_steps</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_checkpoint_step</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
-        <span class="p">]</span>
-        <span class="n">models_and_steps</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">models_and_steps</span> <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">models_and_steps</span><span class="p">:</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_checkpoints</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">models</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No model found in &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Reverse sort, get the path of the first item.</span>
-        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">models_and_steps</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_checkpoint_step</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
