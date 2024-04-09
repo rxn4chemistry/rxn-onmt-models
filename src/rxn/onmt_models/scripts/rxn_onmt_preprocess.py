@@ -6,10 +6,6 @@ from typing import Any, List, Optional, Tuple
 import click
 import yaml
 from rxn.chemutils.tokenization import ensure_tokenized_file
-from rxn.onmt_models import __version__ as onmt_models_version
-from rxn.onmt_models import defaults
-from rxn.onmt_models.training_files import OnmtPreprocessedFiles, RxnPreprocessingFiles
-from rxn.onmt_models.utils import log_file_name_from_time, run_command
 from rxn.onmt_utils import __version__ as onmt_utils_version
 from rxn.onmt_utils.train_command import preprocessed_id_names
 from rxn.utilities.files import (
@@ -19,6 +15,11 @@ from rxn.utilities.files import (
     load_list_from_file,
 )
 from rxn.utilities.logging import setup_console_and_file_logger
+
+from rxn.onmt_models import __version__ as onmt_models_version
+from rxn.onmt_models import defaults
+from rxn.onmt_models.training_files import OnmtPreprocessedFiles, RxnPreprocessingFiles
+from rxn.onmt_models.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
