@@ -1,7 +1,7 @@
 import logging
 import random
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 import click
 import yaml
@@ -54,8 +54,8 @@ def determine_train_dataset(
 def get_build_vocab_config_file(
     train_srcs: List[PathLike],
     train_tgts: List[PathLike],
-    valid_src: List[PathLike],
-    valid_tgt: List[PathLike],
+    valid_src: PathLike,
+    valid_tgt: PathLike,
     save_data: Path,
     share_vocab: bool = True,
     overwrite: bool = True,
@@ -89,7 +89,7 @@ def get_build_vocab_config_file(
 
     # Build dictionary with build vocab config content
     # See structure https://opennmt.net/OpenNMT-py/quickstart.html (Step 1: Prepare the data)
-    build_vocab_config = dict()
+    build_vocab_config: dict[str, Any] = {}
 
     # Arguments save data
     build_vocab_config["save_data"] = str(save_data.parent)
@@ -101,15 +101,15 @@ def get_build_vocab_config_file(
     )
 
     # Other arguments
-    build_vocab_config["overwrite"] = overwrite
-    build_vocab_config["share_vocab"] = share_vocab
-    build_vocab_config["src_seq_length"] = src_seq_length
-    build_vocab_config["tgt_seq_length"] = tgt_seq_length
-    build_vocab_config["src_vocab_size"] = src_vocab_size
-    build_vocab_config["tgt_vocab_size"] = tgt_vocab_size
+    build_vocab_config["overwrite"] = str(overwrite)
+    build_vocab_config["share_vocab"] = str(share_vocab)
+    build_vocab_config["src_seq_length"] = str(src_seq_length)
+    build_vocab_config["tgt_seq_length"] = str(tgt_seq_length)
+    build_vocab_config["src_vocab_size"] = str(src_vocab_size)
+    build_vocab_config["tgt_vocab_size"] = str(tgt_vocab_size)
 
     # Arguments data paths (train)
-    build_vocab_config["data"] = dict()
+    build_vocab_config["data"] = {}
     # TODO: raise error if lengths: train_srcs, train_tgts, valid_src, valid_tgt are different
     number_corpus = len(train_srcs)
     for i in range(number_corpus):
