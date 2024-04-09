@@ -1,7 +1,7 @@
 import logging
 import random
 from pathlib import Path
-from typing import Any, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import click
 import yaml
@@ -90,7 +90,7 @@ def get_build_vocab_config_file(
 
     # Build dictionary with build vocab config content
     # See structure https://opennmt.net/OpenNMT-py/quickstart.html (Step 1: Prepare the data)
-    build_vocab_config: dict[str, Any] = {}
+    build_vocab_config: Dict[str, Any] = {}
 
     # Arguments save data
     build_vocab_config["save_data"] = str(save_data.parent)
