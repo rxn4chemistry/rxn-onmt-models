@@ -118,12 +118,7 @@ def main(
     )
 
     # Write config file
-    import ipdb
-    ipdb.set_trace()
-
     train_cmd.save_to_config_cmd(config_file)
-    #import ipdb
-    #ipdb.set_trace()
 
     # Actual training config file    
     command_and_args = train_cmd.execute_from_config_cmd(config_file)
