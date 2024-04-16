@@ -112,7 +112,7 @@ def main(
         dropout=dropout,
         keep_checkpoint=keep_checkpoint,
         learning_rate=learning_rate,
-        rnn_size=rnn_size,
+        hidden_size=rnn_size,
         save_model=model_files.model_prefix,
         seed=seed,
         train_from=train_from,
@@ -125,8 +125,7 @@ def main(
     )
 
     # Write config file
-    command_and_args = train_cmd.save_to_config_cmd(config_file)
-    run_command(command_and_args)
+    train_cmd.save_to_config_cmd(config_file)
 
     # Actual training config file
     command_and_args = train_cmd.execute_from_config_cmd(config_file)

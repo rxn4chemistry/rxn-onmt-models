@@ -114,8 +114,7 @@ def main(
     )
 
     # Write config file
-    command_and_args = train_cmd.save_to_config_cmd(config_file)
-    run_command(command_and_args)
+    train_cmd.save_to_config_cmd(config_file)
 
     # Actual training config file
     command_and_args = train_cmd.execute_from_config_cmd(config_file)

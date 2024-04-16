@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Tuple
 
 import click
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def get_src_tgt_vocab(data):
+def get_src_tgt_vocab(data: Path) -> Tuple[Path, Path]:
     src_vocab = data.parent / (data.name + ".vocab.src")
     tgt_vocab = data.parent / (data.name + ".vocab.tgt")
     return src_vocab, tgt_vocab
