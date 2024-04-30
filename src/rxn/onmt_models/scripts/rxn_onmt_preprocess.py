@@ -58,7 +58,7 @@ def get_build_vocab_config_file(
     valid_src: PathLike,
     valid_tgt: PathLike,
     save_data: Path,
-    share_vocab: bool = False,
+    share_vocab: bool = True,
     overwrite: bool = True,
     src_seq_length: int = 3000,
     tgt_seq_length: int = 3000,
