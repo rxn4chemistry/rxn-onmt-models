@@ -285,7 +285,7 @@ def main(
         str(e) for e in [
             'onmt_build_vocab',
             '-config', config_file_path,
-            '-n_sample', 3000,
+            '-n_sample', -1,
         ]
     ]
     # yapf: enable
