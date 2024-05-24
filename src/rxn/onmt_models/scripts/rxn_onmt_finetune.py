@@ -54,6 +54,7 @@ logger.addHandler(logging.NullHandler())
 @click.option("--warmup_steps", default=defaults.WARMUP_STEPS)
 @click.option("--report_every", default=1000)
 @click.option("--save_checkpoint_steps", default=5000)
+@click.option("--model_task", type=str, required=True)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
@@ -69,6 +70,7 @@ def main(
     warmup_steps: int,
     report_every: int,
     save_checkpoint_steps: int,
+    model_task: str,
 ) -> None:
     """Finetune an OpenNMT model."""
 
@@ -122,6 +124,7 @@ def main(
         data_weights=data_weights,
         report_every=report_every,
         save_checkpoint_steps=save_checkpoint_steps,
+        model_task=model_task,
     )
 
     # Write config file

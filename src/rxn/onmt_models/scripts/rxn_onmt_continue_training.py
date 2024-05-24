@@ -57,6 +57,7 @@ logger.addHandler(logging.NullHandler())
     default=100000,
     help="Number of steps, including steps from the initial training run.",
 )
+@click.option("--model_task", type=str, required=True)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
@@ -66,6 +67,7 @@ def main(
     preprocess_dir: str,
     train_from: Optional[str],
     train_num_steps: int,
+    model_task: str,
 ) -> None:
     """Continue training for an OpenNMT model.
 
@@ -111,6 +113,7 @@ def main(
         train_steps=train_num_steps,
         no_gpu=no_gpu,
         data_weights=data_weights,
+        model_task=model_task,
     )
 
     # Write config file

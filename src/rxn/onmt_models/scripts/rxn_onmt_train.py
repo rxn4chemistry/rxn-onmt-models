@@ -76,6 +76,7 @@ def check_rnn_vs_hidden_size(hidden_size: int, rnn_size: int) -> int:
 @click.option("--transformer_ff", default=defaults.TRANSFORMER_FF)
 @click.option("--warmup_steps", default=defaults.WARMUP_STEPS)
 @click.option("--word_vec_size", default=defaults.WORD_VEC_SIZE)
+@click.option("--model_task", type=str, required=True)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
@@ -94,6 +95,7 @@ def main(
     transformer_ff: int,
     warmup_steps: int,
     word_vec_size: int,
+    model_task: str,
 ) -> None:
     """Train an OpenNMT model.
 
@@ -143,6 +145,7 @@ def main(
         word_vec_size=word_vec_size,
         no_gpu=no_gpu,
         data_weights=data_weights,
+        model_task=model_task,
     )
 
     # Write config file
