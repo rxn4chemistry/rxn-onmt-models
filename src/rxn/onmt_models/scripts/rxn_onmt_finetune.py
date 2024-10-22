@@ -54,6 +54,7 @@ logger.addHandler(logging.NullHandler())
 @click.option("--warmup_steps", default=defaults.WARMUP_STEPS)
 @click.option("--report_every", default=1000)
 @click.option("--save_checkpoint_steps", default=5000)
+@click.option("--model_task", type=str, required=True)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
@@ -69,6 +70,7 @@ def main(
     warmup_steps: int,
     report_every: int,
     save_checkpoint_steps: int,
+    model_task: str,
 ) -> None:
     """Finetune an OpenNMT model."""
 
@@ -112,7 +114,7 @@ def main(
         dropout=dropout,
         keep_checkpoint=keep_checkpoint,
         learning_rate=learning_rate,
-        rnn_size=rnn_size,
+        hidden_size=rnn_size,
         save_model=model_files.model_prefix,
         seed=seed,
         train_from=train_from,
@@ -122,11 +124,11 @@ def main(
         data_weights=data_weights,
         report_every=report_every,
         save_checkpoint_steps=save_checkpoint_steps,
+        model_task=model_task,
     )
 
     # Write config file
-    command_and_args = train_cmd.save_to_config_cmd(config_file)
-    run_command(command_and_args)
+    train_cmd.save_to_config_cmd(config_file)
 
     # Actual training config file
     command_and_args = train_cmd.execute_from_config_cmd(config_file)
