@@ -94,7 +94,7 @@ class OnmtPreprocessedFiles:
 
     @property
     def vocab_file(self) -> Path:
-        return self.preprocess_prefix.with_suffix(".vocab.pt")
+        return self.preprocess_prefix.with_suffix(".vocab.src")
 
 
 class RxnPreprocessingFiles:

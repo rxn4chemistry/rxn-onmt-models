@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Optional, Tuple
 
 import click
@@ -18,6 +19,12 @@ from rxn.onmt_models.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+
+def get_src_tgt_vocab(data: Path) -> Tuple[Path, Path]:
+    src_vocab = data.parent / (data.name + ".vocab.src")
+    tgt_vocab = data.parent / (data.name + ".vocab.tgt")
+    return src_vocab, tgt_vocab
 
 
 @click.command(context_settings=dict(show_default=True))
@@ -102,9 +109,15 @@ def main(
     dropout = get_model_dropout(train_from)
     seed = get_model_seed(train_from)
 
+    src_vocab, tgt_vocab = get_src_tgt_vocab(
+        data=onmt_preprocessed_files.preprocess_prefix
+    )
+
     train_cmd = OnmtTrainCommand.continue_training(
         batch_size=batch_size,
         data=onmt_preprocessed_files.preprocess_prefix,
+        src_vocab=src_vocab,
+        tgt_vocab=tgt_vocab,
         keep_checkpoint=keep_checkpoint,
         dropout=dropout,
         save_model=model_files.model_prefix,
