@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Optional, Tuple
 
 import click
@@ -18,6 +19,12 @@ from rxn.onmt_models.utils import log_file_name_from_time, run_command
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+
+def get_src_tgt_vocab(data: Path) -> Tuple[Path, Path]:
+    src_vocab = data.parent / (data.name + ".vocab.src")
+    tgt_vocab = data.parent / (data.name + ".vocab.tgt")
+    return src_vocab, tgt_vocab
 
 
 @click.command(context_settings=dict(show_default=True))
@@ -57,6 +64,7 @@ logger.addHandler(logging.NullHandler())
     default=100000,
     help="Number of steps, including steps from the initial training run.",
 )
+@click.option("--model_task", type=str, required=True)
 def main(
     batch_size: int,
     data_weights: Tuple[int, ...],
@@ -66,6 +74,7 @@ def main(
     preprocess_dir: str,
     train_from: Optional[str],
     train_num_steps: int,
+    model_task: str,
 ) -> None:
     """Continue training for an OpenNMT model.
 
@@ -100,9 +109,15 @@ def main(
     dropout = get_model_dropout(train_from)
     seed = get_model_seed(train_from)
 
+    src_vocab, tgt_vocab = get_src_tgt_vocab(
+        data=onmt_preprocessed_files.preprocess_prefix
+    )
+
     train_cmd = OnmtTrainCommand.continue_training(
         batch_size=batch_size,
         data=onmt_preprocessed_files.preprocess_prefix,
+        src_vocab=src_vocab,
+        tgt_vocab=tgt_vocab,
         keep_checkpoint=keep_checkpoint,
         dropout=dropout,
         save_model=model_files.model_prefix,
@@ -111,11 +126,11 @@ def main(
         train_steps=train_num_steps,
         no_gpu=no_gpu,
         data_weights=data_weights,
+        model_task=model_task,
     )
 
     # Write config file
-    command_and_args = train_cmd.save_to_config_cmd(config_file)
-    run_command(command_and_args)
+    train_cmd.save_to_config_cmd(config_file)
 
     # Actual training config file
     command_and_args = train_cmd.execute_from_config_cmd(config_file)
