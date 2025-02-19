@@ -16,6 +16,7 @@ def rxn_translation(
     gpu: bool,
     max_length: int = 300,
     as_external_command: bool = False,
+    **kwargs,
 ) -> None:
     """
     Do a forward or retro translation.
@@ -69,6 +70,7 @@ def rxn_translation(
         batch_size=batch_size,
         gpu=gpu,
         as_external_command=as_external_command,
+        **kwargs,
     )
 
     detokenize_file(tokenized_pred, pred_file)
