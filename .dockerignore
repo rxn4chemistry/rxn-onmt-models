@@ -1,0 +1,10 @@
+*
+!docker
+!LICENSE
+!pyproject.toml
+!README.md
+!setup.cfg
+!setup.py
+!src
+**/__pycache__
+*.pyc
