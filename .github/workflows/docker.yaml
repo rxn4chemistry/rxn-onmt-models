@@ -3,8 +3,7 @@ name: Build and push a docker image on Quay.io
 on:
   push:
     branches:
-      - "master"
-      - "docker-image"
+      - "main"
     tags:
       - "v*"
 
