@@ -19,7 +19,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
-# Note that the legacy source code and scripts are no longer copied here (COPY --chown=rxn:0 . .)
 COPY --chown=rxn:0 --exclude=docker/ . . 
 # Create conda env
 RUN conda create -y -n rxn-env -c conda-forge python=3.8 pip
