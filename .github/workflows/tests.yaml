@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Style, mypy, pytest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v3
+    - uses: actions/checkout@v5
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v6
       with:
-        python-version: 3.7
+        python-version: 3.8
     - name: Install Dependencies
       run: pip install -e .[dev,rdkit]
     - name: Check black
