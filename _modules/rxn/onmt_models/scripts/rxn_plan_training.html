@@ -65,23 +65,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for rxn.onmt_models.scripts.rxn_plan_training</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">click</span>
-<span class="kn">from</span> <span class="nn">attr</span> <span class="kn">import</span> <span class="n">define</span>
-<span class="kn">from</span> <span class="nn">rxn.onmt_utils.train_command</span> <span class="kn">import</span> <span class="n">RxnCommand</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">click</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">attr</span><span class="w"> </span><span class="kn">import</span> <span class="n">define</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.onmt_utils.train_command</span><span class="w"> </span><span class="kn">import</span> <span class="n">RxnCommand</span>
 
-<span class="kn">import</span> <span class="nn">rxn.onmt_models.defaults</span> <span class="k">as</span> <span class="nn">defaults</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rxn.onmt_models.defaults</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">defaults</span>
 
 <span class="n">_CONTEXT_DATA_BATCH_SIZE</span> <span class="o">=</span> <span class="mi">8</span>
 
 
-<div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.Parameter.html#rxn.onmt_models.scripts.rxn_plan_training.Parameter">[docs]</a><span class="k">class</span> <span class="nc">Parameter</span><span class="p">:</span>
+<div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.Parameter.html#rxn.onmt_models.scripts.rxn_plan_training.Parameter">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Parameter</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameter to be queried to the user, if the command(s) are necessary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Parameter.__init__"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.Parameter.html#rxn.onmt_models.scripts.rxn_plan_training.Parameter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Parameter.__init__"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.Parameter.html#rxn.onmt_models.scripts.rxn_plan_training.Parameter.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -108,30 +108,30 @@
 
 
 <div class="viewcode-block" id="ContextOptions"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.ContextOptions.html#rxn.onmt_models.scripts.rxn_plan_training.ContextOptions">[docs]</a><span class="nd">@define</span>
-<span class="k">class</span> <span class="nc">ContextOptions</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContextOptions</span><span class="p">:</span>
     <span class="n">tagging_batch_size</span><span class="p">:</span> <span class="nb">int</span></div>
 
 
 <div class="viewcode-block" id="AugmentOptions"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.AugmentOptions.html#rxn.onmt_models.scripts.rxn_plan_training.AugmentOptions">[docs]</a><span class="nd">@define</span>
-<span class="k">class</span> <span class="nc">AugmentOptions</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AugmentOptions</span><span class="p">:</span>
     <span class="n">number_augmentations</span><span class="p">:</span> <span class="nb">int</span></div>
 
 
 <div class="viewcode-block" id="DatasetOptions"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.DatasetOptions.html#rxn.onmt_models.scripts.rxn_plan_training.DatasetOptions">[docs]</a><span class="nd">@define</span>
-<span class="k">class</span> <span class="nc">DatasetOptions</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatasetOptions</span><span class="p">:</span>
     <span class="n">txt_path</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">processed_path</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">weight</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">augment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AugmentOptions</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="TrainingPlanner"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.html#rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner">[docs]</a><span class="k">class</span> <span class="nc">TrainingPlanner</span><span class="p">:</span>
+<div class="viewcode-block" id="TrainingPlanner"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.html#rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">TrainingPlanner</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that will take the user through the values needed for training models,</span>
 <span class="sd">    in an interactive manner.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TrainingPlanner.__init__"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.html#rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TrainingPlanner.__init__"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.html#rxn.onmt_models.scripts.rxn_plan_training.TrainingPlanner.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># All the logic runs directly in the constructor, to avoid the</span>
         <span class="c1"># necessity of initially setting all the values to None.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_task</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
@@ -159,21 +159,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_parameters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_query_parameters</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">prepare_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_data_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_seed</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">prepare_context_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_context_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_context_data_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">processed_path</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">augment_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">augment_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_augment_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cmd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">cmd</span>
 
-    <span class="k">def</span> <span class="nf">preprocess_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">preprocess_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;rxn-onmt-preprocess &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--input_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">processed_path</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -184,13 +184,13 @@
             <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--additional_data </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">processed_path</span><span class="si">}</span><span class="s2"> &quot;</span>
         <span class="k">return</span> <span class="n">cmd</span>
 
-    <span class="k">def</span> <span class="nf">train_or_finetune_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_or_finetune_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">finetuning</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">finetune_cmd</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_cmd</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">train_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;rxn-onmt-train &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--model_output_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_models</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -201,7 +201,7 @@
         <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpu</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">cmd</span>
 
-    <span class="k">def</span> <span class="nf">finetune_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">finetune_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;rxn-onmt-finetune &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--train_from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">train_from</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -213,7 +213,7 @@
         <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpu</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">cmd</span>
 
-    <span class="k">def</span> <span class="nf">continue_training_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">continue_training_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;rxn-onmt-continue-training &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--model_output_dir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onmt_models</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -224,7 +224,7 @@
         <span class="n">cmd</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpu</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">cmd</span>
 
-    <span class="k">def</span> <span class="nf">_query_about_finetuning</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_query_about_finetuning</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">finetuning</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span>
             <span class="s2">&quot;Are you fine-tuning an existing model?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
@@ -235,7 +235,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">needed_commands</span> <span class="o">=</span> <span class="p">[</span><span class="n">RxnCommand</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">C</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">train_from</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_initialize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;Batch size&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TCF</span><span class="p">),</span>
             <span class="n">Parameter</span><span class="p">(</span>
@@ -275,7 +275,7 @@
             <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;seed&quot;</span><span class="p">,</span> <span class="s2">&quot;Random seed for training&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">.</span><span class="n">SEED</span><span class="p">,</span> <span class="n">RxnCommand</span><span class="o">.</span><span class="n">TF</span><span class="p">),</span>
         <span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_query_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_query_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Query the user about the values of all necessary parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -288,7 +288,7 @@
             <span class="n">value</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="k">def</span> <span class="nf">_get_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DatasetOptions</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DatasetOptions</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the information on datasets from the user.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -324,7 +324,7 @@
 
         <span class="k">return</span> <span class="n">datasets</span>
 
-    <span class="k">def</span> <span class="nf">_maybe_get_context_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ContextOptions</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_maybe_get_context_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ContextOptions</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_task</span> <span class="o">!=</span> <span class="s2">&quot;context&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -335,7 +335,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">ContextOptions</span><span class="p">(</span><span class="n">tagging_batch_size</span><span class="o">=</span><span class="n">tagging_batch_size</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_maybe_get_augment_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AugmentOptions</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_maybe_get_augment_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AugmentOptions</span><span class="p">]:</span>
         <span class="n">augment</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Would you like to augment the data set </span><span class="si">{</span><span class="n">dataset_no</span><span class="si">}</span><span class="s2">?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
@@ -346,7 +346,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">AugmentOptions</span><span class="p">(</span><span class="n">number_augmentations</span><span class="o">=</span><span class="n">n_augmentations</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_parameters_for_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">RxnCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parameters_for_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">RxnCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the string to append to the command for all the parameters associated</span>
 <span class="sd">        with a command type.</span>
@@ -366,7 +366,7 @@
         <span class="k">return</span> <span class="n">to_add</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_prepare_data_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">DatasetOptions</span><span class="p">,</span> <span class="n">prepare_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_data_cmd</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">DatasetOptions</span><span class="p">,</span> <span class="n">prepare_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">command</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;rxn-prepare-data --input_data </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">txt_path</span><span class="si">}</span><span class="s2"> &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--output_dir </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">processed_path</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -375,7 +375,7 @@
             <span class="n">command</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--split_seed </span><span class="si">{</span><span class="n">prepare_seed</span><span class="si">}</span><span class="s2"> &quot;</span>
         <span class="k">return</span> <span class="n">command</span>
 
-    <span class="k">def</span> <span class="nf">_augment_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">DatasetOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_augment_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">DatasetOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">augment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -383,7 +383,7 @@
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_task</span><span class="si">}</span><span class="s2"> -n </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">augment</span><span class="o">.</span><span class="n">number_augmentations</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_prepare_context_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_context_data_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Context options not defined.&quot;</span><span class="p">)</span>
 
@@ -392,21 +392,21 @@
             <span class="n">command</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--batch_size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">context_options</span><span class="o">.</span><span class="n">tagging_batch_size</span><span class="si">}</span><span class="s2"> &quot;</span>
         <span class="k">return</span> <span class="n">command</span>
 
-    <span class="k">def</span> <span class="nf">_data_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_data_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">data_weights</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
                 <span class="n">data_weights</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--data_weights </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">weight</span><span class="si">}</span><span class="s2"> &quot;</span>
         <span class="k">return</span> <span class="n">data_weights</span>
 
-    <span class="k">def</span> <span class="nf">_gpu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gpu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_gpu</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;--no_gpu &quot;</span></div>
 
 
 <span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interactive program to plan the training of RXN OpenNMT models.</span>
 
 <span class="sd">    It will ask a user for the values needed for training, and then print all</span>

@@ -65,19 +65,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for rxn.onmt_models.training_files</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">count</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">rxn.utilities.files</span> <span class="kn">import</span> <span class="n">PathLike</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.utilities.files</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathLike</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>
 
 
-<div class="viewcode-block" id="ModelFiles"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles">[docs]</a><span class="k">class</span> <span class="nc">ModelFiles</span><span class="p">:</span>
+<div class="viewcode-block" id="ModelFiles"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ModelFiles</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to make it easy to get the names/paths of the trained OpenNMT models.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -86,19 +86,19 @@
     <span class="n">MODEL_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span>
     <span class="n">MODEL_STEP_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^model_step_(\d+)\.pt$&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ModelFiles.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_dir</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+<div class="viewcode-block" id="ModelFiles.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_dir</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
         <span class="c1"># Directly converting to an absolute path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="c1"># Create the directory if it does not exist yet</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">model_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">model_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Absolute path to the model prefix; during training, OpenNMT will</span>
 <span class="sd">        append &quot;_step_10000.pt&quot; to it (or other step numbers).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span> <span class="o">/</span> <span class="n">ModelFiles</span><span class="o">.</span><span class="n">MODEL_PREFIX</span>
 
-<div class="viewcode-block" id="ModelFiles.next_config_file"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.next_config_file">[docs]</a>    <span class="k">def</span> <span class="nf">next_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<div class="viewcode-block" id="ModelFiles.next_config_file"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.next_config_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">next_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the next available config file name.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">config_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span> <span class="o">/</span> <span class="n">ModelFiles</span><span class="o">.</span><span class="n">ONMT_CONFIG_FILE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="n">idx</span><span class="p">)</span>
@@ -106,7 +106,7 @@
                 <span class="k">return</span> <span class="n">config_file</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">()</span>  <span class="c1"># Note: in order to satisfy mypy. This is never reached.</span></div>
 
-<div class="viewcode-block" id="ModelFiles.get_checkpoints"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.get_checkpoints">[docs]</a>    <span class="k">def</span> <span class="nf">get_checkpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<div class="viewcode-block" id="ModelFiles.get_checkpoints"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.get_checkpoints">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_checkpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the checkpoints contained in the directory, sorted by step number.&quot;&quot;&quot;</span>
         <span class="n">steps_and_models</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_checkpoint_step</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
@@ -120,7 +120,7 @@
 
         <span class="k">return</span> <span class="p">[</span><span class="n">model</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">steps_and_models</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="ModelFiles.get_last_checkpoint"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.get_last_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">get_last_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<div class="viewcode-block" id="ModelFiles.get_last_checkpoint"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.ModelFiles.html#rxn.onmt_models.training_files.ModelFiles.get_last_checkpoint">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the last checkpoint matching the naming including the step number.</span>
 
 <span class="sd">        Raises:</span>
@@ -132,7 +132,7 @@
         <span class="k">return</span> <span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_checkpoint_step</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_checkpoint_step</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the step from the path of a given model. None if no match.&quot;&quot;&quot;</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">ModelFiles</span><span class="o">.</span><span class="n">MODEL_STEP_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -140,31 +140,31 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="OnmtPreprocessedFiles"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.OnmtPreprocessedFiles.html#rxn.onmt_models.training_files.OnmtPreprocessedFiles">[docs]</a><span class="k">class</span> <span class="nc">OnmtPreprocessedFiles</span><span class="p">:</span>
+<div class="viewcode-block" id="OnmtPreprocessedFiles"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.OnmtPreprocessedFiles.html#rxn.onmt_models.training_files.OnmtPreprocessedFiles">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">OnmtPreprocessedFiles</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to make it easy to get the names/paths of the OpenNMT-preprocessed files.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">PREFIX</span> <span class="o">=</span> <span class="s2">&quot;preprocessed&quot;</span>
 
-<div class="viewcode-block" id="OnmtPreprocessedFiles.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.OnmtPreprocessedFiles.html#rxn.onmt_models.training_files.OnmtPreprocessedFiles.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessed_dir</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+<div class="viewcode-block" id="OnmtPreprocessedFiles.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.OnmtPreprocessedFiles.html#rxn.onmt_models.training_files.OnmtPreprocessedFiles.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessed_dir</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
         <span class="c1"># Directly converting to an absolute path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">preprocessed_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="c1"># Create the directory if it does not exist yet</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">preprocess_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">preprocess_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Absolute path to the prefix for the preprocessed files; during preprocessing,</span>
 <span class="sd">        OpenNMT will append &quot;.train.0.pt&quot;, &quot;.valid.0.pt&quot;, &quot;.vocab.pt&quot;, etc.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_dir</span> <span class="o">/</span> <span class="n">OnmtPreprocessedFiles</span><span class="o">.</span><span class="n">PREFIX</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vocab_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vocab_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_prefix</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.vocab.pt&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="RxnPreprocessingFiles"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles">[docs]</a><span class="k">class</span> <span class="nc">RxnPreprocessingFiles</span><span class="p">:</span>
+<div class="viewcode-block" id="RxnPreprocessingFiles"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RxnPreprocessingFiles</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to make it easy to get the names/paths of the files generated during data preprocessing.</span>
 
@@ -173,11 +173,11 @@
 
     <span class="n">FILENAME_ROOT</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>
 
-<div class="viewcode-block" id="RxnPreprocessingFiles.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processed_data_dir</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+<div class="viewcode-block" id="RxnPreprocessingFiles.__init__"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processed_data_dir</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
         <span class="c1"># Directly converting to an absolute path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">processed_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">processed_data_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extension</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extension</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function get the path of the file produced with the given extension.</span>
 
@@ -194,79 +194,79 @@
         <span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">standardized_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">standardized_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="s2">&quot;standardized.csv&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">processed_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">processed_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="s2">&quot;processed.csv&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_processed_csv_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_processed_csv_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">split</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_split</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processed.</span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">processed_train_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">processed_train_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_processed_csv_for_split</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">processed_validation_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">processed_validation_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_processed_csv_for_split</span><span class="p">(</span><span class="s2">&quot;validation&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">processed_test_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">processed_test_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_processed_csv_for_split</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_precursors_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_precursors_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">split</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_split</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processed.</span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s2">.precursors_tokens&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_products_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_products_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">split</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_split</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processed.</span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s2">.products_tokens&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">train_precursors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_precursors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_precursors_for_split</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">train_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_products_for_split</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">validation_precursors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validation_precursors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_precursors_for_split</span><span class="p">(</span><span class="s2">&quot;validation&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">validation_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validation_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_products_for_split</span><span class="p">(</span><span class="s2">&quot;validation&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">test_precursors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_precursors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_precursors_for_split</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">test_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_products_for_split</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_context_tags_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_tags_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">split</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_split</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processed.</span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s2">.context.tagged&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_context_src_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_src_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">split</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_split</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processed.</span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s2">.context.src&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_context_tgt_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_tgt_for_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">split</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_split</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_extension</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processed.</span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s2">.context.tgt&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RxnPreprocessingFiles.augmented"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles.augmented">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">augmented</span><span class="p">(</span><span class="n">data_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">augmented</span><span class="p">(</span><span class="n">data_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the path for the augmented version of a data file.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">data_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">data_path</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.augmented&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_validate_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">split</span> <span class="o">==</span> <span class="s2">&quot;train&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;train&quot;</span>
         <span class="k">if</span> <span class="n">split</span> <span class="o">==</span> <span class="s2">&quot;valid&quot;</span> <span class="ow">or</span> <span class="n">split</span> <span class="o">==</span> <span class="s2">&quot;validation&quot;</span><span class="p">:</span>
@@ -275,7 +275,7 @@
             <span class="k">return</span> <span class="s2">&quot;test&quot;</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported split: &quot;</span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RxnPreprocessingFiles.get_src_file"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles.get_src_file">[docs]</a>    <span class="k">def</span> <span class="nf">get_src_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<div class="viewcode-block" id="RxnPreprocessingFiles.get_src_file"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles.get_src_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_src_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the source file for the given task.</span>
 
 <span class="sd">        Note: the file is tokenized for the forward and retro tasks, but not</span>
@@ -289,7 +289,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_context_src_for_split</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported model task: &quot;</span><span class="si">{</span><span class="n">model_task</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RxnPreprocessingFiles.get_tgt_file"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles.get_tgt_file">[docs]</a>    <span class="k">def</span> <span class="nf">get_tgt_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<div class="viewcode-block" id="RxnPreprocessingFiles.get_tgt_file"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.training_files.RxnPreprocessingFiles.html#rxn.onmt_models.training_files.RxnPreprocessingFiles.get_tgt_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_tgt_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the target file for the given task.</span>
 
 <span class="sd">        Note: the file is tokenized for the forward and retro tasks, but not</span>

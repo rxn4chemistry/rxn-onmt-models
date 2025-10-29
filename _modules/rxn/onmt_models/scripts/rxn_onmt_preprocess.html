@@ -65,33 +65,33 @@
            <div itemprop="articleBody">
              
   <h1>Source code for rxn.onmt_models.scripts.rxn_onmt_preprocess</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">click</span>
-<span class="kn">from</span> <span class="nn">rxn.chemutils.tokenization</span> <span class="kn">import</span> <span class="n">ensure_tokenized_file</span>
-<span class="kn">from</span> <span class="nn">rxn.onmt_utils</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">onmt_utils_version</span>
-<span class="kn">from</span> <span class="nn">rxn.onmt_utils.train_command</span> <span class="kn">import</span> <span class="n">preprocessed_id_names</span>
-<span class="kn">from</span> <span class="nn">rxn.utilities.files</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">click</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.chemutils.tokenization</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_tokenized_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.onmt_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">onmt_utils_version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.onmt_utils.train_command</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocessed_id_names</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.utilities.files</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PathLike</span><span class="p">,</span>
     <span class="n">count_lines</span><span class="p">,</span>
     <span class="n">dump_list_to_file</span><span class="p">,</span>
     <span class="n">load_list_from_file</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rxn.utilities.logging</span> <span class="kn">import</span> <span class="n">setup_console_and_file_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.utilities.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_console_and_file_logger</span>
 
-<span class="kn">from</span> <span class="nn">rxn.onmt_models</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">onmt_models_version</span>
-<span class="kn">from</span> <span class="nn">rxn.onmt_models</span> <span class="kn">import</span> <span class="n">defaults</span>
-<span class="kn">from</span> <span class="nn">rxn.onmt_models.training_files</span> <span class="kn">import</span> <span class="n">OnmtPreprocessedFiles</span><span class="p">,</span> <span class="n">RxnPreprocessingFiles</span>
-<span class="kn">from</span> <span class="nn">rxn.onmt_models.utils</span> <span class="kn">import</span> <span class="n">log_file_name_from_time</span><span class="p">,</span> <span class="n">run_command</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.onmt_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">onmt_models_version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.onmt_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaults</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.onmt_models.training_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnmtPreprocessedFiles</span><span class="p">,</span> <span class="n">RxnPreprocessingFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.onmt_models.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_file_name_from_time</span><span class="p">,</span> <span class="n">run_command</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>
 
 
-<div class="viewcode-block" id="determine_train_dataset"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset.html#rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset">[docs]</a><span class="k">def</span> <span class="nf">determine_train_dataset</span><span class="p">(</span>
+<div class="viewcode-block" id="determine_train_dataset"><a class="viewcode-back" href="../../../../generated/rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset.html#rxn.onmt_models.scripts.rxn_onmt_preprocess.determine_train_dataset">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">determine_train_dataset</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">RxnPreprocessingFiles</span><span class="p">,</span> <span class="n">model_task</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -162,7 +162,7 @@
         <span class="s2">&quot;to add tokens not in the dataset when training the base model.&quot;</span>
     <span class="p">),</span>
 <span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">input_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">additional_data</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>

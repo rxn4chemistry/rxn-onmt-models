@@ -69,25 +69,25 @@
 <span class="sd">Augmentation of source and target files in the context of RXN translation models.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">rxn.chemutils.smiles_augmenter</span> <span class="kn">import</span> <span class="n">SmilesAugmenter</span>
-<span class="kn">from</span> <span class="nn">rxn.chemutils.smiles_randomization</span> <span class="kn">import</span> <span class="n">randomize_smiles_rotated</span>
-<span class="kn">from</span> <span class="nn">rxn.chemutils.tokenization</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.chemutils.smiles_augmenter</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmilesAugmenter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.chemutils.smiles_randomization</span><span class="w"> </span><span class="kn">import</span> <span class="n">randomize_smiles_rotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.chemutils.tokenization</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">detokenize_smiles</span><span class="p">,</span>
     <span class="n">file_is_tokenized</span><span class="p">,</span>
     <span class="n">tokenize_smiles</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rxn.utilities.files</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rxn.utilities.files</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">dump_list_to_file</span><span class="p">,</span>
     <span class="n">iterate_lines_from_file</span><span class="p">,</span>
     <span class="n">raise_if_paths_are_identical</span><span class="p">,</span>
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="augment_translation_dataset"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.augmentation.augment_translation_dataset.html#rxn.onmt_models.augmentation.augment_translation_dataset">[docs]</a><span class="k">def</span> <span class="nf">augment_translation_dataset</span><span class="p">(</span>
+<div class="viewcode-block" id="augment_translation_dataset"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.augmentation.augment_translation_dataset.html#rxn.onmt_models.augmentation.augment_translation_dataset">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">augment_translation_dataset</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">src_in</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">src_out</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
@@ -140,7 +140,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="augment_src"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.augmentation.augment_src.html#rxn.onmt_models.augmentation.augment_src">[docs]</a><span class="k">def</span> <span class="nf">augment_src</span><span class="p">(</span>
+<div class="viewcode-block" id="augment_src"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.augmentation.augment_src.html#rxn.onmt_models.augmentation.augment_src">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">augment_src</span><span class="p">(</span>
     <span class="n">src_in</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">src_out</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">n_augmentations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -175,7 +175,7 @@
     <span class="n">dump_list_to_file</span><span class="p">(</span><span class="n">src_smiles_out</span><span class="p">,</span> <span class="n">src_out</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="augment_tgt"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.augmentation.augment_tgt.html#rxn.onmt_models.augmentation.augment_tgt">[docs]</a><span class="k">def</span> <span class="nf">augment_tgt</span><span class="p">(</span>
+<div class="viewcode-block" id="augment_tgt"><a class="viewcode-back" href="../../../generated/rxn.onmt_models.augmentation.augment_tgt.html#rxn.onmt_models.augmentation.augment_tgt">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">augment_tgt</span><span class="p">(</span>
     <span class="n">tgt_in</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">tgt_out</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">n_augmentations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -204,7 +204,7 @@
     <span class="n">dump_list_to_file</span><span class="p">(</span><span class="n">tgt_smiles_out</span><span class="p">,</span> <span class="n">tgt_out</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_augment_callback</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_augment_callback</span><span class="p">(</span>
     <span class="n">augmenter</span><span class="p">:</span> <span class="n">SmilesAugmenter</span><span class="p">,</span>
     <span class="n">is_tokenized</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">n_augmentations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -215,7 +215,7 @@
 <span class="sd">    file is tokenized and whether to keep the original samples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">smiles</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fn</span><span class="p">(</span><span class="n">smiles</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="c1"># for augmentation, we first need to detokenize if needed</span>
         <span class="k">if</span> <span class="n">is_tokenized</span><span class="p">:</span>
             <span class="n">smiles</span> <span class="o">=</span> <span class="n">detokenize_smiles</span><span class="p">(</span><span class="n">smiles</span><span class="p">)</span>
